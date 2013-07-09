@@ -4,7 +4,7 @@
   <title><![CDATA[public static void man]]></title>
   <link href="http://PhotoSynthesiis.github.io/atom.xml" rel="self"/>
   <link href="http://PhotoSynthesiis.github.io/"/>
-  <updated>2013-07-09T18:06:16+08:00</updated>
+  <updated>2013-07-09T20:03:09+08:00</updated>
   <id>http://PhotoSynthesiis.github.io/</id>
   <author>
     <name><![CDATA[Qiushi Li]]></name>
@@ -12,6 +12,867 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Java中对象的浅拷贝与深拷贝]]></title>
+    <link href="http://PhotoSynthesiis.github.io/blog/2013/07/09/deep-copy-and-shallow-copy/"/>
+    <updated>2013-07-09T19:17:00+08:00</updated>
+    <id>http://PhotoSynthesiis.github.io/blog/2013/07/09/deep-copy-and-shallow-copy</id>
+    <content type="html"><![CDATA[<p>Java中的拷贝方式分为深拷贝和浅拷贝。简单来说，深拷贝就是把一个对象中的所有值，如果被拷贝对象中有对其他对象的引用，那么这个引用指向的对象本身会被重新创建。浅拷贝和深拷贝类似，但是如果被拷贝对象中有对其他对象的引用，只是这个引用会被拷贝，而不是这个被引用的对象。</p>
+
+<p>说起来有点绕口，那么我们就看看下面的图解吧：</p>
+
+<!-- more -->
+
+
+<p>来看下面这段代码：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Car</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">String</span> <span class="n">brand</span><span class="o">;</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="kt">int</span> <span class="n">price</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getBrand</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">brand</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setBrand</span><span class="o">(</span><span class="n">String</span> <span class="n">brand</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">brand</span> <span class="o">=</span> <span class="n">brand</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">getPrice</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">price</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setPrice</span><span class="o">(</span><span class="kt">int</span> <span class="n">price</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">price</span> <span class="o">=</span> <span class="n">price</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Person</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">String</span> <span class="n">name</span><span class="o">;</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">Car</span> <span class="n">car</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getName</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">name</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setName</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">Car</span> <span class="nf">getCar</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">car</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setCar</span><span class="o">(</span><span class="n">Car</span> <span class="n">car</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">car</span> <span class="o">=</span> <span class="n">car</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">test</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">Car</span> <span class="n">car1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Car</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">car1</span><span class="o">.</span><span class="na">setBrand</span><span class="o">(</span><span class="s">&quot;BMW&quot;</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">car1</span><span class="o">.</span><span class="na">setPrice</span><span class="o">(</span><span class="mi">10000</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">Person</span> <span class="n">person1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Person</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">person1</span><span class="o">.</span><span class="na">setCar</span><span class="o">(</span><span class="n">car1</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">person1</span><span class="o">.</span><span class="na">setName</span><span class="o">(</span><span class="s">&quot;person1&quot;</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">Person</span> <span class="n">person2</span> <span class="o">=</span> <span class="n">person1</span><span class="o">;</span>
+</span><span class='line'>        <span class="n">person2</span><span class="o">.</span><span class="na">setName</span><span class="o">(</span><span class="s">&quot;person2&quot;</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">person1</span><span class="o">.</span><span class="na">getName</span><span class="o">());</span> <span class="c1">// person2        </span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">person2</span><span class="o">.</span><span class="na">getName</span><span class="o">());</span> <span class="c1">// person2       </span>
+</span><span class='line'>        <span class="n">Car</span> <span class="n">car2</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Car</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">car2</span><span class="o">.</span><span class="na">setBrand</span><span class="o">(</span><span class="s">&quot;Benz&quot;</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">car2</span><span class="o">.</span><span class="na">setPrice</span><span class="o">(</span><span class="mi">20000</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">person1</span><span class="o">.</span><span class="na">setCar</span><span class="o">(</span><span class="n">car2</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">person2</span><span class="o">.</span><span class="na">getCar</span><span class="o">().</span><span class="na">getBrand</span><span class="o">());</span> <span class="c1">// Benz       </span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">person2</span><span class="o">.</span><span class="na">getCar</span><span class="o">().</span><span class="na">getPrice</span><span class="o">());</span> <span class="c1">// 20000    </span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>重点在Person person2 = person1;这一句上，person1里面包括了一个对Car对象的引用，那么这句话是深拷贝还是浅拷贝呢？答案是什么都不是。它只是一个简单的引用传递，执行完这句话以后，person1和person2都指向了同一个person对象，所以无论谁去改变对象，另一个引用再去调用该对象的值都会发生改变。 好吧，言归正传，下面来实现一个浅拷贝。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Person</span> <span class="kd">implements</span> <span class="n">Cloneable</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">String</span> <span class="n">name</span><span class="o">;</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">Car</span> <span class="n">car</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getName</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">name</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setName</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">Car</span> <span class="nf">getCar</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">car</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setCar</span><span class="o">(</span><span class="n">Car</span> <span class="n">car</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">car</span> <span class="o">=</span> <span class="n">car</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">Object</span> <span class="nf">clone</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">Person</span> <span class="n">person</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+</span><span class='line'>        <span class="k">try</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">person</span> <span class="o">=</span> <span class="o">(</span><span class="n">Person</span><span class="o">)</span> <span class="kd">super</span><span class="o">.</span><span class="na">clone</span><span class="o">();</span>
+</span><span class='line'>        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">CloneNotSupportedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">person</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">CloneTest</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">Car</span> <span class="n">car1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Car</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">car1</span><span class="o">.</span><span class="na">setBrand</span><span class="o">(</span><span class="s">&quot;BMW&quot;</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">car1</span><span class="o">.</span><span class="na">setPrice</span><span class="o">(</span><span class="mi">10000</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">Person</span> <span class="n">originalPerson</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Person</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">originalPerson</span><span class="o">.</span><span class="na">setCar</span><span class="o">(</span><span class="n">car1</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">originalPerson</span><span class="o">.</span><span class="na">setName</span><span class="o">(</span><span class="s">&quot;originalPerson&quot;</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">Person</span> <span class="n">clonePerson</span> <span class="o">=</span> <span class="o">(</span><span class="n">Person</span><span class="o">)</span> <span class="n">originalPerson</span><span class="o">.</span><span class="na">clone</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">originalPerson</span><span class="o">.</span><span class="na">setName</span><span class="o">(</span><span class="s">&quot;originalPerson_1&quot;</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">originalPerson</span><span class="o">.</span><span class="na">getCar</span><span class="o">().</span><span class="na">setBrand</span><span class="o">(</span><span class="s">&quot;Benz&quot;</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">originalPerson</span><span class="o">.</span><span class="na">getName</span><span class="o">());</span> <span class="c1">// originalPerson_1 </span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">originalPerson</span><span class="o">.</span><span class="na">getCar</span><span class="o">().</span><span class="na">getBrand</span><span class="o">());</span> <span class="c1">// Benz </span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">clonePerson</span><span class="o">.</span><span class="na">getName</span><span class="o">());</span> <span class="c1">// originalPerson </span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">clonePerson</span><span class="o">.</span><span class="na">getCar</span><span class="o">().</span><span class="na">getBrand</span><span class="o">());</span> <span class="c1">// Benz </span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Car类不变，Person实现了Cloneable接口，然后重载了父类的clone方法，并且直接调用super.clone()方法来拷贝。但是值得注意的是，父类的clone只是浅拷贝，所以才会有上述的输出结果。那么，要想达到深拷贝，需要做些什么呢？ 其实答案已经很明显了，因为clone是浅拷贝，而Car中都是原始类型的变量，所以我们只需要让Car类也实现Cloneable接口，然后重载clone方法，然后回到Person类中，在clone的时候，加上car = car.clone()就行了。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">problems</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Car</span> <span class="kd">implements</span> <span class="n">Cloneable</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">String</span> <span class="n">brand</span><span class="o">;</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="kt">int</span> <span class="n">price</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getBrand</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">brand</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setBrand</span><span class="o">(</span><span class="n">String</span> <span class="n">brand</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">brand</span> <span class="o">=</span> <span class="n">brand</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">getPrice</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">price</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setPrice</span><span class="o">(</span><span class="kt">int</span> <span class="n">price</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">price</span> <span class="o">=</span> <span class="n">price</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">Object</span> <span class="nf">clone</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">Car</span> <span class="n">car</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+</span><span class='line'>        <span class="k">try</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">car</span> <span class="o">=</span> <span class="o">(</span><span class="n">Car</span><span class="o">)</span> <span class="kd">super</span><span class="o">.</span><span class="na">clone</span><span class="o">();</span>
+</span><span class='line'>        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">CloneNotSupportedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">car</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Person类中的clone:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="n">Object</span> <span class="nf">clone</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">Person</span> <span class="n">person</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+</span><span class='line'>        <span class="k">try</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">person</span> <span class="o">=</span> <span class="o">(</span><span class="n">Person</span><span class="o">)</span> <span class="kd">super</span><span class="o">.</span><span class="na">clone</span><span class="o">();</span>
+</span><span class='line'>            <span class="n">car</span> <span class="o">=</span> <span class="o">(</span><span class="n">Car</span><span class="o">)</span> <span class="n">car</span><span class="o">.</span><span class="na">clone</span><span class="o">();</span>
+</span><span class='line'>        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">CloneNotSupportedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">person</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>
+然后我们回到test类中，再去看执行结果:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">problems</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">CloneTest</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">Car</span> <span class="n">car1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Car</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">car1</span><span class="o">.</span><span class="na">setBrand</span><span class="o">(</span><span class="s">&quot;BMW&quot;</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">car1</span><span class="o">.</span><span class="na">setPrice</span><span class="o">(</span><span class="mi">10000</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">Person</span> <span class="n">originalPerson</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Person</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">originalPerson</span><span class="o">.</span><span class="na">setCar</span><span class="o">(</span><span class="n">car1</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">originalPerson</span><span class="o">.</span><span class="na">setName</span><span class="o">(</span><span class="s">&quot;originalPerson&quot;</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">Person</span> <span class="n">clonePerson</span> <span class="o">=</span> <span class="o">(</span><span class="n">Person</span><span class="o">)</span> <span class="n">originalPerson</span><span class="o">.</span><span class="na">clone</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">clonePerson</span><span class="o">.</span><span class="na">setName</span><span class="o">(</span><span class="s">&quot;clonePerson&quot;</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">clonePerson</span><span class="o">.</span><span class="na">getCar</span><span class="o">().</span><span class="na">setBrand</span><span class="o">(</span><span class="s">&quot;Benz&quot;</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">originalPerson</span><span class="o">.</span><span class="na">getName</span><span class="o">());</span> <span class="c1">// originalPerson </span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">originalPerson</span><span class="o">.</span><span class="na">getCar</span><span class="o">().</span><span class="na">getBrand</span><span class="o">());</span> <span class="c1">// BMW </span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">clonePerson</span><span class="o">.</span><span class="na">getName</span><span class="o">());</span> <span class="c1">// clonePerson </span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">clonePerson</span><span class="o">.</span><span class="na">getCar</span><span class="o">().</span><span class="na">getBrand</span><span class="o">());</span> <span class="c1">// Benz </span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>但是，在一些java原生类中，并没有实现clone方法，这表明他们是不能被拷贝的。这时，如果想要达到深度拷贝的目的，就需要这么做: car = new Car();然后把原来的car中的值全部一一重新set到新的car对象中。 其实，除了上面这种方法之外，还有一种方法能达到深拷贝的效果，那就是使用序列化。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">problems</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.io.Serializable</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Car</span> <span class="kd">implements</span> <span class="n">Serializable</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">String</span> <span class="n">brand</span><span class="o">;</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="kt">int</span> <span class="n">price</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getBrand</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">brand</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setBrand</span><span class="o">(</span><span class="n">String</span> <span class="n">brand</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">brand</span> <span class="o">=</span> <span class="n">brand</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">getPrice</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">price</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setPrice</span><span class="o">(</span><span class="kt">int</span> <span class="n">price</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">price</span> <span class="o">=</span> <span class="n">price</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">Object</span> <span class="nf">clone</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">Car</span> <span class="n">car</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+</span><span class='line'>        <span class="k">try</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">car</span> <span class="o">=</span> <span class="o">(</span><span class="n">Car</span><span class="o">)</span> <span class="kd">super</span><span class="o">.</span><span class="na">clone</span><span class="o">();</span>
+</span><span class='line'>        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">CloneNotSupportedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">car</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">problems</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.io.*</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">CloneTest</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">IOException</span><span class="o">,</span> <span class="n">ClassNotFoundException</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">Car</span> <span class="n">originalCar</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Car</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">originalCar</span><span class="o">.</span><span class="na">setBrand</span><span class="o">(</span><span class="s">&quot;BMW&quot;</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">originalCar</span><span class="o">.</span><span class="na">setPrice</span><span class="o">(</span><span class="mi">10000</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">ByteArrayOutputStream</span> <span class="n">byteArrayOutputStream</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteArrayOutputStream</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">ObjectOutputStream</span> <span class="n">objectOutputStream</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ObjectOutputStream</span><span class="o">(</span><span class="n">byteArrayOutputStream</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">objectOutputStream</span><span class="o">.</span><span class="na">writeObject</span><span class="o">(</span><span class="n">originalCar</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">objectOutputStream</span><span class="o">.</span><span class="na">flush</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">ByteArrayInputStream</span> <span class="n">byteArrayInputStream</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteArrayInputStream</span><span class="o">(</span><span class="n">byteArrayOutputStream</span><span class="o">.</span><span class="na">toByteArray</span><span class="o">());</span>
+</span><span class='line'>        <span class="n">ObjectInputStream</span> <span class="n">objectInputStream</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ObjectInputStream</span><span class="o">(</span><span class="n">byteArrayInputStream</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">Car</span> <span class="n">cloneCar</span> <span class="o">=</span> <span class="o">(</span><span class="n">Car</span><span class="o">)</span> <span class="n">objectInputStream</span><span class="o">.</span><span class="na">readObject</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">cloneCar</span><span class="o">.</span><span class="na">getBrand</span><span class="o">());</span> <span class="c1">// BMW </span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">cloneCar</span><span class="o">.</span><span class="na">getPrice</span><span class="o">());</span> <span class="c1">// 10000 </span>
+</span><span class='line'>        <span class="n">cloneCar</span><span class="o">.</span><span class="na">setBrand</span><span class="o">(</span><span class="s">&quot;Honda&quot;</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">cloneCar</span><span class="o">.</span><span class="na">setPrice</span><span class="o">(</span><span class="mi">3000</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">originalCar</span><span class="o">.</span><span class="na">getBrand</span><span class="o">());</span> <span class="c1">// BMW </span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">originalCar</span><span class="o">.</span><span class="na">getPrice</span><span class="o">());</span> <span class="c1">// 10000 </span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">cloneCar</span><span class="o">.</span><span class="na">getBrand</span><span class="o">());</span> <span class="c1">// Honda </span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">cloneCar</span><span class="o">.</span><span class="na">getPrice</span><span class="o">());</span> <span class="c1">// 3000 </span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>
+在这里，我们首先让Car类实现Serializable接口使其能够序列化，其次就可以使用java中的io来传输对象了。序列化能够达到深拷贝目的的原因是，它首先将对象的整个对象树持久化，然后全部读出，每读出一次就得到一个全新的拷贝。但是这样做的坏处也不少，首当其冲的就是效率问题，序列化的方式比起clone方法的方式要慢不少。 最后需要说的是，我们究竟什么时候用浅拷贝，什么时候用深拷贝呢？答案就是如果一个对象中只包含原始类型的变量，那么就使用浅拷贝，如果类中有对其他类的引用，但是其他类是imutable的，仍然使用浅拷贝。如果有对其他类的引用，而其他类是可被修改的，这就不得不深拷贝了。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Java中的字符串驻留]]></title>
+    <link href="http://PhotoSynthesiis.github.io/blog/2013/07/09/java-string-reside/"/>
+    <updated>2013-07-09T19:11:00+08:00</updated>
+    <id>http://PhotoSynthesiis.github.io/blog/2013/07/09/java-string-reside</id>
+    <content type="html"><![CDATA[<p>最近在工作的时候，一句再正常不过的代码String a = “hello” + “world”;被改成了new StringBuilder().append(“hello”).append(“world”)；当时就比较疑惑这样做的好处，后来到网上查找了一番之后才清楚这与Java中的字符串驻留机制有关，那么什么是驻留呢？</p>
+
+<!-- more -->
+
+
+<p>顾名思义，驻留就是在内存中保留（在Java中，我们通常称驻留对象的地方为驻留池，不过它也是内存的一部分），它不仅存在于Java中，在C#中同样存在。那么我就写几个例子来讲解什么叫Java中字符串的驻留：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">test</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">String</span> <span class="n">a</span> <span class="o">=</span> <span class="s">&quot;abc&quot;</span><span class="o">;</span>
+</span><span class='line'>        <span class="n">String</span> <span class="n">b</span> <span class="o">=</span> <span class="s">&quot;abc&quot;</span><span class="o">;</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">a</span> <span class="o">==</span> <span class="n">b</span><span class="o">);</span>  <span class="c1">// true</span>
+</span><span class='line'>        <span class="n">String</span> <span class="n">c</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="o">(</span><span class="s">&quot;abc&quot;</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">a</span> <span class="o">==</span> <span class="n">c</span><span class="o">);</span>  <span class="c1">// false</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">a</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">c</span><span class="o">));</span> <span class="c1">// true</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>上面这段代码在执行完String a = “abc”这一句的时候会在内存中创建一个值为abc的String类型对象。当执行下一句代码，即String b = “abc”的时候，java会首先去驻留池里面查找是否有值为abc的字符串对象，如果有就让b引用执行那个对象，如果没有就新创建一个并且将其存放在驻留池中。所以，不难理解，当程序执行到第三句话的时候会返回true，我们知道==在java中比较的是对象的引用指向的对象的内存首地址是否一样，而a和b指向的是同一个对象，所以会返回true。继续往下走，当程序执行到String c = new String(“abc”)这句话的时候，java做的事包括： 检查abc这个字符串对象是否在驻留池中，如果存在就把它当做值，然后再在堆上创建一个String类型的对象放到堆中（我们都知道在java中对象是放在堆中，对象的引用是存放在栈中）。所以这句话其实可能创建了2个对象(如果abc已经在驻留池中了，就只是在堆中创建了一个对象)。同时通过new String()创建出来的字符串对象是不会被放到驻留池中的。你也许会想，有没有一种方法让我把在堆中创建的对象放到驻留池中去呢？答案是有的！java提供了一个方法叫做intern()，如果执行c.intern()，会首先把c指向的对象放到驻留池中，然后返回指向这个对象的引用。那么，以下代码会输出什么呢？</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">recursion_and_iteration</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">test</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">String</span> <span class="n">a</span> <span class="o">=</span> <span class="s">&quot;abc&quot;</span><span class="o">;</span>
+</span><span class='line'>        <span class="n">String</span> <span class="n">b</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="o">(</span><span class="s">&quot;abc&quot;</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">a</span> <span class="o">==</span> <span class="n">b</span><span class="o">.</span><span class="na">intern</span><span class="o">());</span>  <span class="c1">// true      </span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">a</span> <span class="o">==</span> <span class="n">b</span><span class="o">);</span>  <span class="c1">// false  </span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>当然是true！不过它的执行过程还是值得说一下的，重点在b.intern();这句话上。经过上面的讲解你也许会想过程应该是首先到堆中创建一个值为abc的String对象，然后将这个对象放到驻留池中。那么如果驻留池中已经存在值为abc的字符串对象了呢？那么b.intern会直接返回驻留池中的对象，所以这里会返回true。继续向下执行，System.out.println(a == b);会返回false，因为在执行b.intern();这句话的时候，实际上是直接返回了驻留池中的对象，所以对原本b指向的堆中的对象没有影响，所以a == b会返回false。</p>
+
+<p>我通过上面这个例子简单讲解了java中的字符串驻留，那么现在回到文章开始部分的疑惑去，为什么使用StringBuilder而不是简单地使用”+”来连接字符串呢？经过上面的讲解，你可能会猜测StringBuilder用了字符串驻留，而”+”不是。恭喜你，你答对了，加10分。但是你也许并不知道使用”+”的时候tricky的地方在哪里。继续往下看。</p>
+
+<p>原因在于使用+连接字符串每次都生成新的对象，而且是在堆内存上进行，而堆内存速度比较慢(相对而言)，那么再大量连接字符串时直接+是不可取的，当然需要一种效率高的方法。Java提供的StringBuffer和StringBuilder就是解决这个问题的。区别是前者是线程安全的而后者是非线程安全的。所以促使我写这篇博客的问题的原因就找到了。此外，值得注意的一点是，驻留池是不会被GC回收的，它会在程序运行期间一直保留。</p>
+
+<p>最后我还想再说点题外话，请看下面这段程序：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">test</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">String</span> <span class="n">a</span> <span class="o">=</span> <span class="s">&quot;a&quot;</span><span class="o">;</span>
+</span><span class='line'>        <span class="n">String</span> <span class="n">b</span> <span class="o">=</span> <span class="s">&quot;b&quot;</span><span class="o">;</span>
+</span><span class='line'>        <span class="n">String</span> <span class="n">c</span> <span class="o">=</span> <span class="s">&quot;ab&quot;</span><span class="o">;</span>
+</span><span class='line'>        <span class="n">String</span> <span class="n">d</span> <span class="o">=</span> <span class="s">&quot;a&quot;</span> <span class="o">+</span> <span class="s">&quot;b&quot;</span><span class="o">;</span>
+</span><span class='line'>        <span class="n">String</span> <span class="n">e</span> <span class="o">=</span> <span class="n">a</span> <span class="o">+</span> <span class="s">&quot;b&quot;</span><span class="o">;</span>
+</span><span class='line'>        <span class="n">String</span> <span class="n">f</span> <span class="o">=</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="o">;</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">c</span> <span class="o">==</span> <span class="n">d</span><span class="o">);</span>  <span class="c1">// true      </span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">c</span> <span class="o">==</span> <span class="n">e</span><span class="o">);</span>  <span class="c1">// false     </span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">c</span> <span class="o">==</span> <span class="n">f</span><span class="o">);</span>  <span class="c1">// false  </span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">d</span> <span class="o">==</span> <span class="n">e</span><span class="o">);</span>  <span class="c1">// false     </span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">d</span> <span class="o">==</span> <span class="n">f</span><span class="o">);</span>  <span class="c1">// false    </span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">e</span> <span class="o">==</span> <span class="n">f</span><span class="o">);</span>  <span class="c1">// false  </span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>c == d输出true，因为c和d都是字符串常量，他们的值在编译时就确定了。而所有涉及到引用的地方都是在运行时才确定值的，所有下面会全部输出为false。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Apprenticeship Pattern读书笔记]]></title>
+    <link href="http://PhotoSynthesiis.github.io/blog/2013/07/09/apprenticeship-pattern/"/>
+    <updated>2013-07-09T19:06:00+08:00</updated>
+    <id>http://PhotoSynthesiis.github.io/blog/2013/07/09/apprenticeship-pattern</id>
+    <content type="html"><![CDATA[<p>花2个星期读完了这本书，作者是一名前ThoughtWorker，所以书里谈到的很多概念还是很清楚。</p>
+
+<p>书本身非常好，里面谈到了从一名软件小工到专家的成长方法，这些方法都是读者能够拿之能用的。</p>
+
+<!-- more -->
+
+
+<p>在读这本书的时候，我一直担心会因为时间的流失而渐渐忘记书中的内容，所以特意写下这篇博客来记录对书的感悟。</p>
+
+<p>其中，最令我难忘的是confront your ignorance和share with others about what you learn。结合到自己这一年坎坎坷坷的TW之路，感触还是颇深。</p>
+
+<p>不管是在工作还是学习中，我很多时候都没有摆正心态和位置。例如如果大家一起讨论一个问题，我并不知道他们讲的是什么，但是我并没有立即问出来，担心其他人觉得自己太菜，连这么基本的道理或工具都不知道，这样会觉得很没面子。书中关于这一点特别做出了阐述，那就是—-在一个安全的环境下（至少TW是），勇敢地表达自己的无知，因为在别人眼里，并不觉得你不知道这个有什么不妥。但是如果你这次问出来了，你知道了答案，你就进步了一些。别人看来你也很好学，而不是自己想象的那样被鄙视。在得到答案之后，应该以某种方式记录下来，或者自己私下继续探索，而不是这样就过了。当下次别人问起时，你不知道，别人会觉得你的学习能力甚至智商有问题。</p>
+
+<p>其次，应该多share自己学到的东西。别人可以看到你的进步，同时自己也能通过分享的方式加强自己对知识本身的吸收。这一点在书中还有很多章节与之呼应，例如find mentor和find kindred
+spirit。他们都强调在学习的过程中，有人带是多么的重要。自己应该尽量多地去找你的mentor问问题，多暴露自己的不足。</p>
+
+<p>此外，书中还谈到了一点：不要满足于现状，应该不断地去探索新知识。软件行业瞬息万变，始终要记住，自己今天所掌握的知识都在以某种方式贬值。不断地学习乃立足行业的前提。</p>
+
+<p>最后，关于知识的整理和记录。这一点是我在TW这一年被反复强调的学习方法。但是自己都没有做好，不是因为笔记不够多，而是在记笔记后就把它扔了，这样的结果是虽然你学了，笔记也写了（看似很好的学习方法），但是到后来还是完全没有印象。归根到底还是因为平时没有去回顾博客中的内容。在回顾的过程中，结合自己在后来学习到的新知识，会有更深的理解或者不同的见解。</p>
+
+<p>最后的最后，一定要努力。记得读过一篇博客，讲的是一名MS的员工在刚加入的时候，自己直接背了个睡袋到办公室去睡了一年，想到自己在TW这一年稍显酱油的方式，真的很惭愧。以后一定不要再犯这些错误了！！！</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[递归的执行过程]]></title>
+    <link href="http://PhotoSynthesiis.github.io/blog/2013/07/09/recursion/"/>
+    <updated>2013-07-09T18:42:00+08:00</updated>
+    <id>http://PhotoSynthesiis.github.io/blog/2013/07/09/recursion</id>
+    <content type="html"><![CDATA[<p>这个问题困惑了我好久，从当初学习计算机开始就没有弄明白这个过程，只听说过能用迭代取代递归的地方就用迭代，因为递归很容易引起内存泄露。不过，作为一名专业的程序员，了解这些东西都是必不可少的，所以我今天就把它记录下来。 我们拿一个简单的程序来作为例子：</p>
+
+<!-- more -->
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Mystery</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kt">int</span> <span class="n">result</span> <span class="o">=</span> <span class="n">compute</span><span class="o">(</span><span class="mi">4</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">result</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">compute</span><span class="o">(</span><span class="kt">int</span> <span class="n">n</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">n</span> <span class="o">==</span> <span class="mi">1</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">return</span> <span class="mi">1</span><span class="o">;</span>
+</span><span class='line'>        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">return</span> <span class="n">n</span> <span class="o">*</span> <span class="n">compute</span><span class="o">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="o">);</span> <span class="c1">// here&#39;s the recursive invocation         </span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>我们可以看到，compute函数里面实现了递归，当n==1的时候就返回。这是每一个递归函数的必要条件，那么函数在return之后又会做些什么呢？其实过程是这样的，如果执行compute(5)，首先判断n是否等于1，如果不是，就计算5 * compute(4)，再次判断n是否等于1，如果不等就继续执行4*compute(3)。这样执行下去直到n==1。这时，所有函数的递归调用可以看成一个顺序执行的函数，这个函数类似于：5 * compute(4) = 5 * (4 * compute(3)) = 5 * (4 * (3 * compute(2))) = 5 * (4 * (3 * (2 * compute(1))))，当compute(1)的值知道的时候， 就开始返回了。</p>
+
+<p>同时我们应该知道的是，方法的调用其实是入栈与出栈。所以，我们可以通过下面这些图来了解执行过程。
+1.To start off the program, the program pushes a frame corresponding to an invocation to run(). Notice how this frame includes room for run’s variable result.</p>
+
+<p><img src="http://PhotoSynthesiis.github.io/images/recursion-1.png"></p>
+
+<p>2.When the computer sees that run() invokes compute(4), the computer places a new frame atop the stack corresponding to compute; this frame will include the variable n, whose value is initially 4.</p>
+
+<p><img src="http://PhotoSynthesiis.github.io/images/recursion-2.png"></p>
+
+<p>3.When the computer sees that compute(4) invokes compute(3), the computer places a new frame atop the stack, containing the variable n, whose value is initially 3.</p>
+
+<p><img src="http://PhotoSynthesiis.github.io/images/recursion-3.png"></p>
+
+<p>4.When the computer sees that compute(3) invokes compute(2), the computer places a new frame atop the stack, containing the variable n, whose value is initially 2.</p>
+
+<p><img src="http://PhotoSynthesiis.github.io/images/recursion-4.png"></p>
+
+<p>5.When the computer sees that compute(2) invokes compute(1), the computer places a new frame atop the stack, containing the variable n, whose value is initially 1.</p>
+
+<p><img src="http://PhotoSynthesiis.github.io/images/recursion-5.png"></p>
+
+<p>6.When the computer sees that compute(1) returns, it pops the top frame off the stack and resumes with whatever frame is now at the top — which happens to be the frame for compute(2).</p>
+
+<p><img src="http://PhotoSynthesiis.github.io/images/recursion-6.png"></p>
+
+<p>7.When the computer sees that compute(2) returns, it pops the top frame off the stack and resumes with compute(3).</p>
+
+<p><img src="http://PhotoSynthesiis.github.io/images/recursion-7.png"></p>
+
+<p>8.When the computer sees that compute(3) returns, it pops the top frame off the stack and resumes with compute(4).</p>
+
+<p><img src="http://PhotoSynthesiis.github.io/images/recursion-8.png"></p>
+
+<p>9.When the computer sees that compute(4) returns, it pops the top frame off the stack and resumes with run(). The run() invocation assigns the valued returned to its result variable, which modifies the variable in its frame.</p>
+
+<p><img src="http://PhotoSynthesiis.github.io/images/recursion-9.png"></p>
+
+<p>10.As the computer executes the method atop the stack, run, it sees that the method invokes print. It thus pushes print(24) onto the stack. In fact, printwill push additional methods onto the stack, which are all eventually popped off.</p>
+
+<p><img src="http://PhotoSynthesiis.github.io/images/recursion-10.png"></p>
+
+<p>11.Once print returns, the computer pops its frame off the stack and continues executing run. In fact, run will return promptly (since there is nothing else to do in that method). Thus, its frame will be popped off, too. Once the stack is empty, the computer halts execution of the program.</p>
+
+<p><img src="http://PhotoSynthesiis.github.io/images/recursion-11.png"></p>
+
+<p>上面谈到的递归是一种比较简单的实现，下面我们来探讨一下难度稍大的递归，程序如下：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">test</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kt">int</span> <span class="n">result</span> <span class="o">=</span> <span class="n">fibonacci</span><span class="o">(</span><span class="mi">5</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">result</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">static</span> <span class="kt">int</span> <span class="nf">fibonacci</span><span class="o">(</span><span class="kt">int</span> <span class="n">number</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">number</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
+</span><span class='line'>        <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">number</span> <span class="o">==</span> <span class="mi">1</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">return</span> <span class="mi">1</span><span class="o">;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="k">return</span> <span class="nf">fibonacci</span><span class="o">(</span><span class="n">number</span> <span class="o">-</span> <span class="mi">1</span><span class="o">)</span> <span class="o">+</span> <span class="n">fibonacci</span><span class="o">(</span><span class="n">number</span> <span class="o">-</span> <span class="mi">2</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>使用+连接字符串每次都生成新的对象，而且是在堆内存上进行，而堆内存速度比较慢(相对而言)，那么再大量连接字符串时直接+是不可取的，当然需要一种效率高的方法。Java提供的StringBuffer和StringBuilder就是解决这个问题的。区别是前者是线程安全的而后者是非线程安全的，StringBuilder在JDK1.5之后才有。不保证安全的StringBuilder有比StringBuffer更高的效率。</p>
+
+<p>在fibonacci这个方法里面，它两次调用了自己，那么它的执行顺序是怎么样的呢？其实这样的一次执行更像是一次二叉树的前序遍历。它会首先执行前面那个方法，即fibonacci(number &ndash; 1)，当这个方法返回后再执行fibonacci() 如果执行fibonacci(5)，它的执行过程会是下面这个样子的：</p>
+
+<p><img src="http://PhotoSynthesiis.github.io/images/recursion-12.png"></p>
+
+<p>所以，fibonacci(5)的执行顺序会是首先到最左下角F(1)，然后回到F(2)，然后再到F(0)，这样F(2)就执行完毕了。接下来是F(3)的执行，因为F(2)已经得出结果了那么就只需要算F(1)。然后回到F(3),来到F(4)。F(4)的右子树没有被遍历，所以这次会使用相同的方法计算出F(2)。这样F(4)的结果就算出来了。然后回到顶点，开始算顶点右边那个节点F(3)。方法同Fibonacci(5)左边的遍历方法相同。这样就完成了一次递归的计算。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Project Euler 15题解惑]]></title>
+    <link href="http://PhotoSynthesiis.github.io/blog/2013/07/09/project-euler/"/>
+    <updated>2013-07-09T18:28:00+08:00</updated>
+    <id>http://PhotoSynthesiis.github.io/blog/2013/07/09/project-euler</id>
+    <content type="html"><![CDATA[<p>这个题目困惑了本人很久，想过各种方法。不是因为脑容量不够而导致处理问题的栈不足而放弃，或者就是根本对上述的想法非常质疑，而又找不到更好的方法以致陷入不断的困惑中。最后还是一番google，找到了问题的解决方法，之所以要记下来，是因为在这道题上我又学习了一种新的解决问题的方法。我姑且称之为“归纳法” + “倒推法”。</p>
+
+<!-- more -->
+
+
+<p>题目是这样的: Starting in the top left corner of a 22 grid, and only being able to move to the right and down, there are exactly 6 routes to the bottom right corner. How many such routes are there through a 2020 grid?</p>
+
+<p><img src="http://PhotoSynthesiis.github.io/images/PE-1.png"></p>
+
+<p>解决方法是从程序的出口，即最右下角入手进行倒推。首先要想到达最右下角那个点，只有两个点可以到达，即紧挨着的它上面和它左边的那个点。</p>
+
+<p><img src="http://PhotoSynthesiis.github.io/images/PE-2.png"></p>
+
+<p>同时我们可以看到，正方形的最右和最下这两个边上的除了终点的所有点到达终点的方式都只有一种，所以可以把它们全部赋值为1。
+紧接着，我们可以继续向前推，到达与终点斜对角的第一个点。这个点到达终点无外乎两种方式，即通过它右边的那个点或者它下边的那个点到达。所以它到达终点（为了下文叙述方便，姑且称其为A点）共有2种方式。
+接着，我们继续刚才的推导过程。A点左边那个点到达终点的方式=A点到达终点的方式+A点右边那个点下面那个点到达终点的方式。所以它一共有3种方式到达终点。</p>
+
+<p><img src="http://PhotoSynthesiis.github.io/images/PE-3.png"></p>
+
+<p>这样我们一直向回推导，就能推导最左上角到达终点的方式=它下面的那个点到达终点的方式+它右边的那个点到达终点的方式。
+最后，程序代码如下：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">problems</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Problem_15</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kt">long</span><span class="o">[][]</span> <span class="n">paths</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">long</span><span class="o">[</span><span class="mi">21</span><span class="o">][</span><span class="mi">21</span><span class="o">];</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c1">// initialize the boundries</span>
+</span><span class='line'>        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">20</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">paths</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="mi">20</span><span class="o">]</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
+</span><span class='line'>            <span class="n">paths</span><span class="o">[</span><span class="mi">20</span><span class="o">][</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">19</span><span class="o">;</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span><span class="o">--)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">19</span><span class="o">;</span> <span class="n">j</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">j</span><span class="o">--)</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">paths</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">]</span> <span class="o">=</span> <span class="n">paths</span><span class="o">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="o">][</span><span class="n">j</span><span class="o">]</span> <span class="o">+</span> <span class="n">paths</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="o">];</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">paths</span><span class="o">[</span><span class="mi">0</span><span class="o">][</span><span class="mi">0</span><span class="o">]);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Spring MVC学习笔记]]></title>
