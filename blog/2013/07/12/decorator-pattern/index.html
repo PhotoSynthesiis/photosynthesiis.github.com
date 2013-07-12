@@ -1,0 +1,589 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>深入浅出设计模式之装饰器模式(Decorator Pattern) - public static void man</title>
+  <meta name="author" content="Qiushi Li">
+
+  
+  <meta name="description" content="今天该讲第三种设计模式 &mdash; 装饰器模式。同样，从名字就可以看出这种模式必定有一个基础组件，用来被修饰，也会有至少一个装饰器来修饰基础组件。同时要求被装饰器修饰过的组件对外界来说还是一个组件，只不过在被修饰之后多出了一些以前没有的功能。装饰器模式可以看做下图： 装饰器模式相对于一般的继承 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://PhotoSynthesiis.github.io/blog/2013/07/12/decorator-pattern">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="public static void man" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Fjalla+One' rel='stylesheet' type='text/css'>
+  
+
+</head>
+
+<body   class="collapse-sidebar sidebar-footer" >
+  <header role="banner"><hgroup>
+  <h1><a href="/">public static void man</a></h1>
+  
+    <h2>_hope is a good thing</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:PhotoSynthesiis.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">深入浅出设计模式之装饰器模式(Decorator Pattern)</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-12T14:53:00+08:00" pubdate data-updated="true">Jul 12<span>th</span>, 2013</time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>今天该讲第三种设计模式 &mdash; 装饰器模式。同样，从名字就可以看出这种模式必定有一个基础组件，用来被修饰，也会有至少一个装饰器来修饰基础组件。同时要求被装饰器修饰过的组件对外界来说还是一个组件，只不过在被修饰之后多出了一些以前没有的功能。装饰器模式可以看做下图：</p>
+
+<!--more -->
+
+
+<p><img src="/images/decorator_pattern-1.png"></p>
+
+<p>装饰器模式相对于一般的继承，做到了对类的行为的扩展的同时，避免了从父类继承来的不必要的东西，其实是使用了组合的方式来达到的。那么下面就来看看这种模式的具体实现吧。假如有一个咖啡店，卖和多种咖啡，而每种咖啡又可以加上不同的调料，例如奶昔、牛奶等。同时每种咖啡价格不一样，调料的价格也不一样，加过调料的咖啡的价格就是原本咖啡喝调料的总价。咋一看来，似乎继承是一种很好的方式：（如下图）
+<img src="/images/decorator_pattern-2.png"></p>
+
+<p>每种咖啡都实现了统一的接口，子类自己覆盖父类的description和cost方法，但是问题来了，这样的话就会产生很多的类，因为需要为每一种咖啡都建一个类，同时为每一个加了调料的咖啡也建一个类，这样就会产生类爆炸。正确的方式应该是使用装饰器模式，为每一种调料建一个类作为装饰器，这样就会有很多的装饰器类，如果有人想买一杯加了奶昔和豆浆的抹茶咖啡，就应该使用奶昔和豆浆来装饰这种咖啡，使用了组合提高了类的灵活性。下面来看看代码吧：
+1、首先有一个饮料抽象类</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">Beverage</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">String</span> <span class="n">description</span> <span class="o">=</span> <span class="s">&quot;unknown beverage&quot;</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getDescription</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">description</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">abstract</span> <span class="kt">double</span> <span class="nf">cost</span><span class="o">();</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>2、三种不同的饮料</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">DarkRoast</span> <span class="kd">extends</span> <span class="n">Beverage</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">DarkRoast</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">description</span> <span class="o">=</span> <span class="s">&quot;Dark Roast&quot;</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">double</span> <span class="nf">cost</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="o">.</span><span class="mi">99</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Expresso</span> <span class="kd">extends</span> <span class="n">Beverage</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">Expresso</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">description</span> <span class="o">=</span> <span class="s">&quot;Espresso&quot;</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">double</span> <span class="nf">cost</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="mf">1.99</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">HouseBlend</span> <span class="kd">extends</span> <span class="n">Beverage</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">HouseBlend</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">description</span> <span class="o">=</span> <span class="s">&quot;House Blend Coffee&quot;</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">double</span> <span class="nf">cost</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="o">.</span><span class="mi">89</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>3、有一个装饰器的抽象类，它继承自饮料类</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">CondimentDecorator</span> <span class="kd">extends</span> <span class="n">Beverage</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">abstract</span> <span class="n">String</span> <span class="nf">getDescription</span><span class="o">();</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p></p>
+
+<p>4、三种不同的调料</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Mocha</span> <span class="kd">extends</span> <span class="n">CondimentDecorator</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">final</span> <span class="n">Beverage</span> <span class="n">beverage</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">Mocha</span><span class="o">(</span><span class="n">Beverage</span> <span class="n">beverage</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">beverage</span> <span class="o">=</span> <span class="n">beverage</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getDescription</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">beverage</span><span class="o">.</span><span class="na">getDescription</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot;, Mocha&quot;</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">double</span> <span class="nf">cost</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="o">.</span><span class="mi">20</span> <span class="o">+</span> <span class="n">beverage</span><span class="o">.</span><span class="na">cost</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Soy</span> <span class="kd">extends</span> <span class="n">CondimentDecorator</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">final</span> <span class="n">Beverage</span> <span class="n">beverage</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">Soy</span><span class="o">(</span><span class="n">Beverage</span> <span class="n">beverage</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">beverage</span> <span class="o">=</span> <span class="n">beverage</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getDescription</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">beverage</span><span class="o">.</span><span class="na">getDescription</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot;, Soy&quot;</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">double</span> <span class="nf">cost</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="o">.</span><span class="mi">15</span> <span class="o">+</span> <span class="n">beverage</span><span class="o">.</span><span class="na">cost</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Whip</span> <span class="kd">extends</span> <span class="n">CondimentDecorator</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">final</span> <span class="n">Beverage</span> <span class="n">beverage</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">Whip</span><span class="o">(</span><span class="n">Beverage</span> <span class="n">beverage</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">beverage</span> <span class="o">=</span> <span class="n">beverage</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getDescription</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">beverage</span><span class="o">.</span><span class="na">getDescription</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot;, Whip&quot;</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">double</span> <span class="nf">cost</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="o">.</span><span class="mi">10</span> <span class="o">+</span> <span class="n">beverage</span><span class="o">.</span><span class="na">cost</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>我们可以看到每一种装饰器继承自CondimentDecorator，而CondimentDecorator继承自Beverage类，所以实际上每一种装饰器都是一种饮料。从每个装饰器内部都保留了一个饮料的引用就能看出，装饰器实际上实在‘接收’一种饮料，然后给他加点调料，然后返回加了调料的饮料。基础组件和装饰器的关系在咖啡这个例子里面可以通过下面这张图来描述：</p>
+
+<p><img src="/images/decorator_pattern-3.png"></p>
+
+<p>4、点咖啡加调料的实际流程</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">StarBuzzCoffee</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">Beverage</span> <span class="n">beverage1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Expresso</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">beverage1</span><span class="o">.</span><span class="na">getDescription</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot; &amp;&quot;</span> <span class="o">+</span> <span class="n">beverage1</span><span class="o">.</span><span class="na">cost</span><span class="o">());</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">Beverage</span> <span class="n">beverage2</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DarkRoast</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">beverage2</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Mocha</span><span class="o">(</span><span class="n">beverage2</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">beverage2</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Mocha</span><span class="o">(</span><span class="n">beverage2</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">beverage2</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Whip</span><span class="o">(</span><span class="n">beverage2</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">beverage2</span><span class="o">.</span><span class="na">getDescription</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot; &amp;&quot;</span> <span class="o">+</span> <span class="n">beverage2</span><span class="o">.</span><span class="na">cost</span><span class="o">());</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">Beverage</span> <span class="n">beverage3</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HouseBlend</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">beverage3</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Soy</span><span class="o">(</span><span class="n">beverage3</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">beverage3</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Mocha</span><span class="o">(</span><span class="n">beverage3</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">beverage3</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Whip</span><span class="o">(</span><span class="n">beverage3</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">beverage3</span><span class="o">.</span><span class="na">getDescription</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot; &amp;&quot;</span> <span class="o">+</span> <span class="n">beverage3</span><span class="o">.</span><span class="na">cost</span><span class="o">());</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>运行结果：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='text'><span class='line'>Espresso &amp;1.99
+</span><span class='line'>Dark Roast, Mocha, Mocha, Whip &amp;1.49
+</span><span class='line'>House Blend Coffee, Soy, Mocha, Whip &amp;1.34
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>当每次结果装饰器修饰过的基础组件在上面这段代码执行时，过程是这样的：</p>
+
+<p><img src="/images/decorator_pattern-4.png"></p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Qiushi Li</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-12T14:53:00+08:00" pubdate data-updated="true">Jul 12<span>th</span>, 2013</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://PhotoSynthesiis.github.io/blog/2013/07/12/decorator-pattern/" data-via="photosynthesiis@gmail.com" data-counturl="http://PhotoSynthesiis.github.io/blog/2013/07/12/decorator-pattern/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/07/11/observer-pattern/" title="Previous Post: 深入浅出设计模式之观察者模式(Observer Pattern)">&laquo; 深入浅出设计模式之观察者模式(Observer Pattern)</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/07/12/decorator-pattern/">深入浅出设计模式之装饰器模式(Decorator Pattern)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/07/11/observer-pattern/">深入浅出设计模式之观察者模式(Observer Pattern)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/07/11/strategy-pattern/">深入浅出设计模式之策略模式(Strategy Pattern)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/07/09/tail-recursion/">一般递归与尾递归(Tail Recursion)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/07/09/deep-copy-and-shallow-copy/">Java中对象的浅拷贝与深拷贝</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/photosynthesiis@gmail.com">@photosynthesiis@gmail.com</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'photosynthesiis@gmail.com',
+            count: 3,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/photosynthesiis@gmail.com?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Qiushi Li -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'photosynthesiis';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://PhotoSynthesiis.github.io/blog/2013/07/12/decorator-pattern/';
+        var disqus_url = 'http://PhotoSynthesiis.github.io/blog/2013/07/12/decorator-pattern/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
