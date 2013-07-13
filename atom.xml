@@ -4,7 +4,7 @@
   <title><![CDATA[public static void man]]></title>
   <link href="http://PhotoSynthesiis.github.io/atom.xml" rel="self"/>
   <link href="http://PhotoSynthesiis.github.io/"/>
-  <updated>2013-07-12T15:39:20+08:00</updated>
+  <updated>2013-07-13T15:06:40+08:00</updated>
   <id>http://PhotoSynthesiis.github.io/</id>
   <author>
     <name><![CDATA[Qiushi Li]]></name>
@@ -12,6 +12,217 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[深入浅出设计模式之工厂模式(Factory Method Pattern)]]></title>
+    <link href="http://PhotoSynthesiis.github.io/blog/2013/07/13/factory-pattern/"/>
+    <updated>2013-07-13T14:01:00+08:00</updated>
+    <id>http://PhotoSynthesiis.github.io/blog/2013/07/13/factory-pattern</id>
+    <content type="html"><![CDATA[<p>工厂模式算是设计模式中用到的最多的一类了，对于它最直观的描述就是：父类定义一个创建对象的接口，由子类决定需要创建什么对象，这样让类把实例化推迟到了子类。下面来举个例子来阐述吧。</p>
+
+<p>有一个披萨店，可以做各种各样的披萨，但位于不同地方的分店里的披萨味道会有些不同。如果利用工厂模式，就是：</p>
+
+<!-- more -->
+
+
+<p>1、有一个Pizza连锁店，它负责接收客户的订单(orderPizza)，之后就开始生产披萨</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">PizzaStore</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">protected</span> <span class="n">Pizza</span> <span class="nf">orderPizza</span><span class="o">(</span><span class="n">String</span> <span class="n">type</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">Pizza</span> <span class="n">pizza</span> <span class="o">=</span> <span class="n">createPizza</span><span class="o">(</span><span class="n">type</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">pizza</span><span class="o">.</span><span class="na">prepare</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">pizza</span><span class="o">.</span><span class="na">bake</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">pizza</span><span class="o">.</span><span class="na">cut</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">pizza</span><span class="o">.</span><span class="na">box</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">return</span> <span class="n">pizza</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">protected</span> <span class="kd">abstract</span> <span class="n">Pizza</span> <span class="nf">createPizza</span><span class="o">(</span><span class="n">String</span> <span class="n">type</span><span class="o">);</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>上面留了一个createPizza方法，这就是一个工厂方法，它返回一个产品的基类类型，而具体的类型由子类自己决定。父类不管返回的是什么，只管对返回的产品做相应的操作。这样做的好处是隔离了变化与不变的地方，面向接口编程。
+2、纽约的这家Pizza连锁店只生产纽约口味的披萨</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">NYPizzaStore</span> <span class="kd">extends</span> <span class="n">PizzaStore</span> <span class="o">{</span>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">protected</span> <span class="n">Pizza</span> <span class="nf">createPizza</span><span class="o">(</span><span class="n">String</span> <span class="n">type</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">type</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;cheese&quot;</span><span class="o">))</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">return</span> <span class="k">new</span> <span class="nf">NYStyleCheesePizza</span><span class="o">();</span>
+</span><span class='line'>        <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">type</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;veggie&quot;</span><span class="o">))</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">return</span> <span class="k">new</span> <span class="nf">NYStyleVeggiePizza</span><span class="o">();</span>
+</span><span class='line'>        <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">type</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;clam&quot;</span><span class="o">))</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">return</span> <span class="k">new</span> <span class="nf">NYStyleClamPizza</span><span class="o">();</span>
+</span><span class='line'>        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>芝加哥的Pizza连锁店只生产芝加哥口味的披萨</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ChicagoPizzaStore</span> <span class="kd">extends</span> <span class="n">PizzaStore</span> <span class="o">{</span>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">protected</span> <span class="n">Pizza</span> <span class="nf">createPizza</span><span class="o">(</span><span class="n">String</span> <span class="n">type</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">type</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;cheese&quot;</span><span class="o">))</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">return</span> <span class="k">new</span> <span class="nf">ChicagoStyleCheesePizza</span><span class="o">();</span>
+</span><span class='line'>        <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">type</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;veggie&quot;</span><span class="o">))</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">return</span> <span class="k">new</span> <span class="nf">ChicagoStyleVeggiePizza</span><span class="o">();</span>
+</span><span class='line'>        <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">type</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;clam&quot;</span><span class="o">))</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">return</span> <span class="k">new</span> <span class="nf">ChicagoStyleClamPizza</span><span class="o">();</span>
+</span><span class='line'>        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>3、同时有一个Pizza的抽象类，各种披萨都继承自他</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">Pizza</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">protected</span> <span class="n">String</span> <span class="n">description</span><span class="o">;</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">prepare</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Preparing &quot;</span> <span class="o">+</span> <span class="n">description</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">bake</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Baking &quot;</span> <span class="o">+</span> <span class="n">description</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">cut</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Cutting &quot;</span> <span class="o">+</span> <span class="n">description</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">box</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Boxing &quot;</span> <span class="o">+</span> <span class="n">description</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ChicagoStyleCheesePizza</span> <span class="kd">extends</span> <span class="n">Pizza</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">ChicagoStyleCheesePizza</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">description</span> <span class="o">=</span> <span class="s">&quot;Chicago Style Cheese Pizza&quot;</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">NYStyleCheesePizza</span> <span class="kd">extends</span> <span class="n">Pizza</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">NYStyleCheesePizza</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">description</span> <span class="o">=</span> <span class="s">&quot;New York Style Cheese Pizza&quot;</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>.
+.
+.
+(这里就不一一列出了)
+4、客户开始订披萨</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">StartOrderingPizza</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">PizzaStore</span> <span class="n">chicagoPizzaStore</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ChicagoPizzaStore</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">chicagoPizzaStore</span><span class="o">.</span><span class="na">orderPizza</span><span class="o">(</span><span class="s">&quot;cheese&quot;</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">PizzaStore</span> <span class="n">nyPizzaStore</span> <span class="o">=</span> <span class="k">new</span> <span class="n">NYPizzaStore</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">nyPizzaStore</span><span class="o">.</span><span class="na">orderPizza</span><span class="o">(</span><span class="s">&quot;veggie&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>上面可以发现，在不同的地方的店里面点相同的披萨得到的是不同的。披萨店的类图如下：
+<img src="http://PhotoSynthesiis.github.io/images/factory_pattern-1.png"></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[深入浅出设计模式之装饰器模式(Decorator Pattern)]]></title>
