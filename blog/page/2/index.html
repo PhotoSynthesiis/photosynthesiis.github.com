@@ -9,7 +9,8 @@
   <meta name="author" content="Qiushi Li">
 
   
-  <meta name="description" content="Java中的拷贝方式分为深拷贝和浅拷贝。简单来说，深拷贝就是把一个对象中的所有值，如果被拷贝对象中有对其他对象的引用，那么这个引用指向的对象本身会被重新创建。浅拷贝和深拷贝类似，但是如果被拷贝对象中有对其他对象的引用，只是这个引用会被拷贝，而不是这个被引用的对象。 说起来有点绕口， &hellip;">
+  <meta name="description" content="最近在读一篇文章的时候无意间接触到了尾递归，感觉他比一般的递归好用，有点意思，顾将之记录下来。 首先需要了解的是到底什么是尾递归？
+这个问题其实很简单，顾名思义，尾递归就是在一个方法的尾部、且在函数返回前的最后一步调用函数本身。为了更好地理解，还是上代码吧(以著名的斐波拉契为例)： ">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +66,52 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/07/09/tail-recursion/">一般递归与尾递归(Tail Recursion)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-09T21:58:00+08:00" pubdate data-updated="true">Jul 9<span>th</span>, 2013</time>
+        
+         | <a href="/blog/2013/07/09/tail-recursion/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>最近在读一篇文章的时候无意间接触到了尾递归，感觉他比一般的递归好用，有点意思，顾将之记录下来。</p>
+
+<p>首先需要了解的是到底什么是尾递归？
+这个问题其实很简单，顾名思义，尾递归就是在一个方法的尾部、且在函数返回前的最后一步调用函数本身。为了更好地理解，还是上代码吧(以著名的斐波拉契为例)：</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/07/09/tail-recursion/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -345,6 +392,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/07/16/state-pattern/">深入浅出设计模式之状态模式(State Pattern)</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/07/16/iterator-pattern/">深入浅出设计模式之迭代器模式(Iterator Pattern)和组合模式(Composite Pattern)</a>
       </li>
     
@@ -358,10 +409,6 @@
     
       <li class="post">
         <a href="/blog/2013/07/13/command-pattern/">深入浅出设计模式之命令模式(Command Pattern)</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/07/13/singleton-pattern/">深入浅出设计模式之单件模式(Singleton Pattern)</a>
       </li>
     
   </ul>
