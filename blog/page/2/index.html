@@ -9,7 +9,7 @@
   <meta name="author" content="Qiushi Li">
 
   
-  <meta name="description" content="最近在工作的时候，一句再正常不过的代码String a = “hello” + “world”;被改成了new StringBuilder().append(“hello”).append(“world”)；当时就比较疑惑这样做的好处， &hellip;">
+  <meta name="description" content="Java中的拷贝方式分为深拷贝和浅拷贝。简单来说，深拷贝就是把一个对象中的所有值，如果被拷贝对象中有对其他对象的引用，那么这个引用指向的对象本身会被重新创建。浅拷贝和深拷贝类似，但是如果被拷贝对象中有对其他对象的引用，只是这个引用会被拷贝，而不是这个被引用的对象。 说起来有点绕口， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +65,51 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/07/09/deep-copy-and-shallow-copy/">Java中对象的浅拷贝与深拷贝</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-09T19:17:00+08:00" pubdate data-updated="true">Jul 9<span>th</span>, 2013</time>
+        
+         | <a href="/blog/2013/07/09/deep-copy-and-shallow-copy/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Java中的拷贝方式分为深拷贝和浅拷贝。简单来说，深拷贝就是把一个对象中的所有值，如果被拷贝对象中有对其他对象的引用，那么这个引用指向的对象本身会被重新创建。浅拷贝和深拷贝类似，但是如果被拷贝对象中有对其他对象的引用，只是这个引用会被拷贝，而不是这个被引用的对象。</p>
+
+<p>说起来有点绕口，那么我们就看看下面的图解吧：</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/07/09/deep-copy-and-shallow-copy/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -300,6 +345,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/07/16/iterator-pattern/">深入浅出设计模式之迭代器模式(Iterator Pattern)和组合模式(Composite Pattern)</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/07/14/template-method/">深入浅出设计模式之模板方法模式(Template Method)</a>
       </li>
     
@@ -313,10 +362,6 @@
     
       <li class="post">
         <a href="/blog/2013/07/13/singleton-pattern/">深入浅出设计模式之单件模式(Singleton Pattern)</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/07/13/factory-pattern/">深入浅出设计模式之工厂模式(Factory Method Pattern)</a>
       </li>
     
   </ul>
