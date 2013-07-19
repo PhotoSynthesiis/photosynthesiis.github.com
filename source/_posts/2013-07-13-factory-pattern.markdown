@@ -9,6 +9,7 @@ categories:
 
 有一个披萨店，可以做各种各样的披萨，但位于不同地方的分店里的披萨味道会有些不同。如果利用工厂模式，就是：
 <!-- more -->
+
 1、有一个Pizza连锁店，它负责接收客户的订单(orderPizza)，之后就开始生产披萨
 ``` java
 public abstract class PizzaStore {
@@ -27,6 +28,7 @@ public abstract class PizzaStore {
 }
 ```
 上面留了一个createPizza方法，这就是一个工厂方法，它返回一个产品的基类类型，而具体的类型由子类自己决定。父类不管返回的是什么，只管对返回的产品做相应的操作。这样做的好处是隔离了变化与不变的地方，面向接口编程。
+
 2、纽约的这家Pizza连锁店只生产纽约口味的披萨
 ``` java
 public class NYPizzaStore extends PizzaStore {
@@ -102,6 +104,7 @@ public class NYStyleCheesePizza extends Pizza {
 .
 .
 (这里就不一一列出了)
+
 4、客户开始订披萨	
 ``` java
 public class StartOrderingPizza {
@@ -116,3 +119,13 @@ public class StartOrderingPizza {
 ```
 上面可以发现，在不同的地方的店里面点相同的披萨得到的是不同的。披萨店的类图如下：
 {% img /images/factory_pattern-1.png %}
+
+另外，出了工厂模式之外，还有一种叫做抽象工厂模式。此工厂模式生成各种不同类型的物品的产品家族。例如我们要生成各种各样的鸭子，这些鸭子来自同一个家族(实现了相同接口)，我们就可以用抽象工厂模式：
+``` java
+public abstract class AbstractDuckFactory {
+    public abstract Quackable createMallardDuck();
+    public abstract Quackable createRedheadDuck();
+    public abstract Quackable createDuckCall();
+    public abstract Quackable createRubberDuck();
+}
+```
