@@ -4,7 +4,7 @@
   <title><![CDATA[public static void man]]></title>
   <link href="http://PhotoSynthesiis.github.io/atom.xml" rel="self"/>
   <link href="http://PhotoSynthesiis.github.io/"/>
-  <updated>2013-07-18T22:48:20+08:00</updated>
+  <updated>2013-07-19T21:07:28+08:00</updated>
   <id>http://PhotoSynthesiis.github.io/</id>
   <author>
     <name><![CDATA[Qiushi Li]]></name>
@@ -2745,8 +2745,9 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>上面留了一个createPizza方法，这就是一个工厂方法，它返回一个产品的基类类型，而具体的类型由子类自己决定。父类不管返回的是什么，只管对返回的产品做相应的操作。这样做的好处是隔离了变化与不变的地方，面向接口编程。
-2、纽约的这家Pizza连锁店只生产纽约口味的披萨</p>
+<p>上面留了一个createPizza方法，这就是一个工厂方法，它返回一个产品的基类类型，而具体的类型由子类自己决定。父类不管返回的是什么，只管对返回的产品做相应的操作。这样做的好处是隔离了变化与不变的地方，面向接口编程。</p>
+
+<p>2、纽约的这家Pizza连锁店只生产纽约口味的披萨</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -2882,8 +2883,9 @@
 <p>.
 .
 .
-(这里就不一一列出了)
-4、客户开始订披萨</p>
+(这里就不一一列出了)</p>
+
+<p>4、客户开始订披萨</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -2908,6 +2910,23 @@
 
 <p>上面可以发现，在不同的地方的店里面点相同的披萨得到的是不同的。披萨店的类图如下：
 <img src="http://PhotoSynthesiis.github.io/images/factory_pattern-1.png"></p>
+
+<p>另外，出了工厂模式之外，还有一种叫做抽象工厂模式。此工厂模式生成各种不同类型的物品的产品家族。例如我们要生成各种各样的鸭子，这些鸭子来自同一个家族(实现了相同接口)，我们就可以用抽象工厂模式：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">AbstractDuckFactory</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">abstract</span> <span class="n">Quackable</span> <span class="nf">createMallardDuck</span><span class="o">();</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">abstract</span> <span class="n">Quackable</span> <span class="nf">createRedheadDuck</span><span class="o">();</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">abstract</span> <span class="n">Quackable</span> <span class="nf">createDuckCall</span><span class="o">();</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">abstract</span> <span class="n">Quackable</span> <span class="nf">createRubberDuck</span><span class="o">();</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
 ]]></content>
   </entry>
   
