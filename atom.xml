@@ -4,7 +4,7 @@
   <title><![CDATA[public static void man]]></title>
   <link href="http://PhotoSynthesiis.github.io/atom.xml" rel="self"/>
   <link href="http://PhotoSynthesiis.github.io/"/>
-  <updated>2013-07-19T21:07:28+08:00</updated>
+  <updated>2013-07-27T20:34:03+08:00</updated>
   <id>http://PhotoSynthesiis.github.io/</id>
   <author>
     <name><![CDATA[Qiushi Li]]></name>
@@ -12,6 +12,753 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Java Annotation学习笔记]]></title>
+    <link href="http://PhotoSynthesiis.github.io/blog/2013/07/27/java-annotation/"/>
+    <updated>2013-07-27T20:23:00+08:00</updated>
+    <id>http://PhotoSynthesiis.github.io/blog/2013/07/27/java-annotation</id>
+    <content type="html"><![CDATA[<ol>
+<li>Annotation是什么
+Annotation是类，方法或字段的一种注解或元数据，当程序被JVM编译的时候，annotation会和类编译在一起，作为一种元数据去描述被修饰的数据</li>
+<li>Annotation的定义</li>
+</ol>
+
+
+<!-- more -->
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">annotationApplication</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.lang.annotation.ElementType</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.lang.annotation.Retention</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.lang.annotation.RetentionPolicy</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.lang.annotation.Target</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nd">@Retention</span><span class="o">(</span><span class="n">RetentionPolicy</span><span class="o">.</span><span class="na">RUNTIME</span><span class="o">)</span>
+</span><span class='line'><span class="nd">@Target</span><span class="o">(</span><span class="n">ElementType</span><span class="o">.</span><span class="na">TYPE</span><span class="o">)</span>
+</span><span class='line'><span class="kd">public</span> <span class="nd">@interface</span> <span class="n">MyAnnotation</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">name</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">age</span><span class="o">();</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>其中，Retention中的字段表明，该注解能在运行时通过反射得到。Target表明该注解用于何处。此处为类或者接口处可以使用。</p>
+
+<ol>
+<li>Annotation的使用（类、接口范围）
+annotation的定义</li>
+</ol>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">annotationDefinition</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">annotationApplication.MyAnnotation</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nd">@MyAnnotation</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">&quot;Mikel Arteta&quot;</span><span class="o">,</span> <span class="n">age</span> <span class="o">=</span> <span class="mi">29</span><span class="o">)</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyAnnotationUsage</span> <span class="o">{</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>annotation的使用</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">annotationDefinition</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">annotationApplication.MyAnnotation</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nd">@MyAnnotation</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">&quot;Mikel Arteta&quot;</span><span class="o">,</span> <span class="n">age</span> <span class="o">=</span> <span class="mi">29</span><span class="o">)</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyAnnotationUsage</span> <span class="o">{</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>下面是我定义的使用类注解的类的查找器：找到并输出注解类的annotation的value</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">annotationDefinition</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">annotationApplication.MyAnnotation</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.lang.annotation.Annotation</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyAnnotationFinder</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">ClassNotFoundException</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">Class</span><span class="o">&lt;?&gt;</span> <span class="n">myAnnotationUsage</span> <span class="o">=</span> <span class="n">Class</span><span class="o">.</span><span class="na">forName</span><span class="o">(</span><span class="s">&quot;annotationDefinition.MyAnnotationUsage&quot;</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">Annotation</span><span class="o">[]</span> <span class="n">annotations</span> <span class="o">=</span> <span class="n">myAnnotationUsage</span><span class="o">.</span><span class="na">getAnnotations</span><span class="o">();</span>
+</span><span class='line'>        <span class="k">for</span><span class="o">(</span><span class="n">Annotation</span> <span class="n">annotation</span> <span class="o">:</span> <span class="n">annotations</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">MyAnnotation</span> <span class="n">annotation1</span> <span class="o">=</span> <span class="o">(</span><span class="n">MyAnnotation</span><span class="o">)</span><span class="n">annotation</span><span class="o">;</span>
+</span><span class='line'>            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">annotation1</span><span class="o">.</span><span class="na">name</span><span class="o">());</span>
+</span><span class='line'>            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">annotation1</span><span class="o">.</span><span class="na">age</span><span class="o">());</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>运行结果</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='text'><span class='line'>annotation&#39;s name value -- &gt; Mikel Arteta
+</span><span class='line'>annotation&#39;s age value -- &gt; 29
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>
+4. Annotation的使用（方法范围）
+annotation的定义</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">annotationApplication</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.lang.annotation.ElementType</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.lang.annotation.Retention</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.lang.annotation.RetentionPolicy</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.lang.annotation.Target</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nd">@Retention</span><span class="o">(</span><span class="n">RetentionPolicy</span><span class="o">.</span><span class="na">RUNTIME</span><span class="o">)</span>
+</span><span class='line'><span class="nd">@Target</span><span class="o">(</span><span class="n">ElementType</span><span class="o">.</span><span class="na">METHOD</span><span class="o">)</span>
+</span><span class='line'><span class="kd">public</span> <span class="nd">@interface</span> <span class="n">MethodAnnotation</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">methodName</span><span class="o">();</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">methodReturnType</span><span class="o">();</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>下面是我定义的使用类注解的类的查找器：找到并输出注解类的annotation的value</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">annotationDefinition</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">annotationApplication.MethodAnnotation</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.lang.annotation.Annotation</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.lang.reflect.Method</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MethodAnnotationFinder</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">ClassNotFoundException</span><span class="o">,</span> <span class="n">NoSuchMethodException</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">Class</span><span class="o">&lt;?&gt;</span> <span class="n">clazz</span> <span class="o">=</span> <span class="n">Class</span><span class="o">.</span><span class="na">forName</span><span class="o">(</span><span class="s">&quot;annotationDefinition.MethodAnnotationUsage&quot;</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">Method</span> <span class="n">method</span> <span class="o">=</span> <span class="n">clazz</span><span class="o">.</span><span class="na">getDeclaredMethod</span><span class="o">(</span><span class="s">&quot;testMethod&quot;</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">Annotation</span> <span class="n">annotation</span> <span class="o">=</span> <span class="n">method</span><span class="o">.</span><span class="na">getAnnotation</span><span class="o">(</span><span class="n">MethodAnnotation</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">MethodAnnotation</span> <span class="n">annotation1</span> <span class="o">=</span> <span class="o">(</span><span class="n">MethodAnnotation</span><span class="o">)</span> <span class="n">annotation</span><span class="o">;</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;annotationed method name -- &gt; &quot;</span> <span class="o">+</span> <span class="n">annotation1</span><span class="o">.</span><span class="na">methodName</span><span class="o">());</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;annotationed method&#39;s return type -- &gt; &quot;</span> <span class="o">+</span> <span class="n">annotation1</span><span class="o">.</span><span class="na">methodReturnType</span><span class="o">());</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>运行结果：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='text'><span class='line'>annotationed method name -- &gt; testMethod
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ol>
+<li>Annotation的使用（Parameter范围）
+annotation的范围</li>
+</ol>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">annotationApplication</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.lang.annotation.ElementType</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.lang.annotation.Retention</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.lang.annotation.RetentionPolicy</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.lang.annotation.Target</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nd">@Retention</span><span class="o">(</span><span class="n">RetentionPolicy</span><span class="o">.</span><span class="na">RUNTIME</span><span class="o">)</span>
+</span><span class='line'><span class="nd">@Target</span><span class="o">(</span><span class="n">ElementType</span><span class="o">.</span><span class="na">PARAMETER</span><span class="o">)</span>
+</span><span class='line'><span class="kd">public</span> <span class="nd">@interface</span> <span class="n">ParameterAnnotation</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">parameterName</span><span class="o">();</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">parameterType</span><span class="o">();</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>annotation的使用</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">annotationDefinition</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">annotationApplication.ParameterAnnotation</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ParameterAnnotationUsage</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">testMethod</span><span class="o">(</span><span class="nd">@ParameterAnnotation</span><span class="o">(</span><span class="n">parameterName</span> <span class="o">=</span> <span class="s">&quot;pname&quot;</span><span class="o">,</span> <span class="n">parameterType</span> <span class="o">=</span> <span class="s">&quot;int&quot;</span><span class="o">)</span> <span class="kt">int</span> <span class="n">value</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">value</span> <span class="o">=</span> <span class="mi">10</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>下面是我定义的使用类注解的类的查找器：找到并输出注解类的annotation的value</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">annotationDefinition</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">annotationApplication.ParameterAnnotation</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.lang.annotation.Annotation</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.lang.reflect.Method</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ParameterAnnotationFinder</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">parameterAnnotationFinder</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">NoSuchMethodException</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">Class</span><span class="o">&lt;?&gt;</span> <span class="n">clazz</span> <span class="o">=</span> <span class="n">ParameterAnnotationUsage</span><span class="o">.</span><span class="na">class</span><span class="o">;</span>
+</span><span class='line'>        <span class="n">Method</span> <span class="n">method</span> <span class="o">=</span> <span class="n">clazz</span><span class="o">.</span><span class="na">getMethod</span><span class="o">(</span><span class="s">&quot;testMethod&quot;</span><span class="o">,</span> <span class="kt">int</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">Annotation</span><span class="o">[][]</span> <span class="n">annotations</span> <span class="o">=</span> <span class="n">method</span><span class="o">.</span><span class="na">getParameterAnnotations</span><span class="o">();</span>
+</span><span class='line'>        <span class="c1">//Method.getParameterAnnotations() method returns a two-dimensional Annotation array,  </span>
+</span><span class='line'>        <span class="c1">// containing an array of annotations for each method parameter.  </span>
+</span><span class='line'>        <span class="n">Class</span><span class="o">&lt;?&gt;[]</span> <span class="n">parameterTyeps</span> <span class="o">=</span> <span class="n">method</span><span class="o">.</span><span class="na">getParameterTypes</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+</span><span class='line'>        <span class="k">for</span> <span class="o">(</span><span class="n">Annotation</span><span class="o">[]</span> <span class="n">annotation</span> <span class="o">:</span> <span class="n">annotations</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">Class</span><span class="o">&lt;?&gt;</span> <span class="n">parameterTyep</span> <span class="o">=</span> <span class="n">parameterTyeps</span><span class="o">[</span><span class="n">i</span><span class="o">++];</span>
+</span><span class='line'>            <span class="k">for</span> <span class="o">(</span><span class="n">Annotation</span> <span class="n">annotation1</span> <span class="o">:</span> <span class="n">annotation</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">ParameterAnnotation</span> <span class="n">parameterAnnotation1</span> <span class="o">=</span> <span class="o">(</span><span class="n">ParameterAnnotation</span><span class="o">)</span> <span class="n">annotation1</span><span class="o">;</span>
+</span><span class='line'>                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;annotation paraName : &quot;</span> <span class="o">+</span> <span class="n">parameterAnnotation1</span><span class="o">.</span><span class="na">parameterName</span><span class="o">());</span>
+</span><span class='line'>                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;annotation paraType : &quot;</span> <span class="o">+</span> <span class="n">parameterAnnotation1</span><span class="o">.</span><span class="na">parameterType</span><span class="o">());</span>
+</span><span class='line'>                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;parameter Type : &quot;</span> <span class="o">+</span> <span class="n">parameterTyep</span><span class="o">);</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">NoSuchMethodException</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">new</span> <span class="nf">ParameterAnnotationFinder</span><span class="o">().</span><span class="na">parameterAnnotationFinder</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>运行结果：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='text'><span class='line'>annotation paraName : pname
+</span><span class='line'>annotation paraType : int
+</span><span class='line'>parameter Type : int
+</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Java中Comparable和Comparator实现对象比较]]></title>
+    <link href="http://PhotoSynthesiis.github.io/blog/2013/07/27/comparator/"/>
+    <updated>2013-07-27T20:20:00+08:00</updated>
+    <id>http://PhotoSynthesiis.github.io/blog/2013/07/27/comparator</id>
+    <content type="html"><![CDATA[<p>当需要排序的集合或数组不是单纯的数字型时，通常可以使用Comparator或Comparable，以简单的方式实现对象排序或自定义排序。下面通过两个例子分别用Comparable和Comparator实现对User对象中年龄排序。</p>
+
+<!-- more -->
+
+
+<p>1.通过实现Comparable接口，根据User的年龄进行排序</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ComparableUser</span> <span class="kd">implements</span> <span class="n">Comparable</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">String</span> <span class="n">id</span><span class="o">;</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="kt">int</span> <span class="n">age</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">ComparableUser</span><span class="o">(</span><span class="n">String</span> <span class="n">id</span><span class="o">,</span> <span class="kt">int</span> <span class="n">age</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">id</span> <span class="o">=</span> <span class="n">id</span><span class="o">;</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">age</span> <span class="o">=</span> <span class="n">age</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">getAge</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">age</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setAge</span><span class="o">(</span><span class="kt">int</span> <span class="n">age</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">age</span> <span class="o">=</span> <span class="n">age</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getId</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">id</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setId</span><span class="o">(</span><span class="n">String</span> <span class="n">id</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">id</span> <span class="o">=</span> <span class="n">id</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">compareTo</span><span class="o">(</span><span class="n">Object</span> <span class="n">o</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="k">this</span><span class="o">.</span><span class="na">age</span> <span class="o">-</span> <span class="o">((</span><span class="n">ComparableUser</span><span class="o">)</span> <span class="n">o</span><span class="o">).</span><span class="na">getAge</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="cm">/** </span>
+</span><span class='line'><span class="cm">     * 测试方法 </span>
+</span><span class='line'><span class="cm">     */</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">ComparableUser</span><span class="o">[]</span> <span class="n">users</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ComparableUser</span><span class="o">[]</span> <span class="o">{</span>
+</span><span class='line'>                <span class="k">new</span> <span class="nf">ComparableUser</span><span class="o">(</span><span class="s">&quot;u1001&quot;</span><span class="o">,</span> <span class="mi">25</span><span class="o">),</span>
+</span><span class='line'>                <span class="k">new</span> <span class="nf">ComparableUser</span><span class="o">(</span><span class="s">&quot;u1002&quot;</span><span class="o">,</span> <span class="mi">20</span><span class="o">),</span>
+</span><span class='line'>                <span class="k">new</span> <span class="nf">ComparableUser</span><span class="o">(</span><span class="s">&quot;u1003&quot;</span><span class="o">,</span> <span class="mi">21</span><span class="o">)</span> <span class="o">};</span>
+</span><span class='line'>        <span class="n">Arrays</span><span class="o">.</span><span class="na">sort</span><span class="o">(</span><span class="n">users</span><span class="o">);</span>
+</span><span class='line'>        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">users</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">ComparableUser</span> <span class="n">user</span> <span class="o">=</span> <span class="n">users</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
+</span><span class='line'>            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">user</span><span class="o">.</span><span class="na">getId</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot; &quot;</span> <span class="o">+</span> <span class="n">user</span><span class="o">.</span><span class="na">getAge</span><span class="o">());</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ol>
+<li>通过实现Comparator接口，根据User的年龄进行排序</li>
+</ol>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">User</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">String</span> <span class="n">id</span><span class="o">;</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="kt">int</span> <span class="n">age</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">User</span><span class="o">(</span><span class="n">String</span> <span class="n">id</span><span class="o">,</span> <span class="kt">int</span> <span class="n">age</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">id</span> <span class="o">=</span> <span class="n">id</span><span class="o">;</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">age</span> <span class="o">=</span> <span class="n">age</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">getAge</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">age</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setAge</span><span class="o">(</span><span class="kt">int</span> <span class="n">age</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">age</span> <span class="o">=</span> <span class="n">age</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getId</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">id</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setId</span><span class="o">(</span><span class="n">String</span> <span class="n">id</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">id</span> <span class="o">=</span> <span class="n">id</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">UserComparator</span> <span class="kd">implements</span> <span class="n">Comparator</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">compare</span><span class="o">(</span><span class="n">Object</span> <span class="n">arg0</span><span class="o">,</span> <span class="n">Object</span> <span class="n">arg1</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="o">((</span><span class="n">User</span><span class="o">)</span> <span class="n">arg0</span><span class="o">).</span><span class="na">getAge</span><span class="o">()</span> <span class="o">-</span> <span class="o">((</span><span class="n">User</span><span class="o">)</span> <span class="n">arg1</span><span class="o">).</span><span class="na">getAge</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="cm">/** </span>
+</span><span class='line'><span class="cm">     * 测试方法 </span>
+</span><span class='line'><span class="cm">     */</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">User</span><span class="o">[]</span> <span class="n">users</span> <span class="o">=</span> <span class="k">new</span> <span class="n">User</span><span class="o">[]</span> <span class="o">{</span> <span class="k">new</span> <span class="n">User</span><span class="o">(</span><span class="s">&quot;u1001&quot;</span><span class="o">,</span> <span class="mi">25</span><span class="o">),</span>
+</span><span class='line'>                <span class="k">new</span> <span class="nf">User</span><span class="o">(</span><span class="s">&quot;u1002&quot;</span><span class="o">,</span> <span class="mi">20</span><span class="o">),</span> <span class="k">new</span> <span class="n">User</span><span class="o">(</span><span class="s">&quot;u1003&quot;</span><span class="o">,</span> <span class="mi">21</span><span class="o">)</span> <span class="o">};</span>
+</span><span class='line'>        <span class="n">Arrays</span><span class="o">.</span><span class="na">sort</span><span class="o">(</span><span class="n">users</span><span class="o">,</span> <span class="k">new</span> <span class="n">UserComparator</span><span class="o">());</span>
+</span><span class='line'>        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">users</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">User</span> <span class="n">user</span> <span class="o">=</span> <span class="n">users</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
+</span><span class='line'>            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">user</span><span class="o">.</span><span class="na">getId</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot; &quot;</span> <span class="o">+</span> <span class="n">user</span><span class="o">.</span><span class="na">getAge</span><span class="o">());</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>选择Comparable接口还是Comparator？
+ 一个类实现了Comparable接口则表明这个类的对象之间是可以相互比较的，这个类对象组成的集合就可以直接使用sort方法排序。
+Comparator可以看成一种算法的实现，将算法和数据分离，Comparator也可以在下面两种环境下使用：
+1、类的设计师没有考虑到比较问题而没有实现Comparable，可以通过Comparator来实现排序而不必改变对象本身
+2、可以使用多种排序标准，比如升序、降序等。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[使用Wiser测试邮件发送]]></title>
+    <link href="http://PhotoSynthesiis.github.io/blog/2013/07/27/wiser/"/>
+    <updated>2013-07-27T20:14:00+08:00</updated>
+    <id>http://PhotoSynthesiis.github.io/blog/2013/07/27/wiser</id>
+    <content type="html"><![CDATA[<p>最近在做一个小项目，里面有发送邮件这一功能，本文主要是讲如何通过Spring发送邮件，已经一个邮件测试框架 &mdash;&ndash; wiser的介绍。</p>
+
+<p>如何使用Spring发送邮件
+首先主要用到的一个类是JavaMailSenderImpl，它位于Spring的org.springframework.mail.
+javamail包中，主要是用来发送邮件的。为了发送邮件，需要提供给它一系列的参数。这些参数我都配置在了resources包下的一个xml文件中</p>
+
+<!-- more -->
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;bean</span> <span class="na">id=</span><span class="s">&quot;javaMailSenderImpl&quot;</span> <span class="na">class=</span><span class="s">&quot;org.springframework.mail.javamail.JavaMailSenderImpl&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;host&quot;</span> <span class="na">value=</span><span class="s">&quot;smtp.gmail.com&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;port&quot;</span> <span class="na">value=</span><span class="s">&quot;587&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;username&quot;</span> <span class="na">value=</span><span class="s">&quot;twufeedmycat@gmail.com&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;password&quot;</span> <span class="na">value=</span><span class="s">&quot;@twu292012&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;javaMailProperties&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;props&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;prop</span> <span class="na">key=</span><span class="s">&quot;mail.smtp.auth&quot;</span><span class="nt">&gt;</span>true<span class="nt">&lt;/prop&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;prop</span> <span class="na">key=</span><span class="s">&quot;mail.smtp.starttls.enable&quot;</span><span class="nt">&gt;</span>true<span class="nt">&lt;/prop&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;/props&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/property&gt;</span>
+</span><span class='line'><span class="nt">&lt;/bean&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>host: 邮件发送服务器的地址
+port: 与服务器通信的端口
+username &amp; password: 一个gmail账户即可
+mail.smtp.auth: 提供给邮件服务器，校验发送方的授权，也许是为了组织没有授权的发送方肆意发送垃圾邮件
+mail.smtp.starttls.enable: 将一般连接升级到加密连接，而无需另开一个端口进行加密传输。这里要设为true才能使用gmail的邮件服务器</p>
+
+<p>上面的步骤只是建立了连接，下面聊聊发送的内容。
+建立邮件内容，需要用到SimpleMailMessage这个类，它在org.springframework.mail这个包中。下面的代码展示了如何用它创建邮件内容：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">SimpleMailMessage</span> <span class="n">mailMessage</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SimpleMailMessage</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">mailMessage</span><span class="o">.</span><span class="na">setTo</span><span class="o">(</span><span class="n">emailAddress</span><span class="o">);</span>
+</span><span class='line'>    <span class="n">mailMessage</span><span class="o">.</span><span class="na">setFrom</span><span class="o">(</span><span class="n">fromAddress</span><span class="o">);</span>
+</span><span class='line'>    <span class="n">mailMessage</span><span class="o">.</span><span class="na">setSubject</span><span class="o">(</span><span class="n">subject</span><span class="o">);</span>
+</span><span class='line'>    <span class="n">mailMessage</span><span class="o">.</span><span class="na">setText</span><span class="o">(</span><span class="n">content</span><span class="o">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>内容建立好后，就应该发送了，直接调用JavaMailSenderImpl的send方法就OK。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">mailSender</span><span class="o">.</span><span class="na">send</span><span class="o">(</span><span class="n">mailMessage</span><span class="o">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这样就完成了邮件的发送过程，下面来聊聊如何测试。我用到了Wiser框架，道理很简单。既然开始我是之间向google的邮件服务器通信，并让它发送邮件，那么现在测试我就应该发到Wiser上去。在测试用的resources文件夹下，我有一个与上面提到的同名的xml文件，但是配置的JavaMailSenderImpl中的配置肯定是不同的，这次是配置的Wiser，需要注意的是Wiser并不是一个邮件服务器，在我看来，它是一个监听一个端口的程序，每一条经过这个端口发送出的信息，都会被它捕获到，然后存在一个队列中，这样我们就能从这个队列中取出消息进行验证：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;bean</span> <span class="na">id=</span><span class="s">&quot;javaMailSenderImple&quot;</span> <span class="na">class=</span><span class="s">&quot;org.springframework.mail.javamail.JavaMailSenderImpl&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;host&quot;</span> <span class="na">value=</span><span class="s">&quot;localhost&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;port&quot;</span> <span class="na">value=</span><span class="s">&quot;25000&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;username&quot;</span> <span class="na">value=</span><span class="s">&quot;username&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;password&quot;</span> <span class="na">value=</span><span class="s">&quot;password&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;javaMailProperties&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;props&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;prop</span> <span class="na">key=</span><span class="s">&quot;mail.smtp.auth&quot;</span><span class="nt">&gt;</span>true<span class="nt">&lt;/prop&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;prop</span> <span class="na">key=</span><span class="s">&quot;mail.smtp.starttls.enable&quot;</span><span class="nt">&gt;</span>true<span class="nt">&lt;/prop&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;/props&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/property&gt;</span>
+</span><span class='line'><span class="nt">&lt;/bean&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>同时，下面的代码被我用于junit测试中：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">private</span> <span class="n">Wiser</span> <span class="n">wiser</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Before</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setUp</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">wiser</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Wiser</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">wiser</span><span class="o">.</span><span class="na">setPort</span><span class="o">(</span><span class="mi">25000</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">wiser</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@After</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">tearDown</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">wiser</span><span class="o">.</span><span class="na">stop</span><span class="o">();</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>setPort: 设置被监听的端口，与xml中给JavaMailSenderImpl配置的一样。
+最后，启动单元测试，读取发送的邮件进行验证：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">mailSender</span><span class="o">.</span><span class="na">sendEmailToCustomerAfterRegistration</span><span class="o">(</span><span class="n">customerNickname</span><span class="o">,</span> <span class="n">customerEmail</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">WiserMessage</span> <span class="n">wiserMessage</span> <span class="o">=</span> <span class="n">wiser</span><span class="o">.</span><span class="na">getMessages</span><span class="o">().</span><span class="na">get</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span>
+</span><span class='line'>    <span class="n">String</span> <span class="n">expectedReceiver</span> <span class="o">=</span> <span class="s">&quot;adam@test.com&quot;</span><span class="o">;</span>
+</span><span class='line'>    <span class="n">String</span> <span class="n">expectedSender</span> <span class="o">=</span> <span class="s">&quot;admin@thebank.com&quot;</span><span class="o">;</span>
+</span><span class='line'>    <span class="n">String</span> <span class="n">expectedSubject</span> <span class="o">=</span> <span class="s">&quot;Welcome!&quot;</span><span class="o">;</span>
+</span><span class='line'>    <span class="n">String</span> <span class="n">expectedContent</span> <span class="o">=</span> <span class="s">&quot;Dear adam, welcome to the bank&quot;</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">assertThat</span><span class="o">(</span><span class="n">wiserMessage</span><span class="o">.</span><span class="na">getEnvelopeReceiver</span><span class="o">(),</span> <span class="n">is</span><span class="o">(</span><span class="n">expectedReceiver</span><span class="o">));</span>
+</span><span class='line'>    <span class="n">assertThat</span><span class="o">(</span><span class="n">wiserMessage</span><span class="o">.</span><span class="na">getEnvelopeSender</span><span class="o">(),</span> <span class="n">is</span><span class="o">(</span><span class="n">expectedSender</span><span class="o">));</span>
+</span><span class='line'>    <span class="n">assertThat</span><span class="o">(</span><span class="n">wiserMessage</span><span class="o">.</span><span class="na">getMimeMessage</span><span class="o">().</span><span class="na">getContent</span><span class="o">().</span><span class="na">toString</span><span class="o">().</span><span class="na">trim</span><span class="o">(),</span> <span class="n">is</span><span class="o">(</span><span class="n">expectedContent</span><span class="o">));</span>
+</span><span class='line'>    <span class="n">assertThat</span><span class="o">(</span><span class="n">wiserMessage</span><span class="o">.</span><span class="na">getMimeMessage</span><span class="o">().</span><span class="na">getSubject</span><span class="o">().</span><span class="na">trim</span><span class="o">(),</span> <span class="n">is</span><span class="o">(</span><span class="n">expectedSubject</span><span class="o">));</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这就是我在项目中使用到的发送邮件和其测试的技术。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[深入浅出设计模式之代理模式(Proxy Pattern)]]></title>
@@ -4767,258 +5514,6 @@ spirit。他们都强调在学习的过程中，有人带是多么的重要。�
 </span><span class='line'><span class="o">}</span>
 </span></code></pre></td></tr></table></div></figure>
 
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Spring MVC学习笔记]]></title>
-    <link href="http://PhotoSynthesiis.github.io/blog/2013/07/08/spring-mvc/"/>
-    <updated>2013-07-08T23:37:00+08:00</updated>
-    <id>http://PhotoSynthesiis.github.io/blog/2013/07/08/spring-mvc</id>
-    <content type="html"><![CDATA[<p>学习Spring很长时间了，但是一直也没有认真地总结一次，总是陷入学习了忘记的怪圈（其实也不是怪圈，就是学习了没有总结）。 今天我就写一点东西来总结我的Spring MVC学习之旅。 这个得从我的Sponsor给我布置的家庭作业讲起，在这里面我学会了很多Spring的知识。</p>
-
-<p>可以假设Spring是一个大的容器，里面放着各种各样的网页、文件等以供一个个的request访问。所以，我想从web.xml的配置说起。</p>
-
-<!-- more -->
-
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;listener&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;listener-class&gt;</span>org.springframework.web.context.ContextLoaderListener<span class="nt">&lt;/listener-class&gt;</span>
-</span><span class='line'><span class="nt">&lt;/listener&gt;</span>
-</span><span class='line'><span class="nt">&lt;context-param&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;param-name&gt;</span>contextConfigLocation<span class="nt">&lt;/param-name&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;param-value&gt;</span>classpath:applicationContext-servlet.xml
-</span><span class='line'>        classpath:applicationContextDataSource.xml
-</span><span class='line'>    <span class="nt">&lt;/param-value&gt;</span>
-</span><span class='line'><span class="nt">&lt;/context-param&gt;</span>
-</span><span class='line'><span class="nt">&lt;servlet&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;servlet-name&gt;</span>bankingSystem2<span class="nt">&lt;/servlet-name&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;servlet-class&gt;</span>org.springframework.web.servlet.DispatcherServlet<span class="nt">&lt;/servlet-class&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;load-on-startup&gt;</span>1<span class="nt">&lt;/load-on-startup&gt;</span>
-</span><span class='line'><span class="nt">&lt;/servlet&gt;</span>
-</span><span class='line'><span class="nt">&lt;servlet-mapping&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;servlet-name&gt;</span>bankingSystem2<span class="nt">&lt;/servlet-name&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;url-pattern&gt;</span>/<span class="nt">&lt;/url-pattern&gt;</span>
-</span><span class='line'><span class="nt">&lt;/servlet-mapping&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>上面的配置的意思是：servlet-mapping配置了需要被捕获的请求，url-pattern是匹配request中跟的那个地址，例如’/abc’。这里只是一个斜杠，意思是捕获所有的请求，捕获这个请求的servlet名字叫bankingSystem2。 在捕获一个请求后，Spring会根据servlet-name中的名字在这个xml中找到匹配的一个servlet，然后servlet-class是这个servlet文件的所在地。这里的DispatcherServlet是Spring的类，所有发往由Spring 容器管理的资源的请求都由它统一收集，然后它会求助Spring中内置的HandlerMapping已决定该请求被哪个controller处理。最后根据不同的请求目的地再转发给不同的controller，这个后面会讲到。这里有一点值得注意，我们在web.xml中定义了一个名字叫bankingSystem2的servlet，那么就需要在同一个文件夹下面定义一个名叫bankingSystem2-servlet.xml这样一个配置文Spring会默认到里面去读取配置和加载bean，如果没有会报错。</p>
-
-<p>ContextLoaderListener的作用就是启动Web容器时，自动装配ApplicationContext的配置信息。因为它实现了ServletContextListener这个接口，在web.xml配置这个监听器，启动容器时，就会默认执行它实现的方法。 在上面的contextConfigLocation里面配置了想要在Spring容器启动的时候加载的bean。 看完了上述的web.xml，我们进入在那个配置文件中配置的applicationContext-servlet.xml中一探究竟。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;context:component-scan</span> <span class="na">base-package=</span><span class="s">&quot;bank.icbc.controller&quot;</span><span class="nt">/&gt;</span>
-</span><span class='line'><span class="nt">&lt;context:component-scan</span> <span class="na">base-package=</span><span class="s">&quot;bank.icbc.domain&quot;</span><span class="nt">/&gt;</span>
-</span><span class='line'><span class="nt">&lt;mvc:annotation-driven/&gt;</span>
-</span><span class='line'><span class="nt">&lt;bean</span> <span class="na">class=</span><span class="s">&quot;org.springframework.web.servlet.view.InternalResourceViewResolver&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'><span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;prefix&quot;</span> <span class="na">value=</span><span class="s">&quot;/WEB-INF/jsp/&quot;</span><span class="nt">/&gt;</span>
-</span><span class='line'><span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;suffix&quot;</span> <span class="na">value=</span><span class="s">&quot;.jsp&quot;</span><span class="nt">/&gt;</span>
-</span><span class='line'><span class="nt">&lt;/bean&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>
-首先，在这个xml配置文件中定义了一个bean，里面存放着一个resolver，他是Spring中负责显示页面的。即controller处理完一个request后，会返回一个string告诉Spring现在该显示哪个页面了，然后Spring就找到InternalResourceViewResolver，让它告诉该到哪去找到相应的页面来显示。例如，如果一个controller返回字符串abc，那么根据上面的配置，在/WEB-INF/jsp/abc.jsp这个页面就应该被显示。 上面还有一个context:component-scan，它的作用是‘扫描’相应的package，把这些package中的所有类纳入Spring的管理范围来，这样的好处是，如果相应包中有autowire bean中的类，只有主类在Spring的管理范围， 被引用的bean才能被成功地autowire。</p>
-
-<p>同时，有些类（例如服务类）会在类上面表示诸如@Service这样的annotation，它被扫描到后，也会被Spring纳入到管理，这样其他类也能autowire它了。 annotation-driven：表示支持annotation，不写的话所有的annotation注解都无效。</p>
-
-<p>在说完配置后，我们来模拟一个请求，来看看Spring在这个过程中的运行过程。首先，我们来到系统的初始页面：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'>Welcome to the Banking System! <span class="nt">&lt;br/&gt;</span>  <span class="nt">&lt;c:url</span> <span class="na">value=</span><span class="s">&quot;/addCustomer&quot;</span> <span class="na">var=</span><span class="s">&quot;addCustomer&quot;</span><span class="nt">/&gt;</span>
-</span><span class='line'>1. <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;${addCustomer}&quot;</span><span class="nt">&gt;</span>add Customer<span class="nt">&lt;/a&gt;</span>  <span class="nt">&lt;c:url</span> <span class="na">value=</span><span class="s">&quot;/withdraw&quot;</span> <span class="na">var=</span><span class="s">&quot;withdraw&quot;</span><span class="nt">/&gt;</span>
-</span><span class='line'>2. <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;${withdraw}&quot;</span><span class="nt">&gt;</span>withdraw<span class="nt">&lt;/a&gt;</span>  <span class="nt">&lt;c:url</span> <span class="na">value=</span><span class="s">&quot;/deposit&quot;</span> <span class="na">var=</span><span class="s">&quot;deposit&quot;</span><span class="nt">/&gt;</span>
-</span><span class='line'>3. <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;${deposit}&quot;</span><span class="nt">&gt;</span>deposit<span class="nt">&lt;/a&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>
-在这个页面中，我们定义了3个URL，请求的地址分别是/addCustomer, /withdraw和/deposit。这时就需要有相应的controller来捕获对这些地址的请求，请看下面：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-<span class='line-number'>49</span>
-<span class='line-number'>50</span>
-<span class='line-number'>51</span>
-<span class='line-number'>52</span>
-<span class='line-number'>53</span>
-<span class='line-number'>54</span>
-<span class='line-number'>55</span>
-<span class='line-number'>56</span>
-<span class='line-number'>57</span>
-<span class='line-number'>58</span>
-<span class='line-number'>59</span>
-<span class='line-number'>60</span>
-<span class='line-number'>61</span>
-<span class='line-number'>62</span>
-<span class='line-number'>63</span>
-<span class='line-number'>64</span>
-<span class='line-number'>65</span>
-<span class='line-number'>66</span>
-<span class='line-number'>67</span>
-<span class='line-number'>68</span>
-<span class='line-number'>69</span>
-<span class='line-number'>70</span>
-<span class='line-number'>71</span>
-<span class='line-number'>72</span>
-<span class='line-number'>73</span>
-<span class='line-number'>74</span>
-<span class='line-number'>75</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="nd">@Controllerpublic</span>
-</span><span class='line'><span class="kd">class</span> <span class="nc">CustomerController</span> <span class="o">{</span>
-</span><span class='line'>    <span class="nd">@Autowired</span>
-</span><span class='line'>    <span class="nd">@Qualifier</span><span class="o">(</span><span class="s">&quot;bank&quot;</span><span class="o">)</span>
-</span><span class='line'>    <span class="kd">private</span> <span class="n">Bank</span> <span class="n">bank</span><span class="o">;</span>
-</span><span class='line'>    <span class="nd">@Autowired</span>
-</span><span class='line'>    <span class="nd">@Qualifier</span><span class="o">(</span><span class="s">&quot;customer&quot;</span><span class="o">)</span>
-</span><span class='line'>    <span class="kd">private</span> <span class="n">Customer</span> <span class="n">customer</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@RequestMapping</span><span class="o">(</span><span class="n">value</span> <span class="o">=</span> <span class="s">&quot;/addCustomer&quot;</span><span class="o">,</span> <span class="n">method</span> <span class="o">=</span> <span class="n">RequestMethod</span><span class="o">.</span><span class="na">GET</span><span class="o">)</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">addCustomer</span><span class="o">(</span><span class="nd">@ModelAttribute</span> <span class="n">Customer</span> <span class="n">customer</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="s">&quot;AddCustomer&quot;</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@RequestMapping</span><span class="o">(</span><span class="n">value</span> <span class="o">=</span> <span class="s">&quot;/addCustomer&quot;</span><span class="o">,</span> <span class="n">method</span> <span class="o">=</span> <span class="n">RequestMethod</span><span class="o">.</span><span class="na">POST</span><span class="o">)</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">saveCustomer</span><span class="o">(</span><span class="nd">@ModelAttribute</span> <span class="n">Customer</span> <span class="n">customer</span><span class="o">,</span> <span class="n">ModelMap</span> <span class="n">modelMap</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">bank</span><span class="o">.</span><span class="na">addCustomer</span><span class="o">(</span><span class="n">customer</span><span class="o">);</span>
-</span><span class='line'>        <span class="n">Customer</span> <span class="n">theCustomer</span> <span class="o">=</span> <span class="n">bank</span><span class="o">.</span><span class="na">getCustomer</span><span class="o">(</span><span class="n">customer</span><span class="o">.</span><span class="na">getNickname</span><span class="o">());</span>
-</span><span class='line'>        <span class="n">modelMap</span><span class="o">.</span><span class="na">addAttribute</span><span class="o">(</span><span class="s">&quot;nickname&quot;</span><span class="o">,</span> <span class="n">theCustomer</span><span class="o">.</span><span class="na">getNickname</span><span class="o">());</span>
-</span><span class='line'>        <span class="n">modelMap</span><span class="o">.</span><span class="na">addAttribute</span><span class="o">(</span><span class="s">&quot;dateOfBirth&quot;</span><span class="o">,</span> <span class="n">theCustomer</span><span class="o">.</span><span class="na">getDateOfBirth</span><span class="o">());</span>
-</span><span class='line'>        <span class="n">modelMap</span><span class="o">.</span><span class="na">addAttribute</span><span class="o">(</span><span class="s">&quot;emailAddress&quot;</span><span class="o">,</span> <span class="n">theCustomer</span><span class="o">.</span><span class="na">getEmailAddress</span><span class="o">());</span>
-</span><span class='line'>        <span class="k">return</span> <span class="s">&quot;ShowCustomer&quot;</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@RequestMapping</span><span class="o">(</span><span class="n">value</span> <span class="o">=</span> <span class="s">&quot;/openAccount&quot;</span><span class="o">,</span> <span class="n">method</span> <span class="o">=</span> <span class="n">RequestMethod</span><span class="o">.</span><span class="na">GET</span><span class="o">)</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">openAccount</span><span class="o">(</span><span class="nd">@ModelAttribute</span> <span class="n">Account</span> <span class="n">account</span><span class="o">,</span> <span class="n">ModelMap</span> <span class="n">modelMap</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">bank</span><span class="o">.</span><span class="na">addAccount</span><span class="o">(</span><span class="n">customer</span><span class="o">);</span>
-</span><span class='line'>        <span class="n">Account</span> <span class="n">account1</span> <span class="o">=</span> <span class="n">bank</span><span class="o">.</span><span class="na">getAccount</span><span class="o">(</span><span class="n">customer</span><span class="o">.</span><span class="na">getNickname</span><span class="o">());</span>
-</span><span class='line'>        <span class="n">modelMap</span><span class="o">.</span><span class="na">addAttribute</span><span class="o">(</span><span class="s">&quot;nickname&quot;</span><span class="o">,</span> <span class="n">account1</span><span class="o">.</span><span class="na">getBalance</span><span class="o">());</span>
-</span><span class='line'>        <span class="n">modelMap</span><span class="o">.</span><span class="na">addAttribute</span><span class="o">(</span><span class="s">&quot;balance&quot;</span><span class="o">,</span> <span class="n">account1</span><span class="o">.</span><span class="na">getBalance</span><span class="o">());</span>
-</span><span class='line'>        <span class="n">modelMap</span><span class="o">.</span><span class="na">addAttribute</span><span class="o">(</span><span class="s">&quot;joinDate&quot;</span><span class="o">,</span> <span class="n">account1</span><span class="o">.</span><span class="na">getJoinDate</span><span class="o">());</span>
-</span><span class='line'>        <span class="n">modelMap</span><span class="o">.</span><span class="na">addAttribute</span><span class="o">(</span><span class="s">&quot;isPremium&quot;</span><span class="o">,</span> <span class="n">account1</span><span class="o">.</span><span class="na">isPremium</span><span class="o">());</span>
-</span><span class='line'>        <span class="k">return</span> <span class="s">&quot;ShowAccount&quot;</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@RequestMapping</span><span class="o">(</span><span class="n">value</span> <span class="o">=</span> <span class="s">&quot;/withdraw&quot;</span><span class="o">,</span> <span class="n">method</span> <span class="o">=</span> <span class="n">RequestMethod</span><span class="o">.</span><span class="na">GET</span><span class="o">)</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">goToWithdrawPage</span><span class="o">(</span><span class="nd">@ModelAttribute</span> <span class="n">Customer</span> <span class="n">customer</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="s">&quot;Withdraw&quot;</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@RequestMapping</span><span class="o">(</span><span class="n">value</span> <span class="o">=</span> <span class="s">&quot;/deposit&quot;</span><span class="o">,</span> <span class="n">method</span> <span class="o">=</span> <span class="n">RequestMethod</span><span class="o">.</span><span class="na">GET</span><span class="o">)</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">goToDepositPage</span><span class="o">(</span><span class="nd">@ModelAttribute</span> <span class="n">Customer</span> <span class="n">customer</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="s">&quot;Deposit&quot;</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@RequestMapping</span><span class="o">(</span><span class="n">value</span> <span class="o">=</span> <span class="s">&quot;/deposit&quot;</span><span class="o">,</span> <span class="n">method</span> <span class="o">=</span> <span class="n">RequestMethod</span><span class="o">.</span><span class="na">POST</span><span class="o">)</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">deposit</span><span class="o">(</span><span class="kd">final</span> <span class="n">HttpServletRequest</span> <span class="n">request</span><span class="o">,</span> <span class="n">ModelMap</span> <span class="n">modelMap</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">String</span> <span class="n">nickname</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="na">getParameter</span><span class="o">(</span><span class="s">&quot;nickname&quot;</span><span class="o">);</span>
-</span><span class='line'>        <span class="n">Account</span> <span class="n">account</span> <span class="o">=</span> <span class="n">bank</span><span class="o">.</span><span class="na">getAccount</span><span class="o">(</span><span class="n">nickname</span><span class="o">);</span>
-</span><span class='line'>        <span class="n">account</span><span class="o">.</span><span class="na">deposit</span><span class="o">(</span><span class="n">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">request</span><span class="o">.</span><span class="na">getParameter</span><span class="o">(</span><span class="s">&quot;balance&quot;</span><span class="o">)),</span> <span class="n">nickname</span><span class="o">);</span>
-</span><span class='line'>        <span class="n">Account</span> <span class="n">account1</span> <span class="o">=</span> <span class="n">bank</span><span class="o">.</span><span class="na">getAccount</span><span class="o">(</span><span class="n">nickname</span><span class="o">);</span>
-</span><span class='line'>        <span class="n">modelMap</span><span class="o">.</span><span class="na">addAttribute</span><span class="o">(</span><span class="s">&quot;balance&quot;</span><span class="o">,</span> <span class="n">account1</span><span class="o">.</span><span class="na">getBalance</span><span class="o">());</span>
-</span><span class='line'>        <span class="k">return</span> <span class="s">&quot;ShowBalance&quot;</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@RequestMapping</span><span class="o">(</span><span class="n">value</span> <span class="o">=</span> <span class="s">&quot;/withdraw&quot;</span><span class="o">,</span> <span class="n">method</span> <span class="o">=</span> <span class="n">RequestMethod</span><span class="o">.</span><span class="na">POST</span><span class="o">)</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">withdraw</span><span class="o">(</span><span class="kd">final</span> <span class="n">HttpServletRequest</span> <span class="n">request</span><span class="o">,</span> <span class="n">ModelMap</span> <span class="n">modelMap</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">String</span> <span class="n">nickname</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="na">getParameter</span><span class="o">(</span><span class="s">&quot;nickname&quot;</span><span class="o">);</span>
-</span><span class='line'>        <span class="n">Account</span> <span class="n">account</span> <span class="o">=</span> <span class="n">bank</span><span class="o">.</span><span class="na">getAccount</span><span class="o">(</span><span class="n">nickname</span><span class="o">);</span>
-</span><span class='line'>        <span class="n">account</span><span class="o">.</span><span class="na">withdraw</span><span class="o">(</span><span class="n">account</span><span class="o">.</span><span class="na">getBalance</span><span class="o">(),</span> <span class="n">nickname</span><span class="o">);</span>
-</span><span class='line'>        <span class="n">Account</span> <span class="n">account1</span> <span class="o">=</span> <span class="n">bank</span><span class="o">.</span><span class="na">getAccount</span><span class="o">(</span><span class="n">nickname</span><span class="o">);</span>
-</span><span class='line'>        <span class="n">modelMap</span><span class="o">.</span><span class="na">addAttribute</span><span class="o">(</span><span class="s">&quot;balance&quot;</span><span class="o">,</span> <span class="n">account1</span><span class="o">.</span><span class="na">getBalance</span><span class="o">());</span>
-</span><span class='line'>        <span class="k">return</span> <span class="s">&quot;ShowBalance&quot;</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@RequestMapping</span><span class="o">(</span><span class="n">value</span> <span class="o">=</span> <span class="s">&quot;/welcome&quot;</span><span class="o">)</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">backToWelcomePage</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="s">&quot;Welcome&quot;</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@ExceptionHandler</span><span class="o">(</span><span class="n">Exception</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">handleException</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="s">&quot;Exception&quot;</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>这个类是一个controller（因为被标注了@Controller 这个注解）。然后，它会捕获上面那个jsp页面发出来的请求，而具体哪个方法捕获对哪一个URL的请求，请看具体方法上面标示的@RequestMapping 注解。它规定了handle的请求的类型和URL。在处理请求的controller方法的签名中，我们看到request和modelmap。它们都被Spring容器管理，所以直接在方法参数中加进来就能直接使用它们了。ModelMap 的左右是存放一些值，用于JSP页面显示。</p>
-
-<p>这就是一次大致的Spring MVC 例子的讲解。</p>
 ]]></content>
   </entry>
   

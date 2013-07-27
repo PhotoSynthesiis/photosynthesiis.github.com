@@ -9,7 +9,10 @@
   <meta name="author" content="Qiushi Li">
 
   
-  <meta name="description" content="所谓代理，即控制盒管理对目标对象访问的一个中间层。它代表一个真实的对象，并呈现给外界一个假象&mdash;它就是真正的对象，但其实他的一切动作都是调用真实对象来完成的。 一、远程代理 代理模式有很多种，首先我们来讲远程代理。如果我有两个类ClassA和ClassB,它们分别位于不同的机器上( &hellip;">
+  <meta name="description" content="
+Annotation是什么
+Annotation是类，方法或字段的一种注解或元数据，当程序被JVM编译的时候，annotation会和类编译在一起，作为一种元数据去描述被修饰的数据
+Annotation的定义 ">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +68,144 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/07/27/java-annotation/">Java Annotation学习笔记</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-27T20:23:00+08:00" pubdate data-updated="true">Jul 27<span>th</span>, 2013</time>
+        
+         | <a href="/blog/2013/07/27/java-annotation/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><ol>
+<li>Annotation是什么
+Annotation是类，方法或字段的一种注解或元数据，当程序被JVM编译的时候，annotation会和类编译在一起，作为一种元数据去描述被修饰的数据</li>
+<li>Annotation的定义</li>
+</ol>
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/07/27/java-annotation/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/07/27/comparator/">Java中Comparable和Comparator实现对象比较</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-27T20:20:00+08:00" pubdate data-updated="true">Jul 27<span>th</span>, 2013</time>
+        
+         | <a href="/blog/2013/07/27/comparator/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>当需要排序的集合或数组不是单纯的数字型时，通常可以使用Comparator或Comparable，以简单的方式实现对象排序或自定义排序。下面通过两个例子分别用Comparable和Comparator实现对User对象中年龄排序。</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/07/27/comparator/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/07/27/wiser/">使用Wiser测试邮件发送</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-27T20:14:00+08:00" pubdate data-updated="true">Jul 27<span>th</span>, 2013</time>
+        
+         | <a href="/blog/2013/07/27/wiser/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>最近在做一个小项目，里面有发送邮件这一功能，本文主要是讲如何通过Spring发送邮件，已经一个邮件测试框架 &mdash;&ndash; wiser的介绍。</p>
+
+<p>如何使用Spring发送邮件
+首先主要用到的一个类是JavaMailSenderImpl，它位于Spring的org.springframework.mail.
+javamail包中，主要是用来发送邮件的。为了发送邮件，需要提供给它一系列的参数。这些参数我都配置在了resources包下的一个xml文件中</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/07/27/wiser/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -376,137 +517,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/07/13/factory-pattern/">深入浅出设计模式之工厂模式(Factory Method Pattern)</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-07-13T14:01:00+08:00" pubdate data-updated="true">Jul 13<span>th</span>, 2013</time>
-        
-         | <a href="/blog/2013/07/13/factory-pattern/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>工厂模式算是设计模式中用到的最多的一类了，对于它最直观的描述就是：父类定义一个创建对象的接口，由子类决定需要创建什么对象，这样让类把实例化推迟到了子类。下面来举个例子来阐述吧。</p>
-
-<p>有一个披萨店，可以做各种各样的披萨，但位于不同地方的分店里的披萨味道会有些不同。如果利用工厂模式，就是：</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/07/13/factory-pattern/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/07/12/decorator-pattern/">深入浅出设计模式之装饰器模式(Decorator Pattern)</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-07-12T14:53:00+08:00" pubdate data-updated="true">Jul 12<span>th</span>, 2013</time>
-        
-         | <a href="/blog/2013/07/12/decorator-pattern/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>今天该讲第三种设计模式 &mdash; 装饰器模式。同样，从名字就可以看出这种模式必定有一个基础组件，用来被修饰，也会有至少一个装饰器来修饰基础组件。同时要求被装饰器修饰过的组件对外界来说还是一个组件，只不过在被修饰之后多出了一些以前没有的功能。装饰器模式可以看做下图：</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/07/12/decorator-pattern/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/07/11/observer-pattern/">深入浅出设计模式之观察者模式(Observer Pattern)</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-07-11T21:39:00+08:00" pubdate data-updated="true">Jul 11<span>th</span>, 2013</time>
-        
-         | <a href="/blog/2013/07/11/observer-pattern/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>观察者模式，顾名思义，这个模式中必定有观察者和被观察者。打一个形象的比喻，一些在证券交易市场的股民眼巴巴地看着自己买的股票所代表的公司能放些风声出来，这样自己就可以更好地把握这个消息做出买或卖的决定。而上市公司为了加强广大股民的信心，鼓励大家增持股票也会不断地放出例如公司的新项目马上出来了，大家赶紧买啊这些消息。我们暂且不论消息的真假，但这确实一个非常贴切的例子。</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/07/11/observer-pattern/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -522,23 +532,23 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/07/27/java-annotation/">Java Annotation学习笔记</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/07/27/comparator/">Java中Comparable和Comparator实现对象比较</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/07/27/wiser/">使用Wiser测试邮件发送</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/07/18/proxy-pattern/">深入浅出设计模式之代理模式(Proxy Pattern)</a>
       </li>
     
       <li class="post">
         <a href="/blog/2013/07/16/state-pattern/">深入浅出设计模式之状态模式(State Pattern)</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/07/16/iterator-pattern/">深入浅出设计模式之迭代器模式(Iterator Pattern)和组合模式(Composite Pattern)</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/07/14/template-method/">深入浅出设计模式之模板方法模式(Template Method)</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/07/14/adaptor-pattern/">深入浅出设计模式之适配器模式(Adaptor Pattern)与外观模式(Facade Pattern)</a>
       </li>
     
   </ul>
