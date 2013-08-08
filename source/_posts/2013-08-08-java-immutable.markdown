@@ -82,6 +82,18 @@ public class test {
     }
 }
 ```
+
+其实在Java中有很多默认的类都是immutable的，例如String，Integer等。这就意味着，当你在使用String的一些方法的时候，其实它返回的是另一个对象，原对象并没有改变。比如：
+``` java
+public class test {
+    public static void main(String[] args) {
+        String a = "AbC";
+        String b = a.toLowerCase();
+        System.out.println(a);  // print 'AbC'
+        System.out.println(b);  // print 'abc'
+    }
+}
+```
 总结起来，如果要创建一个‘不可变’类，需要遵守下面几条：
 
 1、Class应该定义成final，避免被继承
