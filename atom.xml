@@ -4,7 +4,7 @@
   <title><![CDATA[public static void man]]></title>
   <link href="http://PhotoSynthesiis.github.io/atom.xml" rel="self"/>
   <link href="http://PhotoSynthesiis.github.io/"/>
-  <updated>2013-07-27T20:34:03+08:00</updated>
+  <updated>2013-08-08T22:19:28+08:00</updated>
   <id>http://PhotoSynthesiis.github.io/</id>
   <author>
     <name><![CDATA[Qiushi Li]]></name>
@@ -12,6 +12,171 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[如何在Java中创建Immutable的类]]></title>
+    <link href="http://PhotoSynthesiis.github.io/blog/2013/08/08/java-immutable/"/>
+    <updated>2013-08-08T21:30:00+08:00</updated>
+    <id>http://PhotoSynthesiis.github.io/blog/2013/08/08/java-immutable</id>
+    <content type="html"><![CDATA[<p>首先，我们需要明白什么是Immutable的类。顾名思义，就是在对象创建后，它的状态不能改变。你首先也许会想到final这个关键字，因为它会使被修饰者要么不能被继承(修饰类)，要么不能被重新赋值(修饰字段)。下面我们来看一个简单的例子：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">final</span> <span class="kd">class</span> <span class="nc">ImmutableClass_1</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">final</span> <span class="kt">double</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kt">int</span> <span class="nf">getI</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">i</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kt">double</span> <span class="nf">getJ</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">j</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<!-- more -->
+
+
+<p>这个类被final修饰，意味着它不能被继承，去除了子类修改状态的可能。字段i和j都被什么味final因为这它不能被重新赋值，所以它们都是不能改变的。最后这个类中没有任何的构造函数或者setter方法能对其中的字段做出改变。综上所述，这个类是一个不可变类。</p>
+
+<p>下面让我们来看一个稍微复杂一些的例子:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">final</span> <span class="kd">class</span> <span class="nc">MutableClass_1</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">final</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">stringList</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;();</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kt">int</span> <span class="nf">getI</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">i</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="nf">getStringList</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">stringList</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这个类和上面那个类很相似，类被final修饰，字段也被final修饰，但是它却并非immutable，问题出在stringList上。我们都知道在创建对象的时候，对象名只是一个指向真正对象的引用，我们可以通过这个引用去修改被指向的对象。这里的getStringList方法返回了这个对象的引用，于是这个对象就会有2个引用指向它，所以客户端可以通过下面这段代码来改变对象：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">test</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">MutableClass_1</span> <span class="n">mutableClass_1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MutableClass_1</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">mutableClass_1</span><span class="o">.</span><span class="na">getStringList</span><span class="o">());</span>  <span class="c1">// print &#39;[]&#39;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">mutableClass_1</span><span class="o">.</span><span class="na">getStringList</span><span class="o">().</span><span class="na">add</span><span class="o">(</span><span class="s">&quot;a new string&quot;</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">mutableClass_1</span><span class="o">.</span><span class="na">getStringList</span><span class="o">());</span>  <span class="c1">// print &#39;a new string&#39;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>我们看到mutableClass_1这个对象中的字段被改变了，所以它不是immutable的。如果想要让上面这个MutableClass_1变成不可变的，就需要用到Java中的深拷贝和浅拷贝了。代码如下:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">final</span> <span class="kd">class</span> <span class="nc">ImmutableClass_2</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">final</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">original</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;();</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kt">int</span> <span class="nf">getI</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">i</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="nf">getStringList</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">copy</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;();</span>
+</span><span class='line'>        <span class="k">for</span> <span class="o">(</span><span class="n">String</span> <span class="n">s</span> <span class="o">:</span> <span class="n">original</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">copy</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">s</span><span class="o">);</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">copy</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>我在返回这个list的时候使用了深拷贝，返回了一个与老的list值完全一样的一个新的list。这样，在客户端调用的时候，指向的是另一个list了。所以下面这段代码就不能修改这个类了。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">test</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">ImmutableClass_2</span> <span class="n">mutableClass_2</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ImmutableClass_2</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">mutableClass_2</span><span class="o">.</span><span class="na">getStringList</span><span class="o">());</span>   <span class="c1">// print &#39;[]&#39;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">mutableClass_2</span><span class="o">.</span><span class="na">getStringList</span><span class="o">().</span><span class="na">add</span><span class="o">(</span><span class="s">&quot;a new string&quot;</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">mutableClass_2</span><span class="o">.</span><span class="na">getStringList</span><span class="o">());</span>   <span class="c1">// print &#39;[]&#39;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>总结起来，如果要创建一个‘不可变’类，需要遵守下面几条：</p>
+
+<p>1、Class应该定义成final，避免被继承</p>
+
+<p>2、所有的成员变量应该被定义成final</p>
+
+<p>3、尽量不要暴露mutable的字段(例如list)，如果要暴露，使用深拷贝或浅拷贝</p>
+
+<p>4、不要提供可以改变类状态(成员变量)的方法(get 方法不要把类里的成员变量让外部客服端引用,当需要访问成员变量时，返回成员变量的copy)</p>
+
+<p>5、构造函数不要引用外部可变对象。如果需要引用外部可以变量，应该在构造函数里进行defensive copy</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Java Annotation学习笔记]]></title>
@@ -5440,80 +5605,6 @@ spirit。他们都强调在学习的过程中，有人带是多么的重要。�
 <p><img src="http://PhotoSynthesiis.github.io/images/recursion-12.png"></p>
 
 <p>所以，fibonacci(5)的执行顺序会是首先到最左下角F(1)，然后回到F(2)，然后再到F(0)，这样F(2)就执行完毕了。接下来是F(3)的执行，因为F(2)已经得出结果了那么就只需要算F(1)。然后回到F(3),来到F(4)。F(4)的右子树没有被遍历，所以这次会使用相同的方法计算出F(2)。这样F(4)的结果就算出来了。然后回到顶点，开始算顶点右边那个节点F(3)。方法同Fibonacci(5)左边的遍历方法相同。这样就完成了一次递归的计算。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Project Euler 15题解惑]]></title>
-    <link href="http://PhotoSynthesiis.github.io/blog/2013/07/09/project-euler/"/>
-    <updated>2013-07-09T18:28:00+08:00</updated>
-    <id>http://PhotoSynthesiis.github.io/blog/2013/07/09/project-euler</id>
-    <content type="html"><![CDATA[<p>这个题目困惑了本人很久，想过各种方法。不是因为脑容量不够而导致处理问题的栈不足而放弃，或者就是根本对上述的想法非常质疑，而又找不到更好的方法以致陷入不断的困惑中。最后还是一番google，找到了问题的解决方法，之所以要记下来，是因为在这道题上我又学习了一种新的解决问题的方法。我姑且称之为“归纳法” + “倒推法”。</p>
-
-<!-- more -->
-
-
-<p>题目是这样的: Starting in the top left corner of a 22 grid, and only being able to move to the right and down, there are exactly 6 routes to the bottom right corner. How many such routes are there through a 2020 grid?</p>
-
-<p><img src="http://PhotoSynthesiis.github.io/images/PE-1.png"></p>
-
-<p>解决方法是从程序的出口，即最右下角入手进行倒推。首先要想到达最右下角那个点，只有两个点可以到达，即紧挨着的它上面和它左边的那个点。</p>
-
-<p><img src="http://PhotoSynthesiis.github.io/images/PE-2.png"></p>
-
-<p>同时我们可以看到，正方形的最右和最下这两个边上的除了终点的所有点到达终点的方式都只有一种，所以可以把它们全部赋值为1。
-紧接着，我们可以继续向前推，到达与终点斜对角的第一个点。这个点到达终点无外乎两种方式，即通过它右边的那个点或者它下边的那个点到达。所以它到达终点（为了下文叙述方便，姑且称其为A点）共有2种方式。
-接着，我们继续刚才的推导过程。A点左边那个点到达终点的方式=A点到达终点的方式+A点右边那个点下面那个点到达终点的方式。所以它一共有3种方式到达终点。</p>
-
-<p><img src="http://PhotoSynthesiis.github.io/images/PE-3.png"></p>
-
-<p>这样我们一直向回推导，就能推导最左上角到达终点的方式=它下面的那个点到达终点的方式+它右边的那个点到达终点的方式。
-最后，程序代码如下：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">problems</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Problem_15</span> <span class="o">{</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="kt">long</span><span class="o">[][]</span> <span class="n">paths</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">long</span><span class="o">[</span><span class="mi">21</span><span class="o">][</span><span class="mi">21</span><span class="o">];</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="c1">// initialize the boundries</span>
-</span><span class='line'>        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">20</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
-</span><span class='line'>            <span class="n">paths</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="mi">20</span><span class="o">]</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
-</span><span class='line'>            <span class="n">paths</span><span class="o">[</span><span class="mi">20</span><span class="o">][</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">19</span><span class="o">;</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span><span class="o">--)</span> <span class="o">{</span>
-</span><span class='line'>            <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">19</span><span class="o">;</span> <span class="n">j</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">j</span><span class="o">--)</span> <span class="o">{</span>
-</span><span class='line'>                <span class="n">paths</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">]</span> <span class="o">=</span> <span class="n">paths</span><span class="o">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="o">][</span><span class="n">j</span><span class="o">]</span> <span class="o">+</span> <span class="n">paths</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="o">];</span>
-</span><span class='line'>            <span class="o">}</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">paths</span><span class="o">[</span><span class="mi">0</span><span class="o">][</span><span class="mi">0</span><span class="o">]);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
 ]]></content>
   </entry>
   
