@@ -4,7 +4,7 @@
   <title><![CDATA[public static void man]]></title>
   <link href="http://PhotoSynthesiis.github.io/atom.xml" rel="self"/>
   <link href="http://PhotoSynthesiis.github.io/"/>
-  <updated>2013-08-08T22:33:19+08:00</updated>
+  <updated>2013-08-09T23:13:40+08:00</updated>
   <id>http://PhotoSynthesiis.github.io/</id>
   <author>
     <name><![CDATA[Qiushi Li]]></name>
@@ -12,6 +12,229 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[在java中复写equals和hashCode]]></title>
+    <link href="http://PhotoSynthesiis.github.io/blog/2013/08/09/java-equals-hashcode/"/>
+    <updated>2013-08-09T22:50:00+08:00</updated>
+    <id>http://PhotoSynthesiis.github.io/blog/2013/08/09/java-equals-hashcode</id>
+    <content type="html"><![CDATA[<p>首先我们必须得知道什么是hash code。总的来说，Java中的集合（Collection）有两类，一类是List，再有一类是Set。你知道它们的区别吗？前者集合内的元素是有序的，元素可以重复；后者元素无序，但元素不可重复。那么这里就有一个比较严重的问题了：要想保证元素不重复，可两个元素是否重复应该依据什么来判断呢？这就是Object.equals方法了。但是，如果每增加一个元素就检查一次，那么当元素很多时，后添加到集合中的元素比较的次数就非常多了。也就是说，如果集合中现在已经有1000个元素，那么第1001个元素加入集合时，它就要调用1000次equals方法。这显然会大大降低效率。于是，Java采用了哈希表的原理。哈希（Hash）实际上是个人名，由于他提出一哈希算法的概念，所以就以他的名字命名了。哈希算法也称为散列算法，是将数据依特定算法直接指定到一个地址上。如果详细讲解哈希算法，那需要更多的文章篇幅，我在这里就不介绍了。初学者可以这样理解，hashCode方法实际上返回的就是对象存储的物理地址（实际可能并不是）。这样一来，当集合要添加新的元素时，先调用这个元素的hashCode方法，就一下子能定位到它应该放置的物理位置上。如果这个位置上没有元素，它就可以直接存储在这个位置上，不用再进行任何比较了；如果这个位置上已经有元素了，就调用它的equals方法与新元素进行比较，相同的话就不存了，不相同就散列其它的地址。所以这里存在一个冲突解决的问题。这样一来实际调用equals方法的次数就大大降低了，几乎只需要一两次。所以，Java对于eqauls方法和hashCode方法是这样规定的：1、如果两个对象相同，那么它们的hashCode值一定要相同；2、如果两个对象的hashCode相同，它们并不一定相同。</p>
+
+<!-- more -->
+
+
+<p>重上面的描述能看出，hash code一般是在例如set map等这样的集合中用到，因为它们通常需要通过hash code去判断两个对象是否相等。而如果不是在集合中用，其实复写不复写hash code意义都不大，不过作为一种良好的编程习惯，最好还是两个同时复写。下面我们来聚几个例子：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">class</span> <span class="nc">Person</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">String</span> <span class="n">name</span><span class="o">;</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">age</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">Person</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">,</span> <span class="kt">int</span> <span class="n">age</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">;</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">age</span> <span class="o">=</span> <span class="n">age</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">equals</span><span class="o">(</span><span class="n">Object</span> <span class="n">o</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="k">this</span> <span class="o">==</span> <span class="n">o</span><span class="o">)</span> <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">o</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">||</span> <span class="n">getClass</span><span class="o">()</span> <span class="o">!=</span> <span class="n">o</span><span class="o">.</span><span class="na">getClass</span><span class="o">())</span> <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">Person</span> <span class="n">person</span> <span class="o">=</span> <span class="o">(</span><span class="n">Person</span><span class="o">)</span> <span class="n">o</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">age</span> <span class="o">!=</span> <span class="n">person</span><span class="o">.</span><span class="na">age</span><span class="o">)</span> <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">name</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">?</span> <span class="o">!</span><span class="n">name</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">person</span><span class="o">.</span><span class="na">name</span><span class="o">)</span> <span class="o">:</span> <span class="n">person</span><span class="o">.</span><span class="na">name</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">toString</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="s">&quot;name : &quot;</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s">&quot;; age : &quot;</span> <span class="o">+</span> <span class="n">age</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Person类中没有复写hashCode</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">test</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">Person</span> <span class="n">a</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Person</span><span class="o">(</span><span class="s">&quot;Adam&quot;</span><span class="o">,</span> <span class="mi">27</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">Person</span> <span class="n">b</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Person</span><span class="o">(</span><span class="s">&quot;Adam&quot;</span><span class="o">,</span> <span class="mi">27</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">a</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">b</span><span class="o">));</span>  <span class="c1">// true</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">Set</span><span class="o">&lt;</span><span class="n">Person</span><span class="o">&gt;</span> <span class="n">persons</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashSet</span><span class="o">&lt;</span><span class="n">Person</span><span class="o">&gt;();</span>
+</span><span class='line'>        <span class="n">persons</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">a</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">persons</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">b</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">persons</span><span class="o">.</span><span class="na">contains</span><span class="o">(</span><span class="n">a</span><span class="o">));</span>  <span class="c1">// true</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">persons</span><span class="o">.</span><span class="na">contains</span><span class="o">(</span><span class="n">b</span><span class="o">));</span>  <span class="c1">// true</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;size : &quot;</span> <span class="o">+</span> <span class="n">persons</span><span class="o">.</span><span class="na">size</span><span class="o">());</span>  <span class="c1">// 2</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>所以它们虽然对象里面的值相等，但是并不被认为是同一个对象，所以可以加到set中去。如果我们加上了hashCode：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">class</span> <span class="nc">Person</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">String</span> <span class="n">name</span><span class="o">;</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">age</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">Person</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">,</span> <span class="kt">int</span> <span class="n">age</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">;</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">age</span> <span class="o">=</span> <span class="n">age</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">hashCode</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kt">int</span> <span class="n">result</span> <span class="o">=</span> <span class="n">name</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">?</span> <span class="n">name</span><span class="o">.</span><span class="na">hashCode</span><span class="o">()</span> <span class="o">:</span> <span class="mi">0</span><span class="o">;</span>
+</span><span class='line'>        <span class="n">result</span> <span class="o">=</span> <span class="mi">31</span> <span class="o">*</span> <span class="n">result</span> <span class="o">+</span> <span class="n">age</span><span class="o">;</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">result</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">equals</span><span class="o">(</span><span class="n">Object</span> <span class="n">o</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="k">this</span> <span class="o">==</span> <span class="n">o</span><span class="o">)</span> <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">o</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">||</span> <span class="n">getClass</span><span class="o">()</span> <span class="o">!=</span> <span class="n">o</span><span class="o">.</span><span class="na">getClass</span><span class="o">())</span> <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">Person</span> <span class="n">person</span> <span class="o">=</span> <span class="o">(</span><span class="n">Person</span><span class="o">)</span> <span class="n">o</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">age</span> <span class="o">!=</span> <span class="n">person</span><span class="o">.</span><span class="na">age</span><span class="o">)</span> <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">name</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">?</span> <span class="o">!</span><span class="n">name</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">person</span><span class="o">.</span><span class="na">name</span><span class="o">)</span> <span class="o">:</span> <span class="n">person</span><span class="o">.</span><span class="na">name</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">toString</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="s">&quot;name : &quot;</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s">&quot;; age : &quot;</span> <span class="o">+</span> <span class="n">age</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>那么下面这段代码的执行结果就应该是：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">test</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">Person</span> <span class="n">a</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Person</span><span class="o">(</span><span class="s">&quot;Adam&quot;</span><span class="o">,</span> <span class="mi">27</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">Person</span> <span class="n">b</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Person</span><span class="o">(</span><span class="s">&quot;Adam&quot;</span><span class="o">,</span> <span class="mi">27</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">a</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">b</span><span class="o">));</span>  <span class="c1">// true</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">Set</span><span class="o">&lt;</span><span class="n">Person</span><span class="o">&gt;</span> <span class="n">persons</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashSet</span><span class="o">&lt;</span><span class="n">Person</span><span class="o">&gt;();</span>
+</span><span class='line'>        <span class="n">persons</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">a</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">persons</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">b</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">persons</span><span class="o">.</span><span class="na">contains</span><span class="o">(</span><span class="n">a</span><span class="o">));</span>  <span class="c1">// true</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">persons</span><span class="o">.</span><span class="na">contains</span><span class="o">(</span><span class="n">b</span><span class="o">));</span>  <span class="c1">// true</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;size : &quot;</span> <span class="o">+</span> <span class="n">persons</span><span class="o">.</span><span class="na">size</span><span class="o">());</span>  <span class="c1">// 1</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>1、equals()相等的两个对象，hashcode()一定相等；</p>
+
+<p>2、equals()不相等的两个对象，却并不能证明他们的hashcode()不相等。换句话说，equals()方法不相等的两个对象，hashcode()有可能相等。（我的理解是由于哈希码在生成的时候产生冲突造成的）。</p>
+
+<p>3、hashcode()不等，一定能推出equals()也不等；</p>
+
+<p>4、hashcode()相等，equals()可能相等，也可能不等。
+其实上面代码中的equals和hashCode函数都是Intellij自动生成的，以后编写都可以按照这种方法来。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[如何在Java中创建Immutable的类]]></title>
@@ -5491,141 +5714,6 @@ spirit。他们都强调在学习的过程中，有人带是多么的重要。�
 <p>最后，关于知识的整理和记录。这一点是我在TW这一年被反复强调的学习方法。但是自己都没有做好，不是因为笔记不够多，而是在记笔记后就把它扔了，这样的结果是虽然你学了，笔记也写了（看似很好的学习方法），但是到后来还是完全没有印象。归根到底还是因为平时没有去回顾博客中的内容。在回顾的过程中，结合自己在后来学习到的新知识，会有更深的理解或者不同的见解。</p>
 
 <p>最后的最后，一定要努力。记得读过一篇博客，讲的是一名MS的员工在刚加入的时候，自己直接背了个睡袋到办公室去睡了一年，想到自己在TW这一年稍显酱油的方式，真的很惭愧。以后一定不要再犯这些错误了！！！</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[递归的执行过程]]></title>
-    <link href="http://PhotoSynthesiis.github.io/blog/2013/07/09/recursion/"/>
-    <updated>2013-07-09T18:42:00+08:00</updated>
-    <id>http://PhotoSynthesiis.github.io/blog/2013/07/09/recursion</id>
-    <content type="html"><![CDATA[<p>这个问题困惑了我好久，从当初学习计算机开始就没有弄明白这个过程，只听说过能用迭代取代递归的地方就用迭代，因为递归很容易引起内存泄露。不过，作为一名专业的程序员，了解这些东西都是必不可少的，所以我今天就把它记录下来。 我们拿一个简单的程序来作为例子：</p>
-
-<!-- more -->
-
-
-
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Mystery</span> <span class="o">{</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="kt">int</span> <span class="n">result</span> <span class="o">=</span> <span class="n">compute</span><span class="o">(</span><span class="mi">4</span><span class="o">);</span>
-</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">result</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">compute</span><span class="o">(</span><span class="kt">int</span> <span class="n">n</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">n</span> <span class="o">==</span> <span class="mi">1</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>            <span class="k">return</span> <span class="mi">1</span><span class="o">;</span>
-</span><span class='line'>        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
-</span><span class='line'>            <span class="k">return</span> <span class="n">n</span> <span class="o">*</span> <span class="n">compute</span><span class="o">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="o">);</span> <span class="c1">// here&#39;s the recursive invocation         </span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>我们可以看到，compute函数里面实现了递归，当n==1的时候就返回。这是每一个递归函数的必要条件，那么函数在return之后又会做些什么呢？其实过程是这样的，如果执行compute(5)，首先判断n是否等于1，如果不是，就计算5 * compute(4)，再次判断n是否等于1，如果不等就继续执行4*compute(3)。这样执行下去直到n==1。这时，所有函数的递归调用可以看成一个顺序执行的函数，这个函数类似于：5 * compute(4) = 5 * (4 * compute(3)) = 5 * (4 * (3 * compute(2))) = 5 * (4 * (3 * (2 * compute(1))))，当compute(1)的值知道的时候， 就开始返回了。</p>
-
-<p>同时我们应该知道的是，方法的调用其实是入栈与出栈。所以，我们可以通过下面这些图来了解执行过程。
-1.To start off the program, the program pushes a frame corresponding to an invocation to run(). Notice how this frame includes room for run’s variable result.</p>
-
-<p><img src="http://PhotoSynthesiis.github.io/images/recursion-1.png"></p>
-
-<p>2.When the computer sees that run() invokes compute(4), the computer places a new frame atop the stack corresponding to compute; this frame will include the variable n, whose value is initially 4.</p>
-
-<p><img src="http://PhotoSynthesiis.github.io/images/recursion-2.png"></p>
-
-<p>3.When the computer sees that compute(4) invokes compute(3), the computer places a new frame atop the stack, containing the variable n, whose value is initially 3.</p>
-
-<p><img src="http://PhotoSynthesiis.github.io/images/recursion-3.png"></p>
-
-<p>4.When the computer sees that compute(3) invokes compute(2), the computer places a new frame atop the stack, containing the variable n, whose value is initially 2.</p>
-
-<p><img src="http://PhotoSynthesiis.github.io/images/recursion-4.png"></p>
-
-<p>5.When the computer sees that compute(2) invokes compute(1), the computer places a new frame atop the stack, containing the variable n, whose value is initially 1.</p>
-
-<p><img src="http://PhotoSynthesiis.github.io/images/recursion-5.png"></p>
-
-<p>6.When the computer sees that compute(1) returns, it pops the top frame off the stack and resumes with whatever frame is now at the top — which happens to be the frame for compute(2).</p>
-
-<p><img src="http://PhotoSynthesiis.github.io/images/recursion-6.png"></p>
-
-<p>7.When the computer sees that compute(2) returns, it pops the top frame off the stack and resumes with compute(3).</p>
-
-<p><img src="http://PhotoSynthesiis.github.io/images/recursion-7.png"></p>
-
-<p>8.When the computer sees that compute(3) returns, it pops the top frame off the stack and resumes with compute(4).</p>
-
-<p><img src="http://PhotoSynthesiis.github.io/images/recursion-8.png"></p>
-
-<p>9.When the computer sees that compute(4) returns, it pops the top frame off the stack and resumes with run(). The run() invocation assigns the valued returned to its result variable, which modifies the variable in its frame.</p>
-
-<p><img src="http://PhotoSynthesiis.github.io/images/recursion-9.png"></p>
-
-<p>10.As the computer executes the method atop the stack, run, it sees that the method invokes print. It thus pushes print(24) onto the stack. In fact, printwill push additional methods onto the stack, which are all eventually popped off.</p>
-
-<p><img src="http://PhotoSynthesiis.github.io/images/recursion-10.png"></p>
-
-<p>11.Once print returns, the computer pops its frame off the stack and continues executing run. In fact, run will return promptly (since there is nothing else to do in that method). Thus, its frame will be popped off, too. Once the stack is empty, the computer halts execution of the program.</p>
-
-<p><img src="http://PhotoSynthesiis.github.io/images/recursion-11.png"></p>
-
-<p>上面谈到的递归是一种比较简单的实现，下面我们来探讨一下难度稍大的递归，程序如下：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">test</span> <span class="o">{</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="kt">int</span> <span class="n">result</span> <span class="o">=</span> <span class="n">fibonacci</span><span class="o">(</span><span class="mi">5</span><span class="o">);</span>
-</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">result</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">private</span> <span class="kd">static</span> <span class="kt">int</span> <span class="nf">fibonacci</span><span class="o">(</span><span class="kt">int</span> <span class="n">number</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">number</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>            <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
-</span><span class='line'>        <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">number</span> <span class="o">==</span> <span class="mi">1</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>            <span class="k">return</span> <span class="mi">1</span><span class="o">;</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>        <span class="k">return</span> <span class="nf">fibonacci</span><span class="o">(</span><span class="n">number</span> <span class="o">-</span> <span class="mi">1</span><span class="o">)</span> <span class="o">+</span> <span class="n">fibonacci</span><span class="o">(</span><span class="n">number</span> <span class="o">-</span> <span class="mi">2</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>使用+连接字符串每次都生成新的对象，而且是在堆内存上进行，而堆内存速度比较慢(相对而言)，那么再大量连接字符串时直接+是不可取的，当然需要一种效率高的方法。Java提供的StringBuffer和StringBuilder就是解决这个问题的。区别是前者是线程安全的而后者是非线程安全的，StringBuilder在JDK1.5之后才有。不保证安全的StringBuilder有比StringBuffer更高的效率。</p>
-
-<p>在fibonacci这个方法里面，它两次调用了自己，那么它的执行顺序是怎么样的呢？其实这样的一次执行更像是一次二叉树的前序遍历。它会首先执行前面那个方法，即fibonacci(number &ndash; 1)，当这个方法返回后再执行fibonacci() 如果执行fibonacci(5)，它的执行过程会是下面这个样子的：</p>
-
-<p><img src="http://PhotoSynthesiis.github.io/images/recursion-12.png"></p>
-
-<p>所以，fibonacci(5)的执行顺序会是首先到最左下角F(1)，然后回到F(2)，然后再到F(0)，这样F(2)就执行完毕了。接下来是F(3)的执行，因为F(2)已经得出结果了那么就只需要算F(1)。然后回到F(3),来到F(4)。F(4)的右子树没有被遍历，所以这次会使用相同的方法计算出F(2)。这样F(4)的结果就算出来了。然后回到顶点，开始算顶点右边那个节点F(3)。方法同Fibonacci(5)左边的遍历方法相同。这样就完成了一次递归的计算。</p>
 ]]></content>
   </entry>
   
