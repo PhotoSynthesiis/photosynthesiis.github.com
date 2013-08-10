@@ -8,6 +8,17 @@ categories:
 Java中的拷贝方式分为深拷贝和浅拷贝。简单来说，深拷贝就是把一个对象中的所有值，如果被拷贝对象中有对其他对象的引用，那么这个引用指向的对象本身会被重新创建。浅拷贝和深拷贝类似，但是如果被拷贝对象中有对其他对象的引用，只是这个引用会被拷贝，而不是这个被引用的对象。
 
 说起来有点绕口，那么我们就看看下面的图解吧：
+
+{% img /images/deep_shallow_copy-1.png %}
+
+shallow copy:
+
+{% img /images/deep_shallow_copy-2.png %}
+
+deep copy:
+
+{% img /images/deep_shallow_copy-3.png %}
+
 <!-- more -->
 来看下面这段代码：
 ``` java
