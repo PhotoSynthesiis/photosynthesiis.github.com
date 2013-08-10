@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Java reorder"
+title: "理解Java中的重排序"
 date: 2013-08-10 13:08
 comments: true
 categories: 
