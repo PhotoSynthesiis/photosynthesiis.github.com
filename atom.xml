@@ -4,7 +4,7 @@
   <title><![CDATA[public static void man]]></title>
   <link href="http://PhotoSynthesiis.github.io/atom.xml" rel="self"/>
   <link href="http://PhotoSynthesiis.github.io/"/>
-  <updated>2013-08-10T13:35:05+08:00</updated>
+  <updated>2013-08-10T13:39:34+08:00</updated>
   <id>http://PhotoSynthesiis.github.io/</id>
   <author>
     <name><![CDATA[Qiushi Li]]></name>
@@ -14,7 +14,7 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Java reorder]]></title>
+    <title type="html"><![CDATA[理解Java中的重排序]]></title>
     <link href="http://PhotoSynthesiis.github.io/blog/2013/08/10/java-reorder/"/>
     <updated>2013-08-10T13:08:00+08:00</updated>
     <id>http://PhotoSynthesiis.github.io/blog/2013/08/10/java-reorder</id>
