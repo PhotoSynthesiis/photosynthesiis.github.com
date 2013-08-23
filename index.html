@@ -9,19 +9,7 @@
   <meta name="author" content="Qiushi Li">
 
   
-  <meta name="description" content="一、选择排序 选择排序之所以被称为选择排序是因为在每一次的迭代过程中，总是‘选择’最小的一个元素到数组的最左边。下面是一个选择排序的实例： 1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-private static void sort(String[] a) { int N = a. &hellip;">
+  <meta name="description" content="Merge sort即归并排序，它的中心思想是分而治之(divide and conquer)，即将一个原来很大的待排序数列分成若干个小的数列然后分别对他们进行排序，最后把小的排好序的数列合并起来。这个过程可以分为三个步骤： 第一, 分解: 把待排序的 n 个元素的序列分解成两个子序列, &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +65,57 @@ private static void sort(String[] a) { int N = a. &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/08/23/merge-sort/">Merge Sort</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-08-23T08:51:00-05:00" pubdate data-updated="true">Aug 23<span>rd</span>, 2013</time>
+        
+         | <a href="/blog/2013/08/23/merge-sort/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Merge sort即归并排序，它的中心思想是分而治之(divide and conquer)，即将一个原来很大的待排序数列分成若干个小的数列然后分别对他们进行排序，最后把小的排好序的数列合并起来。这个过程可以分为三个步骤：</p>
+
+<p>第一, 分解: 把待排序的 n 个元素的序列分解成两个子序列, 每个子序列包括 n/2 个元素.</p>
+
+<p>第二, 治理: 对每个子序列分别调用归并排序MergeSort, 进行递归操作。</p>
+
+<p>第三, 合并: 合并两个排好序的子序列,生成排序结果。</p>
+
+<p>在我看来，归并排序中最重要的还是‘合并’，因为在多次递归分解之后，剩下的大小为2的数组都是通过‘合并’过程达到排序的目的。合并的过程很简单，从下面这张图就能大概看出来：</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/08/23/merge-sort/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -540,51 +579,6 @@ javamail包中，主要是用来发送邮件的。为了发送邮件，需要提
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/07/16/iterator-pattern/">深入浅出设计模式之迭代器模式(Iterator Pattern)和组合模式(Composite Pattern)</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-07-16T16:52:00-05:00" pubdate data-updated="true">Jul 16<span>th</span>, 2013</time>
-        
-         | <a href="/blog/2013/07/16/iterator-pattern/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>一、迭代器模式</p>
-
-<p>迭代器模式应用了封装的原理，封装了可迭代组件的具体实现，游走于聚合内每一个元素，而又不暴露内部的表示。举个例子吧，有两家餐馆，它们现在合并了，这样提供的菜品就是原来的2倍。但是餐馆A使用数组来存储菜品，而餐馆B用列表来存储。如果想看所有的菜品，还得通过两种方式便利得到全部内容，这样很不方便，于是就想到了通过迭代器模式封装它们。</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/07/16/iterator-pattern/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -600,6 +594,10 @@ javamail包中，主要是用来发送邮件的。为了发送邮件，需要提
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/08/23/merge-sort/">merge sort</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/08/13/selection-insertion-and-shellsort/">选择排序(Selection sort)插入排序(Insertion sort)与希尔排序(Shellsort)</a>
       </li>
     
@@ -613,10 +611,6 @@ javamail包中，主要是用来发送邮件的。为了发送邮件，需要提
     
       <li class="post">
         <a href="/blog/2013/08/08/java-immutable/">如何在Java中创建Immutable的类</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/07/27/java-annotation/">Java Annotation学习笔记</a>
       </li>
     
   </ul>
