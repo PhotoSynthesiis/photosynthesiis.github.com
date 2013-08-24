@@ -9,7 +9,7 @@
   <meta name="author" content="Qiushi Li">
 
   
-  <meta name="description" content="一、迭代器模式 迭代器模式应用了封装的原理，封装了可迭代组件的具体实现，游走于聚合内每一个元素，而又不暴露内部的表示。举个例子吧，有两家餐馆，它们现在合并了，这样提供的菜品就是原来的2倍。但是餐馆A使用数组来存储菜品，而餐馆B用列表来存储。如果想看所有的菜品，还得通过两种方式便利得到全部内容， &hellip;">
+  <meta name="description" content="在现实生活中，常常遇到许多与状态相关的问题，一些状态因为一些行为的触发转移到下一个状态。就拿一个糖果机为例子吧，糖果机有四种状态：没有25分钱、有25分钱、售出糖果和糖果售罄。由不同的触发条件到达另一种状态.例如如果没有25分钱，投入25分钱，会达到有25分钱的状态，其他状态如下图所示： ">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +65,51 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/07/16/state-pattern/">深入浅出设计模式之状态模式(State Pattern)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-16T22:39:00-05:00" pubdate data-updated="true">Jul 16<span>th</span>, 2013</time>
+        
+         | <a href="/blog/2013/07/16/state-pattern/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>在现实生活中，常常遇到许多与状态相关的问题，一些状态因为一些行为的触发转移到下一个状态。就拿一个糖果机为例子吧，糖果机有四种状态：没有25分钱、有25分钱、售出糖果和糖果售罄。由不同的触发条件到达另一种状态.例如如果没有25分钱，投入25分钱，会达到有25分钱的状态，其他状态如下图所示：</p>
+
+<p><img src="/images/state_pattern-1.png"></p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/07/16/state-pattern/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -459,52 +504,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/07/09/tail-recursion/">一般递归与尾递归(Tail Recursion)</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-07-09T21:58:00-05:00" pubdate data-updated="true">Jul 9<span>th</span>, 2013</time>
-        
-         | <a href="/blog/2013/07/09/tail-recursion/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>最近在读一篇文章的时候无意间接触到了尾递归，感觉他比一般的递归好用，有点意思，顾将之记录下来。</p>
-
-<p>首先需要了解的是到底什么是尾递归？
-这个问题其实很简单，顾名思义，尾递归就是在一个方法的尾部、且在函数返回前的最后一步调用函数本身。为了更好地理解，还是上代码吧(以著名的斐波拉契为例)：</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/07/09/tail-recursion/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/3/">&larr; Older</a>
@@ -522,7 +521,11 @@
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2013/08/23/merge-sort/">merge sort</a>
+        <a href="/blog/2013/08/23/quick-sort/">快速排序(Quicksort)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/08/23/merge-sort/">归并排序(Mergesort)</a>
       </li>
     
       <li class="post">
@@ -535,10 +538,6 @@
     
       <li class="post">
         <a href="/blog/2013/08/09/java-equals-hashcode/">在java中复写equals和hashCode</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/08/08/java-immutable/">如何在Java中创建Immutable的类</a>
       </li>
     
   </ul>

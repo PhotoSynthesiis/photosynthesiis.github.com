@@ -4,7 +4,7 @@
   <title><![CDATA[public static void man]]></title>
   <link href="http://PhotoSynthesiis.github.io/atom.xml" rel="self"/>
   <link href="http://PhotoSynthesiis.github.io/"/>
-  <updated>2013-08-23T11:16:24-05:00</updated>
+  <updated>2013-08-23T22:27:46-05:00</updated>
   <id>http://PhotoSynthesiis.github.io/</id>
   <author>
     <name><![CDATA[Qiushi Li]]></name>
@@ -14,7 +14,171 @@
 
   
   <entry>
-    <title type="html"><![CDATA[merge sort]]></title>
+    <title type="html"><![CDATA[快速排序(Quicksort)]]></title>
+    <link href="http://PhotoSynthesiis.github.io/blog/2013/08/23/quick-sort/"/>
+    <updated>2013-08-23T21:57:00-05:00</updated>
+    <id>http://PhotoSynthesiis.github.io/blog/2013/08/23/quick-sort</id>
+    <content type="html"><![CDATA[<p>Quick Sort即快速排序，它是对归并排序的一种补充，采用的也是分治策略。基本思想是在整个数组中选择第一个数作为一个基准，然后分别从第二个数向后和最后一个数向前开始扫描。如果在向后扫描的过程中如果遇到比基准大的数字(我们这里假设默认为升序排列)，同时在从后向前扫描的过程中遇到比基准小的数字，那么这两个数字就交换。这个过程一直持续下去直到从左扫描的下标大于从右开始扫描的下标作为结束。最后，把基准和右边下标指向的数交换，这样基准左边的数字都小于该基准，基准右边的数字都大于它。不断地递归这个过程就是快速排序。我们可以看看下面这个图帮助理解：</p>
+
+<!-- more -->
+
+
+<p><img src="http://PhotoSynthesiis.github.io/images/quick_sort-1.png">
+快速排序和归并排序的主要区别在于，归并排序是先递归再合并，而快速排序是先分解再递归。下面是分解的过程：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">private</span> <span class="kd">static</span> <span class="kt">int</span> <span class="nf">partition</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">a</span><span class="o">,</span> <span class="kt">int</span> <span class="n">low</span><span class="o">,</span> <span class="kt">int</span> <span class="n">high</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">String</span> <span class="n">value</span> <span class="o">=</span> <span class="n">a</span><span class="o">[</span><span class="n">low</span><span class="o">];</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">low</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">high</span><span class="o">;</span>
+</span><span class='line'>    <span class="k">while</span> <span class="o">(</span><span class="kc">true</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">while</span> <span class="o">(</span><span class="n">a</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="na">compareTo</span><span class="o">(</span><span class="n">value</span><span class="o">)</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">high</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">i</span><span class="o">++;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="k">while</span> <span class="o">(</span><span class="n">a</span><span class="o">[</span><span class="n">j</span><span class="o">].</span><span class="na">compareTo</span><span class="o">(</span><span class="n">value</span><span class="o">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">j</span> <span class="o">&gt;</span> <span class="n">low</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">j</span><span class="o">--;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">i</span> <span class="o">&gt;=</span> <span class="n">j</span><span class="o">)</span>
+</span><span class='line'>            <span class="k">break</span><span class="o">;</span>
+</span><span class='line'>        <span class="n">exchange</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">i</span><span class="o">,</span> <span class="n">j</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="n">exchange</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">low</span><span class="o">,</span> <span class="n">j</span><span class="o">);</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">j</span><span class="o">;</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Partition一次之后，基准的左边都小于它，右边都大于它。</p>
+
+<p>下面是分解后递归的过程：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">private</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">sort</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">a</span><span class="o">,</span> <span class="kt">int</span> <span class="n">low</span><span class="o">,</span> <span class="kt">int</span> <span class="n">high</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">if</span> <span class="o">(</span><span class="n">low</span> <span class="o">&gt;=</span> <span class="n">high</span><span class="o">)</span>
+</span><span class='line'>        <span class="k">return</span><span class="o">;</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">partition</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">low</span><span class="o">,</span> <span class="n">high</span><span class="o">);</span>
+</span><span class='line'>    <span class="n">sort</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">low</span><span class="o">,</span> <span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="o">);</span>
+</span><span class='line'>    <span class="n">sort</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="o">,</span> <span class="n">high</span><span class="o">);</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>我们可以看出，这其实是在对每一个小分组都执行第一张图里所示的过程。</p>
+
+<p>最后整个程序如下：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">QuickSort</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">static</span> <span class="n">String</span><span class="o">[]</span> <span class="n">a</span> <span class="o">=</span> <span class="o">{</span><span class="s">&quot;Q&quot;</span><span class="o">,</span> <span class="s">&quot;U&quot;</span><span class="o">,</span> <span class="s">&quot;I&quot;</span><span class="o">,</span> <span class="s">&quot;C&quot;</span><span class="o">,</span> <span class="s">&quot;K&quot;</span><span class="o">,</span> <span class="s">&quot;S&quot;</span><span class="o">,</span> <span class="s">&quot;O&quot;</span><span class="o">,</span> <span class="s">&quot;R&quot;</span><span class="o">,</span> <span class="s">&quot;T&quot;</span><span class="o">};</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">sort</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">a</span><span class="o">.</span><span class="na">length</span> <span class="o">-</span> <span class="mi">1</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">Arrays</span><span class="o">.</span><span class="na">toString</span><span class="o">(</span><span class="n">a</span><span class="o">));</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">sort</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">a</span><span class="o">,</span> <span class="kt">int</span> <span class="n">low</span><span class="o">,</span> <span class="kt">int</span> <span class="n">high</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">low</span> <span class="o">&gt;=</span> <span class="n">high</span><span class="o">)</span>
+</span><span class='line'>            <span class="k">return</span><span class="o">;</span>
+</span><span class='line'>        <span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">partition</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">low</span><span class="o">,</span> <span class="n">high</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">sort</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">low</span><span class="o">,</span> <span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">sort</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="o">,</span> <span class="n">high</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">static</span> <span class="kt">int</span> <span class="nf">partition</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">a</span><span class="o">,</span> <span class="kt">int</span> <span class="n">low</span><span class="o">,</span> <span class="kt">int</span> <span class="n">high</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">String</span> <span class="n">value</span> <span class="o">=</span> <span class="n">a</span><span class="o">[</span><span class="n">low</span><span class="o">];</span>
+</span><span class='line'>        <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">low</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
+</span><span class='line'>        <span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">high</span><span class="o">;</span>
+</span><span class='line'>        <span class="k">while</span> <span class="o">(</span><span class="kc">true</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">while</span> <span class="o">(</span><span class="n">a</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="na">compareTo</span><span class="o">(</span><span class="n">value</span><span class="o">)</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">high</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">i</span><span class="o">++;</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>            <span class="k">while</span> <span class="o">(</span><span class="n">a</span><span class="o">[</span><span class="n">j</span><span class="o">].</span><span class="na">compareTo</span><span class="o">(</span><span class="n">value</span><span class="o">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">j</span> <span class="o">&gt;</span> <span class="n">low</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">j</span><span class="o">--;</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>            <span class="k">if</span> <span class="o">(</span><span class="n">i</span> <span class="o">&gt;=</span> <span class="n">j</span><span class="o">)</span>
+</span><span class='line'>                <span class="k">break</span><span class="o">;</span>
+</span><span class='line'>            <span class="n">exchange</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">i</span><span class="o">,</span> <span class="n">j</span><span class="o">);</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="n">exchange</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">low</span><span class="o">,</span> <span class="n">j</span><span class="o">);</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">j</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">exchange</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">a</span><span class="o">,</span> <span class="kt">int</span> <span class="n">i</span><span class="o">,</span> <span class="kt">int</span> <span class="n">j</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">String</span> <span class="n">temp</span> <span class="o">=</span> <span class="n">a</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
+</span><span class='line'>        <span class="n">a</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">a</span><span class="o">[</span><span class="n">j</span><span class="o">];</span>
+</span><span class='line'>        <span class="n">a</span><span class="o">[</span><span class="n">j</span><span class="o">]</span> <span class="o">=</span> <span class="n">temp</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[归并排序(Mergesort)]]></title>
     <link href="http://PhotoSynthesiis.github.io/blog/2013/08/23/merge-sort/"/>
     <updated>2013-08-23T08:51:00-05:00</updated>
     <id>http://PhotoSynthesiis.github.io/blog/2013/08/23/merge-sort</id>
@@ -5284,186 +5448,6 @@ mail.smtp.starttls.enable: 将一般连接升级到加密连接，而无需另�
 
 <p>最后是上面提到的类的依赖关系：
 <img src="http://PhotoSynthesiis.github.io/images/strategy_pattern.png"></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[一般递归与尾递归(Tail Recursion)]]></title>
-    <link href="http://PhotoSynthesiis.github.io/blog/2013/07/09/tail-recursion/"/>
-    <updated>2013-07-09T21:58:00-05:00</updated>
-    <id>http://PhotoSynthesiis.github.io/blog/2013/07/09/tail-recursion</id>
-    <content type="html"><![CDATA[<p>最近在读一篇文章的时候无意间接触到了尾递归，感觉他比一般的递归好用，有点意思，顾将之记录下来。</p>
-
-<p>首先需要了解的是到底什么是尾递归？
-这个问题其实很简单，顾名思义，尾递归就是在一个方法的尾部、且在函数返回前的最后一步调用函数本身。为了更好地理解，还是上代码吧(以著名的斐波拉契为例)：</p>
-
-<!-- more -->
-
-
-<p>一般的递归：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">private</span> <span class="kd">static</span> <span class="kt">int</span> <span class="nf">fibonacci</span><span class="o">(</span><span class="kt">int</span> <span class="n">number</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>    <span class="k">if</span> <span class="o">(</span><span class="n">number</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">number</span> <span class="o">==</span> <span class="mi">1</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">number</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>    <span class="k">return</span> <span class="n">number</span> <span class="o">*</span> <span class="n">fibonacci</span><span class="o">(</span><span class="n">number</span> <span class="o">-</span> <span class="mi">1</span><span class="o">);</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>在return返回前做了两件事，他们的顺序是：1、 计算fibonacci(number &ndash; 1)的值  2、 将fibonacci(number &ndash; 1)的值与number相乘。只有当第二步完成之后才返回。所以这里fibonacci方法最后做的事其实是一步乘法操作。</p>
-
-<p>尾递归：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">private</span> <span class="kd">static</span> <span class="kt">int</span> <span class="nf">fibonacci</span><span class="o">(</span><span class="kt">int</span> <span class="n">number</span><span class="o">,</span> <span class="kt">int</span> <span class="n">result</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>    <span class="k">if</span> <span class="o">(</span><span class="n">number</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>    <span class="k">if</span> <span class="o">(</span><span class="n">number</span> <span class="o">==</span> <span class="mi">1</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">result</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>    <span class="k">return</span> <span class="nf">fibonacci</span><span class="o">(</span><span class="n">number</span> <span class="o">-</span> <span class="mi">1</span><span class="o">,</span> <span class="n">result</span> <span class="o">*</span> <span class="n">number</span><span class="o">);</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>
-这里的最后一步还是在执行递归操作，所以这个方法就是一个尾递归。</p>
-
-<p>那么尾递归的好处是什么呢？其实在了解这个之前我们不妨换一种思路，看看一般递归的坏处是什么!我们都知道，递归之所以如此臭名昭著，不仅在于它的不好理解，更在于它对内存的大量消耗。因为递归的执行其实是在不断地将一次执行未完成的参数、变量和返回地址等储存在栈中，而由于每个线程在执行代码时，都会分配一定尺寸的栈空间(Windows系统中为1M),这些信息再少也会占用一定空间，成千上万个此类空间累积起来，自然就超过线程的栈空间了，于是就会抛出StackOverFlowException。
-尾递归的递归过程：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">Rescuvie</span><span class="o">(</span><span class="mi">5</span><span class="o">)</span>
-</span><span class='line'><span class="o">{</span><span class="mi">5</span> <span class="o">*</span> <span class="n">Rescuvie</span><span class="o">(</span><span class="mi">4</span><span class="o">)}</span>
-</span><span class='line'><span class="o">{</span><span class="mi">5</span> <span class="o">*</span> <span class="o">{</span><span class="mi">4</span> <span class="o">*</span> <span class="n">Rescuvie</span><span class="o">(</span><span class="mi">3</span><span class="o">)}}</span>
-</span><span class='line'><span class="o">{</span><span class="mi">5</span> <span class="o">*</span> <span class="o">{</span><span class="mi">4</span> <span class="o">*</span> <span class="o">{</span><span class="mi">3</span> <span class="o">*</span> <span class="n">Rescuvie</span><span class="o">(</span><span class="mi">2</span><span class="o">)}}}</span>
-</span><span class='line'><span class="o">{</span><span class="mi">5</span> <span class="o">*</span> <span class="o">{</span><span class="mi">4</span> <span class="o">*</span> <span class="o">{</span><span class="mi">3</span> <span class="o">*</span> <span class="o">{</span><span class="mi">2</span> <span class="o">*</span> <span class="n">Rescuvie</span><span class="o">(</span><span class="mi">1</span><span class="o">)}}}}</span>
-</span><span class='line'><span class="o">{</span><span class="mi">5</span> <span class="o">*</span> <span class="o">{</span><span class="mi">4</span> <span class="o">*</span> <span class="o">{</span><span class="mi">3</span> <span class="o">*</span> <span class="o">{</span><span class="mi">2</span> <span class="o">*</span> <span class="mi">1</span><span class="o">}}}}</span>
-</span><span class='line'><span class="o">{</span><span class="mi">5</span> <span class="o">*</span> <span class="o">{</span><span class="mi">4</span> <span class="o">*</span> <span class="o">{</span><span class="mi">3</span> <span class="o">*</span> <span class="mi">2</span><span class="o">}}}</span>
-</span><span class='line'><span class="o">{</span><span class="mi">5</span> <span class="o">*</span> <span class="o">{</span><span class="mi">4</span> <span class="o">*</span> <span class="mi">6</span><span class="o">}}</span>
-</span><span class='line'><span class="o">{</span><span class="mi">5</span> <span class="o">*</span> <span class="mi">24</span><span class="o">}</span>
-</span><span class='line'><span class="mi">120</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>但是尾递归不会有上面的烦恼，为什么呢？因为尾递归在每次执行下一次递归之前，本次计算的结果已经算出来了，通过递归调用把本次得到的值传给下一次计算。所以，本次递归中所有的参数、变量、返回地址等都变得没有意义。所以编译器不会为尾递归分配多个栈空间，而是只分配一个，后面的操作都在这个栈空间里面进行。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">TailRescuvie</span><span class="o">(</span><span class="mi">5</span><span class="o">)</span>
-</span><span class='line'><span class="n">TailRescuvie</span><span class="o">(</span><span class="mi">5</span><span class="o">,</span> <span class="mi">1</span><span class="o">)</span>
-</span><span class='line'><span class="n">TailRescuvie</span><span class="o">(</span><span class="mi">4</span><span class="o">,</span> <span class="mi">5</span><span class="o">)</span>
-</span><span class='line'><span class="n">TailRescuvie</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="mi">20</span><span class="o">)</span>
-</span><span class='line'><span class="n">TailRescuvie</span><span class="o">(</span><span class="mi">2</span><span class="o">,</span> <span class="mi">60</span><span class="o">)</span>
-</span><span class='line'><span class="n">TailRescuvie</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="mi">120</span><span class="o">)</span>
-</span><span class='line'><span class="mi">120</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>那么接下来你也许会问，我们需要做什么去优化尾递归？答案是，我们无需做任何事，因为对尾递归的优化都是由语言本身决定的，很不幸的是，JVM并不支持对尾递归的优化，所以简而言之，在Java中即使使用尾递归，程序还是会为每一次的递归调用分配栈空间，这样就和一般递归没有差别了。</p>
-
-<p>最后贴上全部代码：
-1、一般递归</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">recursion_and_iteration</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Recursion_fibonacci</span> <span class="o">{</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">fibonacci</span><span class="o">(</span><span class="mi">6</span><span class="o">));</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">private</span> <span class="kd">static</span> <span class="kt">int</span> <span class="nf">fibonacci</span><span class="o">(</span><span class="kt">int</span> <span class="n">number</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">number</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">number</span> <span class="o">==</span> <span class="mi">1</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>            <span class="k">return</span> <span class="n">number</span><span class="o">;</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">number</span> <span class="o">*</span> <span class="n">fibonacci</span><span class="o">(</span><span class="n">number</span> <span class="o">-</span> <span class="mi">1</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>2、尾递归</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">recursion_and_iteration</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">TailRecursion_fibonacci</span> <span class="o">{</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">fibonacci</span><span class="o">(</span><span class="mi">6</span><span class="o">,</span> <span class="mi">1</span><span class="o">));</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">private</span> <span class="kd">static</span> <span class="kt">int</span> <span class="nf">fibonacci</span><span class="o">(</span><span class="kt">int</span> <span class="n">number</span><span class="o">,</span> <span class="kt">int</span> <span class="n">result</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">number</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>            <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">number</span> <span class="o">==</span> <span class="mi">1</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>            <span class="k">return</span> <span class="n">result</span><span class="o">;</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>        <span class="k">return</span> <span class="nf">fibonacci</span><span class="o">(</span><span class="n">number</span> <span class="o">-</span> <span class="mi">1</span><span class="o">,</span> <span class="n">result</span> <span class="o">*</span> <span class="n">number</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
 ]]></content>
   </entry>
   
