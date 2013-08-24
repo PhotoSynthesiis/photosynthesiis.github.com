@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "merge sort"
+title: "归并排序(Mergesort)"
 date: 2013-08-23 08:51
 comments: true
 categories: 
