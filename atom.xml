@@ -4,7 +4,7 @@
   <title><![CDATA[public static void man]]></title>
   <link href="http://PhotoSynthesiis.github.io/atom.xml" rel="self"/>
   <link href="http://PhotoSynthesiis.github.io/"/>
-  <updated>2013-08-23T22:27:46-05:00</updated>
+  <updated>2014-03-06T19:53:51-06:00</updated>
   <id>http://PhotoSynthesiis.github.io/</id>
   <author>
     <name><![CDATA[Qiushi Li]]></name>
@@ -12,6 +12,132 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[iOS Programming 1(A simple iOS application)]]></title>
+    <link href="http://PhotoSynthesiis.github.io/blog/2014/03/06/ios-programming-1/"/>
+    <updated>2014-03-06T14:07:00-06:00</updated>
+    <id>http://PhotoSynthesiis.github.io/blog/2014/03/06/ios-programming-1</id>
+    <content type="html"><![CDATA[<pre><code>最近在学习iOS开发，虽然课上也有讲，但是还是不如自己看书学得更实在，今天就从最基础的iOS开发说起。值得注意的是，我在这类博客里所讲到的内容，完全是按照iOS Programming: The Big Nerd Ranch Guide第四版里面来的。
+</code></pre>
+
+<!-- more -->
+
+
+<pre><code>项目最后出来的效果类似于下面这张图：
+&lt;img src="http://PhotoSynthesiis.github.io/images/ios1.png"&gt;
+
+首先新建一个empty application，此时的项目里面只有WUSTLAppDelegate文件。今天我们的目的是根据MVC模式建立一个简单的项目，所以，第一步我们从controller出发，建立一个名为WUSTLQuizViewController的类，需要注意的是，在建立的时候一定要勾上'with XIB for user interface'这个选项，这样系统会给你建一个后缀名为xib的文件。其实我们常常把xib文件和Interface Builder搞混，以为他俩是一回事，其实不然。Interface Builder其实是一个对象的编辑器，你可以在里面创建和修改对象(例如button和label)，然后把他们保存到一个文件中，这个保存下来的文件就是xib文件，这就不难理解为什么xib文件的全称是XML Interface Builder了。
+
+接下来我们应该创建MVC中的View部分了，我们分别拖动两个label和两个button到interface builder里面，然后调整他们的大小等，以达到上图的效果，这样就算完成了View部分。但是现在的View只是一个独立的东西，它不能传递信息给controller，也不能从controller得到显示的指令，所以下一个我们需要做的就是把controller和view连接起来。连接使两个在内存中的对象互相知道了对方，这样他们就能互相交流了。在Interface Builder中有两种连接可以使用：Outlet和Action。Outlet指向一个对象，Action是用来相应view中事件的具体方法。
+
+View里面有四个对象，所以我们也需要在相应的controller里面建立四个对象，在WUSTLQuizViewController.m里将@implementation和@end之间系统自动填充的代码全部删除，然后再在WUSTLQuizViewController.m.m的@interface和@end之间加上如下代码(首先我们只加label部分)：
+```objective-c
+@property (nonatomic, weak) IBOutlet UILabel *questionLabel;
+@property (nonatomic, weak) IBOutlet UILabel *answerLabel;
+```
+这两行代码的意思是，在每个WUSTLQuizViewController.m的对象中建立两个IBOutlet对象，分别叫做questionLabel和answerLabel，他们都指向UILabel，关键字IBOutlet的作用是告诉Interface Builder我们将用这个被Iboutlet修饰的对象连接Interface Builder中的一个一个对象。
+既然Controller和View两边都声明了对象，剩下就工作就是把他们连接起来了。我们找到xib文件，然后找到左边Placeholders，右键点击后会出现下面这样的弹框让你选择：
+&lt;img src="http://PhotoSynthesiis.github.io/images/ios2.png"&gt;
+我们可以看到在小黑框里面有我们刚刚在controller里面生命的Outlet对象，左键点击小黑框中变量右边的加号，然后连出一条线指向Label，如果Label高亮了就松开，这就创建了一个controller中的Outlet对象和View中的label对象的连接。
+&lt;img src="http://PhotoSynthesiis.github.io/images/ios3.png"&gt;
+同样的事再做一遍，连接另一个label。值得注意的是，刚才我们连线的时候是从小黑框到Interface Builder，这个顺序是有讲究的，因为我们想把在controller中的Outlet在View中显示，所以就是从小黑框到Interface Builder这个指向。
+UILabel已经连接了，那么接下来应该连接button了。因为我们想要的效果是在用户点击button的时候View给controller发送消息，这个时候在controller中应该有处理这个消息的方法，所以我们到WUSTLQuizViewController.m中建立两个对应的方法:
+```objective-c
+- (IBAction)showQuestion:(id)sender {
+}
+
+- (IBAction)showAnswer:(id)sender {
+    NSString *answer = self.answers[self.currentQuestionIndex];
+    self.answerLabel.text = answer;
+}
+```
+上面代码中IBAction是告诉Xcode，这个方法是用来响应Interface Builder中的事件的。说到这里，不得不提一下Target\Action模式，他是objective-c中的一种消息机制，当用户在view中做出一些动作后，view会发送消息到controller，Target指的就是相应这个事件的对象(在这里就是WUSTLQuizViewController.m)，Action指的是Target中的哪个方法具体用来处理这个时间的(在这里Action分别是showQuestion和showAnswer方法)。这时我们再回到xib文件中，点击Interface Builder中的button，然后按住不放拉出一条线并在Placeholder中的file‘s owner松开(control-drag)：
+&lt;img src="http://PhotoSynthesiis.github.io/images/ios4.png"&gt;
+对两个button分别做同样的动作，我们就完成了button到controller的连接，也就是两次Target/Action操作。上面的file’s owner对于与xib文件来说就是controller，所以下面在做连接操作的时候，实际上就是View中的对象和Controller里面的对象做连接。接下来我们就需要回到controller中去实现具体的响应操作了。我们在WUSTLQuizViewController.m中刚才加label的地方加上两个NSArray和一个index，NSArray用来装question和answer，index用来存当前NSArray的下标。
+```objective-c
+#import "WUSTLQuizViewController.h"
+
+@interface WUSTLQuizViewController ()
+@property (nonatomic) int currentQuestionIndex;
+
+@property (nonatomic, copy) NSArray *questions;
+@property (nonatomic, copy) NSArray *answers;
+
+@property (nonatomic, weak) IBOutlet UILabel *questionLabel;
+@property (nonatomic, weak) IBOutlet UILabel *answerLabel;
+@end
+
+@implementation
+...
+@end
+```
+这里需要提到另一个方法:
+```objective-c
+initWithNibName:bundle:
+```objective-c
+这个方法是在包含他的controller被创建的时候调用的，我们可以在里面做一些初始化，例如在这里我们可以在里面初始化两个NSArray，如下：
+```objective-c
+- (instancetype) initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil     {
+    // call the init method implemented by the superclass
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+
+    if (self) {
+        // create two arrays filled with questions and answers
+        // and make the pointers point to them
+        self.questions = @[@"From what is cognac made?", @"What is 7 + 7?", @"What is the captal of Vermont?"];
+        self.answers = @[@"Grapes", @"14", @"Montpelier"];
+    }
+
+    // return the address of the new object
+    return self;
+}
+```objective-c  
+那么这里的nib又是什么呢？注意到之前我们用到了xib文件，其实nib文件就是xib文件编译后产生的，他比xib文件更小，并且对于应用来说更容易解析。每一个应用都有一个叫做application bundle的文件夹，这里面专门存放这个有用会使用到的可执行文件和一些其他的资源，nib文件也会在编译完成后被拷贝到这里面。在运行时，系统会载入application bundle里面的资源并在需要的时候使用。
+
+我们接下来实现showQuestion和showAnswer方法了。由于在之前已经把他俩和Interface Builder中的button关联起来了，所以button在被点之后，这两个方法会相应地被调用。我们想要在show question点击的时候在label中显示问题，所以可以这么实现：
+```objective-c
+- (IBAction)showQuestion:(id)sender {
+
+    self.currentQuestionIndex++;
+
+    if (self.currentQuestionIndex == [self.questions count]) {
+        self.currentQuestionIndex = 0;
+    }
+
+    NSString *question = self.questions[self.currentQuestionIndex];
+    self.questionLabel.text = question;
+    self.answerLabel.text = @"???";
+}
+```objective-c
+同理，现实答案的button可以这么实现：
+```objective-c
+- (IBAction)showAnswer:(id)sender {
+    NSString *answer = self.answers[self.currentQuestionIndex];
+    self.answerLabel.text = answer;
+}
+```objective-c
+controller和view已经连接完毕了，但是还没有完，如果这个时候启动项目会发现屏幕上什么都没有，因为没有把view加入到显示中去。我们需要做的就是在AppDelegate的application方法中把当前的controller作为整个应用的root view：
+```objective-c
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary        *)launchOptions
+{
+    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    // Override point for customization after application launch.
+
+    WUSTLQuizViewController *quizVC = [[WUSTLQuizViewController alloc] init];
+    self.window.rootViewController = quizVC;
+
+    self.window.backgroundColor = [UIColor whiteColor];
+    [self.window makeKeyAndVisible];
+    return YES;
+}
+```objective-c  
+每个iOS应用都有一个AppDelegate，他是应用的入口，当应用启动和关闭的时候，可以在AppDelegate里面相应的方法中做初始化和收尾的工作。
+
+到这个时候，每次启动应用的时候，一个controller对象会被创建，然后initWithNibName方法会被调用，所有准备工作结束，可以启动项目了。
+</code></pre>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[快速排序(Quicksort)]]></title>
@@ -5215,239 +5341,6 @@ mail.smtp.starttls.enable: 将一般连接升级到加密连接，而无需另�
 <p>在实际应用中，observer里面会包含对subject的应用，以便自己退出subject的通知或者再次加进去。观察者模式应用到了很多OO原则，例如通过隔离变化的观察者和不变化的被观察者来分离固定于不变，通过在被观察者中注册观察者来达到针对接口而非实现编程的目的，同时它应用了组合在被观察者中保持了对观察者的引用而没有用继承来实现。</p>
 
 <p>其实，Java在util包中有Observable和Observer类，它们分别对应了上面的subject和observer的角色。所以可以说观察者模式在Java中是内置了的，由此可以看出这种模式的应用有多么宽广。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[深入浅出设计模式之策略模式(Strategy Pattern)]]></title>
-    <link href="http://PhotoSynthesiis.github.io/blog/2013/07/11/strategy-pattern/"/>
-    <updated>2013-07-11T00:02:00-05:00</updated>
-    <id>http://PhotoSynthesiis.github.io/blog/2013/07/11/strategy-pattern</id>
-    <content type="html"><![CDATA[<p>今天开始阅读Head First设计模式，老早就听说这是一本经典书籍，但是这类华丽的辞藻确实听过太多，每每在阅读的时候发现自己也许期望太高了或者自己的水平不足，并没有带给自己耳目一新的感觉。但是今天在阅读这本书的时候，终于找到了一种久违的兴奋感，而它更来自于对书中内容的由浅入深的理解和阅读的乐趣。例如，在第一章讲解策略模式的时候，在读到书的最后一页之前，我并不知道自己学习的是哪种模式，所以在学习的过程中
-我能完全静下心来理解纯粹的内容，而不是一边试图去记住“策略模式”这四个字，一边去看“策略”应用在哪里，而在这个过程中往往偏离了书本想要表达的内容，及作者期望读者走的学习道路，致使书本的作用大大降低。从引导读者这一点上来说，Head First设计模式这本书做得非常好！</p>
-
-<!-- more -->
-
-
-<p>说完书的概况，下面就来说说书的第一章内容 &mdash; 策略模式吧。策略模式这个名字听起来挺吓人的，策略二字似乎隐含着无尽的逻辑和‘勾心斗角’，但是take it easy，事实并没有这么复杂。简单来说，策略模式就是将一个对象的行为(通常被称为一个算法族)分离出来并将其封装，达到高复用的目的。</p>
-
-<p>现在有一个真实的需求，一家玩具公司生产了一批鸭子，他们有很多种，比如一般的鸭子，诱饵鸭，火箭鸭等等(管它叫什么名字呢)。鸭子有‘叫’，‘飞’两种行为。对于设计者来说，最直观的设计方案是创造一个Duck的父类，里面有‘叫’和‘飞’两个方法，然后其他的鸭子就去继承。但是这样会造成一些子类继承了自己并不想要的东西，比如诱饵鸭继承了‘飞’，而它却不会飞。应用OO中‘分离变化与不变化的原则’，你也许又会想到将父类鸭子里面变化的行为分离出来，做成单独的接口，子类根据实际需要去实现。但问题又来了，如果一般鸭子和火箭鸭都会飞，那岂不是分别要实现同样的代码两次？那么应该怎么做呢？我们不妨在分离出来的接口下面再实现一层具体类，它们可以分别代表不同的类型，比如在‘叫’下面可以分为‘尖叫’，‘呱呱叫’和‘不叫’。‘飞’的行为与其类似。这样，所有鸭子的所有行为我们都知道了，剩下的就是应用组合，不同的鸭子根据需求找到对应的行为类组合起来。接下来是比较tricky的地方，会用到OO设计原则里的‘针对接口而不是针对实现编程’。既然是针对接口，那么这里只有两种接口 &mdash; ‘叫’和‘飞’。虽然不同的行为被分离了出来，但是原来Duck父类还是保留了相应的行为，只不过这些行为变成了接口，意味着对所有子类提供了公共的接口，具体行为还得看子类自己的实现。同时，子类还能改变自身的行为，这样就大大地提高了灵活性。</p>
-
-<p>下面是上面说的实现:
-1、父类Duck</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">Duck</span> <span class="o">{</span>
-</span><span class='line'>    <span class="kd">protected</span> <span class="n">QuackBehavior</span> <span class="n">quackBehavior</span><span class="o">;</span>
-</span><span class='line'>    <span class="kd">protected</span> <span class="n">FlyBehavior</span> <span class="n">flyBehavior</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">setQuackBehavior</span><span class="o">(</span><span class="n">QuackBehavior</span> <span class="n">quackBehavior</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">quackBehavior</span> <span class="o">=</span> <span class="n">quackBehavior</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">setFlyBehavior</span><span class="o">(</span><span class="n">FlyBehavior</span> <span class="n">flyBehavior</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">flyBehavior</span> <span class="o">=</span> <span class="n">flyBehavior</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">performQuack</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">quackBehavior</span><span class="o">.</span><span class="na">quack</span><span class="o">();</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">performFly</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">flyBehavior</span><span class="o">.</span><span class="na">fly</span><span class="o">();</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>2、‘叫’接口与‘飞’接口</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">QuackBehavior</span> <span class="o">{</span>
-</span><span class='line'>    <span class="kt">void</span> <span class="nf">quack</span><span class="o">();</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">FlyBehavior</span> <span class="o">{</span>
-</span><span class='line'>    <span class="kt">void</span> <span class="nf">fly</span><span class="o">();</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>3、具体的鸭子的行为的实现 &mdash; 来自‘叫’和‘飞’接口</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Quack</span> <span class="kd">implements</span> <span class="n">QuackBehavior</span> <span class="o">{</span>
-</span><span class='line'>    <span class="nd">@Override</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">quack</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;quack&quot;</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Squeak</span> <span class="kd">implements</span> <span class="n">QuackBehavior</span> <span class="o">{</span>
-</span><span class='line'>    <span class="nd">@Override</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">quack</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Squeak&quot;</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">FlyNoWay</span> <span class="kd">implements</span> <span class="n">FlyBehavior</span> <span class="o">{</span>
-</span><span class='line'>    <span class="nd">@Override</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">fly</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;I can&#39;t fly&quot;</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">FlyWithWings</span> <span class="kd">implements</span> <span class="n">FlyBehavior</span> <span class="o">{</span>
-</span><span class='line'>    <span class="nd">@Override</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">fly</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;I&#39;m flying&quot;</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">FlyRocketPowered</span> <span class="kd">implements</span> <span class="n">FlyBehavior</span> <span class="o">{</span>
-</span><span class='line'>    <span class="nd">@Override</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">fly</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;I am flying with a rocket&quot;</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>4、子类实现父类Duck</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ModelDuck</span> <span class="kd">extends</span> <span class="n">Duck</span> <span class="o">{</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="nf">ModelDuck</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">flyBehavior</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FlyNoWay</span><span class="o">();</span>
-</span><span class='line'>        <span class="n">quackBehavior</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Quack</span><span class="o">();</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MallardDuck</span> <span class="kd">extends</span> <span class="n">Duck</span> <span class="o">{</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="nf">MallardDuck</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">quackBehavior</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Quack</span><span class="o">();</span>
-</span><span class='line'>        <span class="n">flyBehavior</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FlyWithWings</span><span class="o">();</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>5、应用</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MiniDuckSimulator</span> <span class="o">{</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">Duck</span> <span class="n">duck</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MallardDuck</span><span class="o">();</span>
-</span><span class='line'>        <span class="n">duck</span><span class="o">.</span><span class="na">performQuack</span><span class="o">();</span>
-</span><span class='line'>        <span class="n">duck</span><span class="o">.</span><span class="na">performFly</span><span class="o">();</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">Duck</span> <span class="n">model</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ModelDuck</span><span class="o">();</span>
-</span><span class='line'>        <span class="n">model</span><span class="o">.</span><span class="na">performQuack</span><span class="o">();</span>
-</span><span class='line'>        <span class="n">model</span><span class="o">.</span><span class="na">performFly</span><span class="o">();</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">model</span><span class="o">.</span><span class="na">setFlyBehavior</span><span class="o">(</span><span class="k">new</span> <span class="n">FlyRocketPowered</span><span class="o">());</span>
-</span><span class='line'>        <span class="n">model</span><span class="o">.</span><span class="na">performFly</span><span class="o">();</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>
-这里我们可以看到model对象在被初始化后还能改变自身的行为，即model.setFlyBehavior(new FlyRocketPowered());同时如果系统扩展，更多的类被加了进来，我们需要做的仅仅是加上一些新的行为，同时不会对原有类造成影响，这就是这个模式的精妙之处。</p>
-
-<p>这个时候我们可以回到第二部看看，它创建了所有鸭子的所有行为，然后我们根据一定的‘策略’选择特定的行为组合起来。也许这就是策略模式名称的由来吧。</p>
-
-<p>最后是上面提到的类的依赖关系：
-<img src="http://PhotoSynthesiis.github.io/images/strategy_pattern.png"></p>
 ]]></content>
   </entry>
   
