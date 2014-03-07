@@ -4,7 +4,7 @@
   <title><![CDATA[public static void man]]></title>
   <link href="http://PhotoSynthesiis.github.io/atom.xml" rel="self"/>
   <link href="http://PhotoSynthesiis.github.io/"/>
-  <updated>2014-03-06T20:11:57-06:00</updated>
+  <updated>2014-03-07T14:57:24-06:00</updated>
   <id>http://PhotoSynthesiis.github.io/</id>
   <author>
     <name><![CDATA[Qiushi Li]]></name>
@@ -25,7 +25,7 @@
 
 <p>项目最后出来的效果类似于下面这张图：</p>
 
-<p><img src="http://PhotoSynthesiis.github.io/images/ios1.png"></p>
+<p><img src="http://PhotoSynthesiis.github.io/images/ios1.png" width="300" height="600"></p>
 
 <p>首先新建一个empty application，此时的项目里面只有WUSTLAppDelegate文件。今天我们的目的是根据MVC模式建立一个简单的项目，所以，第一步我们从controller出发，建立一个名为WUSTLQuizViewController的类，需要注意的是，在建立的时候一定要勾上&#8217;with XIB for user interface&#8217;这个选项，这样系统会给你建一个后缀名为xib的文件。其实我们常常把xib文件和Interface Builder搞混，以为他俩是一回事，其实不然。Interface Builder其实是一个对象的编辑器，你可以在里面创建和修改对象(例如button和label)，然后把他们保存到一个文件中，这个保存下来的文件就是xib文件，这就不难理解为什么xib文件的全称是XML Interface Builder了。</p>
 
@@ -44,11 +44,11 @@
 
 <p>既然Controller和View两边都声明了对象，剩下就工作就是把他们连接起来了。我们找到xib文件，然后找到左边Placeholders，右键点击后会出现下面这样的弹框让你选择：</p>
 
-<p><img src="http://PhotoSynthesiis.github.io/images/ios2.png"></p>
+<p><img src="http://PhotoSynthesiis.github.io/images/ios2.png" width="400" height="400"></p>
 
 <p>我们可以看到在小黑框里面有我们刚刚在controller里面生命的Outlet对象，左键点击小黑框中变量右边的加号，然后连出一条线指向Label，如果Label高亮了就松开，这就创建了一个controller中的Outlet对象和View中的label对象的连接。</p>
 
-<p><img src="http://PhotoSynthesiis.github.io/images/ios3.png"></p>
+<p><img src="http://PhotoSynthesiis.github.io/images/ios3.png" width="600" height="600"></p>
 
 <p>同样的事再做一遍，连接另一个label。值得注意的是，刚才我们连线的时候是从小黑框到Interface Builder，这个顺序是有讲究的，因为我们想把在controller中的Outlet在View中显示，所以就是从小黑框到Interface Builder这个指向。</p>
 
@@ -59,21 +59,17 @@
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
 </pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">IBAction</span><span class="p">)</span><span class="nf">showQuestion:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">sender</span> <span class="p">{</span>
 </span><span class='line'><span class="p">}</span>
 </span><span class='line'>
 </span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">IBAction</span><span class="p">)</span><span class="nf">showAnswer:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">sender</span> <span class="p">{</span>
-</span><span class='line'>  <span class="n">NSString</span> <span class="o">*</span><span class="n">answer</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">answers</span><span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">currentQuestionIndex</span><span class="p">];</span>
-</span><span class='line'>    <span class="n">self</span><span class="p">.</span><span class="n">answerLabel</span><span class="p">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">answer</span><span class="p">;</span>
 </span><span class='line'><span class="p">}</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
 <p>上面代码中IBAction是告诉Xcode，这个方法是用来响应Interface Builder中的事件的。说到这里，不得不提一下Target\Action模式，他是objective-c中的一种消息机制，当用户在view中做出一些动作后，view会发送消息到controller，Target指的就是相应这个事件的对象(在这里就是WUSTLQuizViewController.m)，Action指的是Target中的哪个方法具体用来处理这个时间的(在这里Action分别是showQuestion和showAnswer方法)。这时我们再回到xib文件中，点击Interface Builder中的button，然后按住不放拉出一条线并在Placeholder中的file‘s owner松开(control-drag)：</p>
 
-<p><img src="http://PhotoSynthesiis.github.io/images/ios4.png"></p>
+<p><img src="http://PhotoSynthesiis.github.io/images/ios4.png" width="600" height="600"></p>
 
 <p>对两个button分别做同样的动作，我们就完成了button到controller的连接，也就是两次Target/Action操作。上面的file’s owner对于与xib文件来说就是controller，所以下面在做连接操作的时候，实际上就是View中的对象和Controller里面的对象做连接。接下来我们就需要回到controller中去实现具体的响应操作了。我们在WUSTLQuizViewController.m中刚才加label的地方加上两个NSArray和一个index，NSArray用来装question和answer，index用来存当前NSArray的下标。</p>
 
@@ -133,15 +129,19 @@
 <span class='line-number'>12</span>
 <span class='line-number'>13</span>
 <span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="n">instancetype</span><span class="p">)</span> <span class="nf">initWithNibName:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">nibNameOrNil</span> <span class="nf">bundle:</span><span class="p">(</span><span class="n">NSBundle</span> <span class="o">*</span><span class="p">)</span><span class="nv">nibBundleOrNil</span>   <span class="p">{</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="n">instancetype</span><span class="p">)</span> <span class="nf">initWithNibName:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">nibNameOrNil</span> <span class="nf">bundle:</span><span class="p">(</span><span class="n">NSBundle</span>          <span class="o">*</span><span class="p">)</span><span class="nv">nibBundleOrNil</span> <span class="p">{</span>
 </span><span class='line'>  <span class="c1">// call the init method implemented by the superclass</span>
 </span><span class='line'>    <span class="n">self</span> <span class="o">=</span> <span class="p">[</span><span class="n">super</span> <span class="nl">initWithNibName:</span><span class="n">nibNameOrNil</span> <span class="nl">bundle:</span><span class="n">nibBundleOrNil</span><span class="p">];</span>
 </span><span class='line'>
 </span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="n">self</span><span class="p">)</span> <span class="p">{</span>
 </span><span class='line'>      <span class="c1">// create two arrays filled with questions and answers</span>
 </span><span class='line'>        <span class="c1">// and make the pointers point to them</span>
-</span><span class='line'>      <span class="n">self</span><span class="p">.</span><span class="n">questions</span> <span class="o">=</span> <span class="err">@</span><span class="p">[</span><span class="s">@&quot;From what is cognac made?&quot;</span><span class="p">,</span> <span class="s">@&quot;What is 7 + 7?&quot;</span><span class="p">,</span> <span class="s">@&quot;What is the captal of Vermont?&quot;</span><span class="p">];</span>
-</span><span class='line'>        <span class="n">self</span><span class="p">.</span><span class="n">answers</span> <span class="o">=</span> <span class="err">@</span><span class="p">[</span><span class="s">@&quot;Grapes&quot;</span><span class="p">,</span> <span class="s">@&quot;14&quot;</span><span class="p">,</span> <span class="s">@&quot;Montpelier&quot;</span><span class="p">];</span>
+</span><span class='line'>      <span class="n">self</span><span class="p">.</span><span class="n">questions</span> <span class="o">=</span> <span class="err">@</span><span class="p">[</span><span class="s">@&quot;From what is cognac made?&quot;</span><span class="p">,</span>
+</span><span class='line'>       <span class="s">@&quot;What is 7 + 7?&quot;</span><span class="p">,</span>
+</span><span class='line'>       <span class="s">@&quot;What is the captal of Vermont?&quot;</span><span class="p">];</span>
+</span><span class='line'>      <span class="n">self</span><span class="p">.</span><span class="n">answers</span> <span class="o">=</span> <span class="err">@</span><span class="p">[</span><span class="s">@&quot;Grapes&quot;</span><span class="p">,</span> <span class="s">@&quot;14&quot;</span><span class="p">,</span> <span class="s">@&quot;Montpelier&quot;</span><span class="p">];</span>
 </span><span class='line'>  <span class="p">}</span>
 </span><span class='line'>
 </span><span class='line'>    <span class="c1">// return the address of the new object</span>
@@ -166,14 +166,14 @@
 <span class='line-number'>10</span>
 <span class='line-number'>11</span>
 </pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">IBAction</span><span class="p">)</span><span class="nf">showQuestion:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">sender</span> <span class="p">{</span>
-</span><span class='line'>
 </span><span class='line'>    <span class="n">self</span><span class="p">.</span><span class="n">currentQuestionIndex</span><span class="o">++</span><span class="p">;</span>
 </span><span class='line'>
-</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">currentQuestionIndex</span> <span class="o">==</span> <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">questions</span> <span class="n">count</span><span class="p">])</span> <span class="p">{</span>         <span class="n">self</span><span class="p">.</span><span class="n">currentQuestionIndex</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">currentQuestionIndex</span> <span class="o">==</span> <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">questions</span> <span class="n">count</span><span class="p">])</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">self</span><span class="p">.</span><span class="n">currentQuestionIndex</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 </span><span class='line'>    <span class="p">}</span>
 </span><span class='line'>
 </span><span class='line'>    <span class="n">NSString</span> <span class="o">*</span><span class="n">question</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">questions</span><span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">currentQuestionIndex</span><span class="p">];</span>
-</span><span class='line'>  <span class="n">self</span><span class="p">.</span><span class="n">questionLabel</span><span class="p">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">question</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">self</span><span class="p">.</span><span class="n">questionLabel</span><span class="p">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">question</span><span class="p">;</span>
 </span><span class='line'>    <span class="n">self</span><span class="p">.</span><span class="n">answerLabel</span><span class="p">.</span><span class="n">text</span> <span class="o">=</span> <span class="s">@&quot;???&quot;</span><span class="p">;</span>
 </span><span class='line'><span class="p">}</span>
 </span></code></pre></td></tr></table></div></figure>
@@ -187,7 +187,7 @@
 <span class='line-number'>4</span>
 </pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">IBAction</span><span class="p">)</span><span class="nf">showAnswer:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">sender</span> <span class="p">{</span>
 </span><span class='line'>    <span class="n">NSString</span> <span class="o">*</span><span class="n">answer</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">answers</span><span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">currentQuestionIndex</span><span class="p">];</span>
-</span><span class='line'>  <span class="n">self</span><span class="p">.</span><span class="n">answerLabel</span><span class="p">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">answer</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">self</span><span class="p">.</span><span class="n">answerLabel</span><span class="p">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">answer</span><span class="p">;</span>
 </span><span class='line'><span class="p">}</span>
 </span></code></pre></td></tr></table></div></figure>
 
@@ -205,17 +205,15 @@
 <span class='line-number'>9</span>
 <span class='line-number'>10</span>
 <span class='line-number'>11</span>
-<span class='line-number'>12</span>
-</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nf">application:</span><span class="p">(</span><span class="n">UIApplication</span> <span class="o">*</span><span class="p">)</span><span class="nv">application</span> <span class="nf">didFinishLaunchingWithOptions:</span><span class="p">(</span><span class="n">NSDictionary</span>   <span class="o">*</span><span class="p">)</span><span class="nv">launchOptions</span>
-</span><span class='line'><span class="p">{</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nf">application:</span><span class="p">(</span><span class="n">UIApplication</span> <span class="o">*</span><span class="p">)</span><span class="nv">application</span> <span class="nf">didFinishLaunchingWithOptions:</span><span class="p">(</span><span class="n">NSDictionary</span>   <span class="o">*</span><span class="p">)</span><span class="nv">launchOptions</span> <span class="p">{</span>
 </span><span class='line'>    <span class="n">self</span><span class="p">.</span><span class="n">window</span> <span class="o">=</span> <span class="p">[[</span><span class="n">UIWindow</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithFrame:</span><span class="p">[[</span><span class="n">UIScreen</span> <span class="n">mainScreen</span><span class="p">]</span> <span class="n">bounds</span><span class="p">]];</span>
 </span><span class='line'>  <span class="c1">// Override point for customization after application launch.</span>
 </span><span class='line'>
 </span><span class='line'>    <span class="n">WUSTLQuizViewController</span> <span class="o">*</span><span class="n">quizVC</span> <span class="o">=</span> <span class="p">[[</span><span class="n">WUSTLQuizViewController</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
-</span><span class='line'>  <span class="n">self</span><span class="p">.</span><span class="n">window</span><span class="p">.</span><span class="n">rootViewController</span> <span class="o">=</span> <span class="n">quizVC</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">self</span><span class="p">.</span><span class="n">window</span><span class="p">.</span><span class="n">rootViewController</span> <span class="o">=</span> <span class="n">quizVC</span><span class="p">;</span>
 </span><span class='line'>
 </span><span class='line'>    <span class="n">self</span><span class="p">.</span><span class="n">window</span><span class="p">.</span><span class="n">backgroundColor</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIColor</span> <span class="n">whiteColor</span><span class="p">];</span>
-</span><span class='line'>  <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">window</span> <span class="n">makeKeyAndVisible</span><span class="p">];</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">window</span> <span class="n">makeKeyAndVisible</span><span class="p">];</span>
 </span><span class='line'>    <span class="k">return</span> <span class="n">YES</span><span class="p">;</span>
 </span><span class='line'><span class="p">}</span>
 </span></code></pre></td></tr></table></div></figure>
