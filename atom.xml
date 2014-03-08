@@ -4,7 +4,7 @@
   <title><![CDATA[public static void man]]></title>
   <link href="http://PhotoSynthesiis.github.io/atom.xml" rel="self"/>
   <link href="http://PhotoSynthesiis.github.io/"/>
-  <updated>2014-03-07T14:57:24-06:00</updated>
+  <updated>2014-03-07T22:17:23-06:00</updated>
   <id>http://PhotoSynthesiis.github.io/</id>
   <author>
     <name><![CDATA[Qiushi Li]]></name>
@@ -12,6 +12,83 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[iOS Programming 2(objective-c)]]></title>
+    <link href="http://PhotoSynthesiis.github.io/blog/2014/03/07/ios-programming-2/"/>
+    <updated>2014-03-07T18:36:00-06:00</updated>
+    <id>http://PhotoSynthesiis.github.io/blog/2014/03/07/ios-programming-2</id>
+    <content type="html"><![CDATA[<p>Objective-c中的方法调用其实是一种消息传送的机制，例如下面这段代码：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="p">[</span><span class="n">partyInstance</span> <span class="nl">addAttendee:</span><span class="n">somePerson</span><span class="p">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>他表达的意思是发送addAttendee:消息给partyInstance对象，然后这个对象再去调用他的类中的addAttendee方法，somePerson在这里是参数。在运行时，消息被发送到对象，然后对象会向创建自己的那个类寻求帮助，并告诉这个类去运行消息中指定的方法(e.g. addAttendee)(这里需要注意的是，一切都是发生在运行时，而不是一些其他语言在编译时进行检查)。那么一个对象又是怎么知道自己属于哪个类呢？其实每个对象都有一个叫做&#8217;isa&#8217;的instance variable，当这个对象被创建的时候，这个isa就自动被初始化为指向创建他的那个类。这个instance variable叫做&#8217;isa&#8217;是有道理的，因为他是创建他的类的一个实例。他们的关系如下：</p>
+
+<!--more-->
+
+
+<p><img src="http://PhotoSynthesiis.github.io/images/objects.png" width="500" height="800"></p>
+
+<p>一个对象只响应在他的类中定义了的方法。因为这一切都是发生在运行时，所以xCode并不能在运行时(项目build的时候)发现到底这个对象能不能相应传进来的消息。有时xCode能判断出是否能响应，但是有时并不能，例如：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="n">NSArray</span> <span class="o">*</span><span class="n">items</span> <span class="o">=</span> <span class="err">@</span><span class="p">[</span><span class="s">@&quot;A&quot;</span><span class="p">,</span> <span class="s">@&quot;B&quot;</span><span class="p">,</span> <span class="s">@&quot;C&quot;</span><span class="p">];</span>
+</span><span class='line'><span class="kt">id</span> <span class="n">lastString</span> <span class="o">=</span> <span class="p">[</span><span class="n">items</span> <span class="n">lastObject</span><span class="p">];</span>
+</span><span class='line'><span class="p">[</span><span class="n">lastString</span> <span class="n">count</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>上面首先创建一个array，里面装了3个string对象的引用，然后返回最后一个string引用给lastString，然后调用lastString的count方法，因为lastString其实是一个string，并没有count方法，所以xCode会抛出异常。在iOS开发中，异常被视为应该被程序员捕获并修改的错误，而不是被动地等待其在运行时抛出来，所以try&hellip;catch并不在iOS开发中流行。</p>
+
+<p>在objective-c中，array并不存放对象本身，而是对象的引用，同时和其他语言的array不同的是，一个array中可以存放不同类型的对象引用。array中不能存放像int这样的primative值，如果要存放他，需要使用对应的包装对象(NSInteger)。其次，objective-c只支持单继承，每个类只能有一个父类。每当创建一个类的时候，两个文件会被创建.h和.m。.h是头文件，他定义类名，类的继承关系，实例变量和方法等，.m文件主要实现.h文件中定义的方法，在.m文件里需要import.h文件。</p>
+
+<p>objective-c中有两种方式调用acccessor。当在.h文件中定义了instance variable和对应的getter方法之后，可以在.m文件中使用下面的方法调用：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="p">[</span><span class="n">self</span> <span class="n">ivarName</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>或者直接使用&#8221;.&ldquo;调用：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="n">self</span><span class="p">.</span><span class="n">ivarName</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>以前我总以为这种调用是直接访问的实例变量，其实不然，这其实是在访问实例变量的getter方法，只不过方法的名字叫做ivarName罢了。</p>
+
+<p>objective-c中有两个特殊的类型值得一提，instanceType和id。前者只能作为方法的返回类型使用，他匹配调用这个方法的对象的类型，通常在类的init方法中使用，例如：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="n">instancetype</span><span class="p">)</span><span class="nf">init</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="p">[</span><span class="n">self</span> <span class="nl">initWithItemName:</span><span class="s">@&quot;item&quot;</span><span class="p">];</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>我们通常会使用下面这种方法来新建一个对象：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="n">NSMutableArray</span> <span class="o">*</span><span class="n">items</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSMutableArray</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这样就不难发现，在最后调用init的时候，init方法返回了一个instanceType的类型，这个类型被自动匹配给了NSMutableArray。和instanceType不一样，id不仅可以作为方法的返回类型，而且还可以直接作为对象的声明类型，类似于Java中的Object，他指向任何对象：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="kt">id</span> <span class="n">name</span> <span class="o">=</span> <span class="s">@&quot;abc&quot;</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[iOS Programming 1(A simple iOS application)]]></title>
@@ -5161,272 +5238,6 @@ mail.smtp.starttls.enable: 将一般连接升级到加密连接，而无需另�
 <p>当每次结果装饰器修饰过的基础组件在上面这段代码执行时，过程是这样的：</p>
 
 <p><img src="http://PhotoSynthesiis.github.io/images/decorator_pattern-4.png"></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[深入浅出设计模式之观察者模式(Observer Pattern)]]></title>
-    <link href="http://PhotoSynthesiis.github.io/blog/2013/07/11/observer-pattern/"/>
-    <updated>2013-07-11T21:39:00-05:00</updated>
-    <id>http://PhotoSynthesiis.github.io/blog/2013/07/11/observer-pattern</id>
-    <content type="html"><![CDATA[<p>观察者模式，顾名思义，这个模式中必定有观察者和被观察者。打一个形象的比喻，一些在证券交易市场的股民眼巴巴地看着自己买的股票所代表的公司能放些风声出来，这样自己就可以更好地把握这个消息做出买或卖的决定。而上市公司为了加强广大股民的信心，鼓励大家增持股票也会不断地放出例如公司的新项目马上出来了，大家赶紧买啊这些消息。我们暂且不论消息的真假，但这确实一个非常贴切的例子。</p>
-
-<!-- more -->
-
-
-<p>观察者模式中的被观察者与观察者的对应关系是1:n，意思是一个被观察者对于n个观察者。被观察者叫做subject或observable，观察者叫做observer。被观察者可以通知观察者新的消息，但是观察者只是被动地等待。被观察者中维护着一系列的注册过的观察者，这些观察者可以通过添加进入被观察者的通知范围，也可以通过删除避免继续街道被观察者的通知。下面我们通过一个股票程序来阐述观察者和被观察者的结构：</p>
-
-<p>1、被观察者的接口及其实现(红星集团会放出消息，期待股民增持自己的股票)</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">CorperationSubject</span> <span class="o">{</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">registerObserver</span><span class="o">(</span><span class="n">InvesterObserver</span> <span class="n">investerObserver</span><span class="o">);</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">removeObserver</span><span class="o">(</span><span class="n">InvesterObserver</span> <span class="n">investerObserver</span><span class="o">);</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">notifyObservers</span><span class="o">();</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">java.util.ArrayList</span><span class="o">;</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">java.util.List</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">HongtaSecurity</span> <span class="kd">implements</span> <span class="n">CorperationSubject</span> <span class="o">{</span>
-</span><span class='line'>    <span class="kd">private</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">InvesterObserver</span><span class="o">&gt;</span> <span class="n">observerList</span><span class="o">;</span>
-</span><span class='line'>    <span class="kd">private</span> <span class="kt">int</span> <span class="n">announcedIncome</span> <span class="o">=</span> <span class="mi">1000000</span><span class="o">;</span>
-</span><span class='line'>    <span class="kd">private</span> <span class="kt">int</span> <span class="n">actualIncome</span> <span class="o">=</span> <span class="mi">500000</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="kd">public</span> <span class="nf">HongtaSecurity</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">observerList</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">InvesterObserver</span><span class="o">&gt;();</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@Override</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">registerObserver</span><span class="o">(</span><span class="n">InvesterObserver</span> <span class="n">investerObserver</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">observerList</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">investerObserver</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@Override</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">removeObserver</span><span class="o">(</span><span class="n">InvesterObserver</span> <span class="n">investerObserver</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="kt">int</span> <span class="n">index</span> <span class="o">=</span> <span class="n">observerList</span><span class="o">.</span><span class="na">indexOf</span><span class="o">(</span><span class="n">investerObserver</span><span class="o">);</span>
-</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">index</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>            <span class="n">observerList</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">index</span><span class="o">);</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@Override</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">notifyObservers</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">for</span> <span class="o">(</span><span class="n">InvesterObserver</span> <span class="n">investerObserver</span> <span class="o">:</span> <span class="n">observerList</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>            <span class="n">investerObserver</span><span class="o">.</span><span class="na">update</span><span class="o">(</span><span class="s">&quot;明天股票会大涨！！&quot;</span><span class="o">);</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">getAnnouncedIncome</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">announcedIncome</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">getActualIncome</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">actualIncome</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>2、观察者的接口和实现(这里有两个实现，分别表示一个聪明的和一个笨的投资人。聪明的觉得红星是在耍小把戏，笨的投资者完全相信公司的话)</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">InvesterObserver</span> <span class="o">{</span>
-</span><span class='line'>    <span class="kt">void</span> <span class="nf">update</span><span class="o">(</span><span class="n">String</span> <span class="n">s</span><span class="o">);</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Investor_Smart</span> <span class="kd">implements</span> <span class="n">InvesterObserver</span><span class="o">{</span>
-</span><span class='line'>    <span class="kd">private</span> <span class="n">String</span> <span class="n">message</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@Override</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">update</span><span class="o">(</span><span class="n">String</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">message</span> <span class="o">=</span> <span class="n">message</span><span class="o">;</span>
-</span><span class='line'>        <span class="n">action</span><span class="o">();</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">action</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;红星集团一定放的假消息在骗钱，明天一早就得抛&quot;</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Investor_Dumb</span> <span class="kd">implements</span> <span class="n">InvesterObserver</span> <span class="o">{</span>
-</span><span class='line'>    <span class="kd">private</span> <span class="n">String</span> <span class="n">message</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@Override</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">update</span><span class="o">(</span><span class="n">String</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">message</span> <span class="o">=</span> <span class="n">message</span><span class="o">;</span>
-</span><span class='line'>        <span class="n">action</span><span class="o">();</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">action</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;明天一早就买进10000股红星证券&quot;</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>3、两种投资人在消息下来后做出的截然不同的反应</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Anoncement</span> <span class="o">{</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">HongtaSecurity</span> <span class="n">hongtaSecurity</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HongtaSecurity</span><span class="o">();</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">hongtaSecurity</span><span class="o">.</span><span class="na">registerObserver</span><span class="o">(</span><span class="k">new</span> <span class="n">Investor_Dumb</span><span class="o">());</span>
-</span><span class='line'>        <span class="n">hongtaSecurity</span><span class="o">.</span><span class="na">registerObserver</span><span class="o">(</span><span class="k">new</span> <span class="n">Investor_Smart</span><span class="o">());</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">hongtaSecurity</span><span class="o">.</span><span class="na">notifyObservers</span><span class="o">();</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>运行输出：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='text'><span class='line'>明天一早就买进10000股红星证券
-</span><span class='line'>红星集团一定放的假消息在骗钱，明天一早就得抛
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>
-最后还有一种特别聪明的人，在集团放出话后，它真实地去查看了集团的公布的营业额和实际的营业额，发现实际的比公布的差了不少，判定公司一定是在做假账。
-1、特别聪明的人</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Investor_wickedlySmart</span> <span class="kd">implements</span> <span class="n">InvesterObserver</span><span class="o">,</span> <span class="n">Action</span> <span class="o">{</span>
-</span><span class='line'>    <span class="kd">private</span> <span class="n">String</span> <span class="n">message</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@Override</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">update</span><span class="o">(</span><span class="n">String</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">message</span> <span class="o">=</span> <span class="n">message</span><span class="o">;</span>
-</span><span class='line'>        <span class="n">action</span><span class="o">();</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@Override</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">action</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">HongtaSecurity</span> <span class="n">hongtaSecurity</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HongtaSecurity</span><span class="o">();</span>
-</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">hongtaSecurity</span><span class="o">.</span><span class="na">getActualIncome</span><span class="o">()</span> <span class="o">&lt;=</span> <span class="n">hongtaSecurity</span><span class="o">.</span><span class="na">getAnnouncedIncome</span><span class="o">())</span> <span class="o">{</span>
-</span><span class='line'>            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;红星在做假账，看来是假消息，明天一定得抛&quot;</span><span class="o">);</span>
-</span><span class='line'>        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
-</span><span class='line'>            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;红星的话看来是真的，明天疯狂买进&quot;</span><span class="o">);</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p></p>
-
-<p>在实际应用中，observer里面会包含对subject的应用，以便自己退出subject的通知或者再次加进去。观察者模式应用到了很多OO原则，例如通过隔离变化的观察者和不变化的被观察者来分离固定于不变，通过在被观察者中注册观察者来达到针对接口而非实现编程的目的，同时它应用了组合在被观察者中保持了对观察者的引用而没有用继承来实现。</p>
-
-<p>其实，Java在util包中有Observable和Observer类，它们分别对应了上面的subject和observer的角色。所以可以说观察者模式在Java中是内置了的，由此可以看出这种模式的应用有多么宽广。</p>
 ]]></content>
   </entry>
   
