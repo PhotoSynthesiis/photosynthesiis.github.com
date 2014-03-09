@@ -4,7 +4,7 @@
   <title><![CDATA[public static void man]]></title>
   <link href="http://PhotoSynthesiis.github.io/atom.xml" rel="self"/>
   <link href="http://PhotoSynthesiis.github.io/"/>
-  <updated>2014-03-07T22:17:23-06:00</updated>
+  <updated>2014-03-08T20:02:24-06:00</updated>
   <id>http://PhotoSynthesiis.github.io/</id>
   <author>
     <name><![CDATA[Qiushi Li]]></name>
@@ -12,6 +12,86 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[iOS Programming 3(Managing Memory wih ARC)]]></title>
+    <link href="http://PhotoSynthesiis.github.io/blog/2014/03/08/ios-3/"/>
+    <updated>2014-03-08T18:54:00-06:00</updated>
+    <id>http://PhotoSynthesiis.github.io/blog/2014/03/08/ios-3</id>
+    <content type="html"><![CDATA[<h3>栈和堆</h3>
+
+<p>当一个方法被执行的时候，系统会从栈中分配出一定的内存让代码在其中运行，这一块专门分配出来的内存叫做frame，每一个方法都有一个frame。当方法从main方法中开始执行的时候，main方法的frame被放到了栈上，然后如果在main方法中有其他方法的调用，就会有不断的frame被加到栈上，下图就是在一个栈上不断调用和结束调用方法的对应的frame结构：</p>
+
+<!--more-->
+
+
+<p><img src="http://PhotoSynthesiis.github.io/images/ios_stack.png" width="600" height="900"></p>
+
+<p>在内存中有另外一块区域叫做堆。与栈不同，堆并没有顺序可言，他是用来存放对象的地方，你可以想象里面是一大块无序的区域，每一个在其中的对象都有至少一个外部指针指向他。在objective-c中，我们并不需要具体去关心对象的生命周期，因为这一切都由iOS自己经理，对应的机制叫做ARC(Automatic Reference Counting)。</p>
+
+<h3>对象的所属权(Object Ownership)</h3>
+
+<ol>
+<li>在一个方法中，如果定义了局部变量指向一个对象，那么这个被指向的对象属于那个局部变量。</li>
+<li>当一个对象的实例变量指向一个对象时，那么包含这个实例变量的对象拥有被实例变量指向的对象。</li>
+</ol>
+
+
+<p>对象的所属关系到这个对象在内存中的生命周期。如果一个对象存在指向其的指针，那么这个对象就不能被释放，如果一个对象没有其他指针指向他，那么该对象占有的内存可以被释放。</p>
+
+<h3>强引用和弱引用(Strong and Weak References)</h3>
+
+<p>強引用是当一个指针指向一个对象时，这个对象被那个指针所拥有，所以他不会被销毁。在objective-c中，指向一个对象的指针可以选择不拥有其指向的对象，这叫做弱引用。</p>
+
+<p>弱引用的一大好处是可以用来避免强引用循环(Strong reference Cycle)。例如有两个对象，他们互相指向对方，即使你把所有指向这两个对象的指针都设置为nil，这两个对象也不会被释放，因为他们仍然有来自对方的指针。</p>
+
+<p><img src="http://PhotoSynthesiis.github.io/images/ios_ownership_1.png" width="500" height="800"></p>
+
+<p>当把所有的指针设为nil后</p>
+
+<p><img src="http://PhotoSynthesiis.github.io/images/ios_ownership_2.png" width="500" height="800"></p>
+
+<p>当上述关系出现的时候，可以用把其中一个对象的指针设为弱引用来化解。那么把谁的指针设为弱引用呢？在大部分情况下，两个对象的強引用都可以拆分为一个parent-child关系，这时候我们可以把child指向parent的引用设为weak就行了。例如有一个backpack对象和calculator对象，backpack是parent，calculator是child，我们只需要把calculator指向backpack的引用设为弱引用。当我们完成弱引用的设置后，如果被指向的对象被释放(backpack)，那么发出这个指针的对象也会被释放(calculator)。</p>
+
+<h3>Properties</h3>
+
+<p>当定义一个property属性时，系统会为你做2件事：1、创建一个实例变量 2、创建该实例变量的accessor方法(getter &amp; setter)。所以当你像下面这样定义一个property的时候：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="n">property</span> <span class="kt">int</span> <span class="n">itemName</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>系统会为你创建一个名为_itemName的实例变量(注意underscore)，itemName和setItemName:方法。以前objective-c规定定义property必须在implementation中synthesis，但是大概自从xCode 4之后就不需要了，直接定义property就行了。</p>
+
+<h4>Properties的属性</h4>
+
+<ol>
+<li>atomic/nonatomic。主要是在多线程环境下用，一般情况下，考虑到性能一般使用nonatomic。</li>
+<li>readwrite/readonly。他告诉编译器这个property的可读和可写的属性。如果定义为readwrite，系统会实现setter和getter方法，如果为readonly，系统只会实现getter方法。</li>
+<li>strong/weak/copy/unsafe_unretained。他们都为内存管理属性，strong和weak前面都介绍过了，当一个指针指向的实例有可变子类的时候，应该把这个指针的属性设为copy，这样做是保证他指向的对象不会变化：</li>
+</ol>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">copy</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">itemName</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>当这样使用后，系统会在后台生成如下代码：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">setItemName:</span> <span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">itemName</span> <span class="p">{</span>
+</span><span class='line'>    <span class="n">_itemName</span> <span class="o">=</span> <span class="p">[</span><span class="n">itemName</span> <span class="n">copy</span><span class="p">];</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>copy返回一个原类型的不可变string类型，即使原类型是可变的，这里也不用担心。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[iOS Programming 2(objective-c)]]></title>
@@ -4938,306 +5018,6 @@ mail.smtp.starttls.enable: 将一般连接升级到加密连接，而无需另�
 </span><span class='line'><span class="o">}</span>
 </span></code></pre></td></tr></table></div></figure>
 
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[深入浅出设计模式之装饰器模式(Decorator Pattern)]]></title>
-    <link href="http://PhotoSynthesiis.github.io/blog/2013/07/12/decorator-pattern/"/>
-    <updated>2013-07-12T14:53:00-05:00</updated>
-    <id>http://PhotoSynthesiis.github.io/blog/2013/07/12/decorator-pattern</id>
-    <content type="html"><![CDATA[<p>今天该讲第三种设计模式 &mdash; 装饰器模式。同样，从名字就可以看出这种模式必定有一个基础组件，用来被修饰，也会有至少一个装饰器来修饰基础组件。同时要求被装饰器修饰过的组件对外界来说还是一个组件，只不过在被修饰之后多出了一些以前没有的功能。装饰器模式可以看做下图：</p>
-
-<!--more -->
-
-
-<p><img src="http://PhotoSynthesiis.github.io/images/decorator_pattern-1.png"></p>
-
-<p>装饰器模式相对于一般的继承，做到了对类的行为的扩展的同时，避免了从父类继承来的不必要的东西，其实是使用了组合的方式来达到的。那么下面就来看看这种模式的具体实现吧。假如有一个咖啡店，卖和多种咖啡，而每种咖啡又可以加上不同的调料，例如奶昔、牛奶等。同时每种咖啡价格不一样，调料的价格也不一样，加过调料的咖啡的价格就是原本咖啡喝调料的总价。咋一看来，似乎继承是一种很好的方式：（如下图）
-<img src="http://PhotoSynthesiis.github.io/images/decorator_pattern-2.png"></p>
-
-<p>每种咖啡都实现了统一的接口，子类自己覆盖父类的description和cost方法，但是问题来了，这样的话就会产生很多的类，因为需要为每一种咖啡都建一个类，同时为每一个加了调料的咖啡也建一个类，这样就会产生类爆炸。正确的方式应该是使用装饰器模式，为每一种调料建一个类作为装饰器，这样就会有很多的装饰器类，如果有人想买一杯加了奶昔和豆浆的抹茶咖啡，就应该使用奶昔和豆浆来装饰这种咖啡，使用了组合提高了类的灵活性。下面来看看代码吧：
-1、首先有一个饮料抽象类</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">Beverage</span> <span class="o">{</span>
-</span><span class='line'>    <span class="n">String</span> <span class="n">description</span> <span class="o">=</span> <span class="s">&quot;unknown beverage&quot;</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getDescription</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">description</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="kd">abstract</span> <span class="kt">double</span> <span class="nf">cost</span><span class="o">();</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>2、三种不同的饮料</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">DarkRoast</span> <span class="kd">extends</span> <span class="n">Beverage</span> <span class="o">{</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="nf">DarkRoast</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">description</span> <span class="o">=</span> <span class="s">&quot;Dark Roast&quot;</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@Override</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">double</span> <span class="nf">cost</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="o">.</span><span class="mi">99</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p></p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Expresso</span> <span class="kd">extends</span> <span class="n">Beverage</span> <span class="o">{</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="nf">Expresso</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">description</span> <span class="o">=</span> <span class="s">&quot;Espresso&quot;</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@Override</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">double</span> <span class="nf">cost</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="mf">1.99</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">HouseBlend</span> <span class="kd">extends</span> <span class="n">Beverage</span> <span class="o">{</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="nf">HouseBlend</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">description</span> <span class="o">=</span> <span class="s">&quot;House Blend Coffee&quot;</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@Override</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">double</span> <span class="nf">cost</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="o">.</span><span class="mi">89</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>3、有一个装饰器的抽象类，它继承自饮料类</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">CondimentDecorator</span> <span class="kd">extends</span> <span class="n">Beverage</span> <span class="o">{</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kd">abstract</span> <span class="n">String</span> <span class="nf">getDescription</span><span class="o">();</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p></p>
-
-<p>4、三种不同的调料</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Mocha</span> <span class="kd">extends</span> <span class="n">CondimentDecorator</span> <span class="o">{</span>
-</span><span class='line'>    <span class="kd">private</span> <span class="kd">final</span> <span class="n">Beverage</span> <span class="n">beverage</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="nf">Mocha</span><span class="o">(</span><span class="n">Beverage</span> <span class="n">beverage</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">beverage</span> <span class="o">=</span> <span class="n">beverage</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@Override</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getDescription</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">beverage</span><span class="o">.</span><span class="na">getDescription</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot;, Mocha&quot;</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@Override</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">double</span> <span class="nf">cost</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="o">.</span><span class="mi">20</span> <span class="o">+</span> <span class="n">beverage</span><span class="o">.</span><span class="na">cost</span><span class="o">();</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Soy</span> <span class="kd">extends</span> <span class="n">CondimentDecorator</span> <span class="o">{</span>
-</span><span class='line'>    <span class="kd">private</span> <span class="kd">final</span> <span class="n">Beverage</span> <span class="n">beverage</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="nf">Soy</span><span class="o">(</span><span class="n">Beverage</span> <span class="n">beverage</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">beverage</span> <span class="o">=</span> <span class="n">beverage</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@Override</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getDescription</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">beverage</span><span class="o">.</span><span class="na">getDescription</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot;, Soy&quot;</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@Override</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">double</span> <span class="nf">cost</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="o">.</span><span class="mi">15</span> <span class="o">+</span> <span class="n">beverage</span><span class="o">.</span><span class="na">cost</span><span class="o">();</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Whip</span> <span class="kd">extends</span> <span class="n">CondimentDecorator</span> <span class="o">{</span>
-</span><span class='line'>    <span class="kd">private</span> <span class="kd">final</span> <span class="n">Beverage</span> <span class="n">beverage</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="nf">Whip</span><span class="o">(</span><span class="n">Beverage</span> <span class="n">beverage</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">beverage</span> <span class="o">=</span> <span class="n">beverage</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@Override</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getDescription</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">beverage</span><span class="o">.</span><span class="na">getDescription</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot;, Whip&quot;</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@Override</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">double</span> <span class="nf">cost</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="o">.</span><span class="mi">10</span> <span class="o">+</span> <span class="n">beverage</span><span class="o">.</span><span class="na">cost</span><span class="o">();</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>我们可以看到每一种装饰器继承自CondimentDecorator，而CondimentDecorator继承自Beverage类，所以实际上每一种装饰器都是一种饮料。从每个装饰器内部都保留了一个饮料的引用就能看出，装饰器实际上实在‘接收’一种饮料，然后给他加点调料，然后返回加了调料的饮料。基础组件和装饰器的关系在咖啡这个例子里面可以通过下面这张图来描述：</p>
-
-<p><img src="http://PhotoSynthesiis.github.io/images/decorator_pattern-3.png"></p>
-
-<p>4、点咖啡加调料的实际流程</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">StarBuzzCoffee</span> <span class="o">{</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">Beverage</span> <span class="n">beverage1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Expresso</span><span class="o">();</span>
-</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">beverage1</span><span class="o">.</span><span class="na">getDescription</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot; &amp;&quot;</span> <span class="o">+</span> <span class="n">beverage1</span><span class="o">.</span><span class="na">cost</span><span class="o">());</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">Beverage</span> <span class="n">beverage2</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DarkRoast</span><span class="o">();</span>
-</span><span class='line'>        <span class="n">beverage2</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Mocha</span><span class="o">(</span><span class="n">beverage2</span><span class="o">);</span>
-</span><span class='line'>        <span class="n">beverage2</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Mocha</span><span class="o">(</span><span class="n">beverage2</span><span class="o">);</span>
-</span><span class='line'>        <span class="n">beverage2</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Whip</span><span class="o">(</span><span class="n">beverage2</span><span class="o">);</span>
-</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">beverage2</span><span class="o">.</span><span class="na">getDescription</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot; &amp;&quot;</span> <span class="o">+</span> <span class="n">beverage2</span><span class="o">.</span><span class="na">cost</span><span class="o">());</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">Beverage</span> <span class="n">beverage3</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HouseBlend</span><span class="o">();</span>
-</span><span class='line'>        <span class="n">beverage3</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Soy</span><span class="o">(</span><span class="n">beverage3</span><span class="o">);</span>
-</span><span class='line'>        <span class="n">beverage3</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Mocha</span><span class="o">(</span><span class="n">beverage3</span><span class="o">);</span>
-</span><span class='line'>        <span class="n">beverage3</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Whip</span><span class="o">(</span><span class="n">beverage3</span><span class="o">);</span>
-</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">beverage3</span><span class="o">.</span><span class="na">getDescription</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot; &amp;&quot;</span> <span class="o">+</span> <span class="n">beverage3</span><span class="o">.</span><span class="na">cost</span><span class="o">());</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>运行结果：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='text'><span class='line'>Espresso &amp;1.99
-</span><span class='line'>Dark Roast, Mocha, Mocha, Whip &amp;1.49
-</span><span class='line'>House Blend Coffee, Soy, Mocha, Whip &amp;1.34
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>当每次结果装饰器修饰过的基础组件在上面这段代码执行时，过程是这样的：</p>
-
-<p><img src="http://PhotoSynthesiis.github.io/images/decorator_pattern-4.png"></p>
 ]]></content>
   </entry>
   
