@@ -104,9 +104,9 @@
 
 <p>首先新建一个empty application，此时的项目里面只有WUSTLAppDelegate文件。今天我们的目的是根据MVC模式建立一个简单的项目，所以，第一步我们从controller出发，建立一个名为WUSTLQuizViewController的类，需要注意的是，在建立的时候一定要勾上&#8217;with XIB for user interface&#8217;这个选项，这样系统会给你建一个后缀名为xib的文件。其实我们常常把xib文件和Interface Builder搞混，以为他俩是一回事，其实不然。Interface Builder其实是一个对象的编辑器，你可以在里面创建和修改对象(例如button和label)，然后把他们保存到一个文件中，这个保存下来的文件就是xib文件，这就不难理解为什么xib文件的全称是XML Interface Builder了。</p>
 
-<p>接下来我们应该创建MVC中的View部分了，我们分别拖动两个label和两个button到interface builder里面，然后调整他们的大小等，以达到上图的效果，这样就算完成了View部分。但是现在的View只是一个独立的东西，它不能传递信息给controller，也不能从controller得到显示的指令，所以下一个我们需要做的就是把controller和view连接起来。连接使两个在内存中的对象互相知道了对方，这样他们就能互相交流了。在Interface Builder中有两种连接可以使用：Outlet和Action。Outlet指向一个对象，Action是用来相应view中事件的具体方法。</p>
+<p>接下来我们应该创建MVC中的View部分了，我们分别拖动两个label和两个button到interface builder里面，然后调整他们的大小等，以达到上图的效果，这样就算完成了View部分。但是现在的View只是一个独立的东西，它不能传递信息给controller，也不能从controller得到显示的指令，所以下一个我们需要做的就是把controller和view连接起来。连接使两个在内存中的对象互相知道了对方，这样他们就能互相交流了。在Interface Builder中有两种连接可以使用：Outlet和Action。Outlet指向一个对象，Action是用来响应view中事件的具体方法。</p>
 
-<p>View里面有四个对象，所以我们也需要在相应的controller里面建立四个对象，在WUSTLQuizViewController.m里将@implementation和@end之间系统自动填充的代码全部删除，然后再在WUSTLQuizViewController.m.m的@interface和@end之间加上如下代码(首先我们只加label部分)：</p>
+<p>View里面有四个对象，所以我们也需要在相应的controller里面建立四个对象，在WUSTLQuizViewController.m里将@implementation和@end之间系统自动填充的代码全部删除，然后再在WUSTLQuizViewController.m的@interface和@end之间(category)加上如下代码(首先我们只加label部分)：</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -115,7 +115,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>这两行代码的意思是，在每个WUSTLQuizViewController.m的对象中建立两个IBOutlet对象，分别叫做questionLabel和answerLabel，他们都指向UILabel，关键字IBOutlet的作用是告诉Interface Builder我们将用这个被Iboutlet修饰的对象连接Interface Builder中的一个一个对象。</p>
+<p>这两行代码的意思是，在每个WUSTLQuizViewController.m的对象中建立两个IBOutlet对象，分别叫做questionLabel和answerLabel，他们都指向UILabel，关键字IBOutlet的作用是告诉Interface Builder我们将用这个被Iboutlet修饰的对象连接Interface Builder中的一个对象。</p>
 
 <p>既然Controller和View两边都声明了对象，剩下就工作就是把他们连接起来了。我们找到xib文件，然后找到左边Placeholders，右键点击后会出现下面这样的弹框让你选择：</p>
 
@@ -142,7 +142,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>上面代码中IBAction是告诉Xcode，这个方法是用来响应Interface Builder中的事件的。说到这里，不得不提一下Target\Action模式，他是objective-c中的一种消息机制，当用户在view中做出一些动作后，view会发送消息到controller，Target指的就是相应这个事件的对象(在这里就是WUSTLQuizViewController.m)，Action指的是Target中的哪个方法具体用来处理这个时间的(在这里Action分别是showQuestion和showAnswer方法)。这时我们再回到xib文件中，点击Interface Builder中的button，然后按住不放拉出一条线并在Placeholder中的file‘s owner松开(control-drag)：</p>
+<p>上面代码中IBAction是告诉Xcode，这个方法是用来响应Interface Builder中的事件的。说到这里，不得不提一下Target\Action模式，他是objective-c中的一种消息机制，当用户在view中做出一些动作后，view会发送消息到controller，Target指的就是响应这个事件的对象(在这里就是WUSTLQuizViewController.m)，Action指的是Target中的哪个方法具体用来处理这个事件的(在这里Action分别是showQuestion和showAnswer方法)。这时我们再回到xib文件中，点击Interface Builder中的button，然后按住不放拉出一条线并在Placeholder中的file‘s owner松开(control-drag)：</p>
 
 <p><img src="/images/ios4.png" width="600" height="600"></p>
 
