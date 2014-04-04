@@ -4,7 +4,7 @@
   <title><![CDATA[public static void man]]></title>
   <link href="http://PhotoSynthesiis.github.io/atom.xml" rel="self"/>
   <link href="http://PhotoSynthesiis.github.io/"/>
-  <updated>2014-03-12T23:08:38-05:00</updated>
+  <updated>2014-04-03T23:23:40-05:00</updated>
   <id>http://PhotoSynthesiis.github.io/</id>
   <author>
     <name><![CDATA[Qiushi Li]]></name>
@@ -12,6 +12,641 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[使用递归计算的回溯法]]></title>
+    <link href="http://PhotoSynthesiis.github.io/blog/2014/04/03/backtrack/"/>
+    <updated>2014-04-03T21:59:00-05:00</updated>
+    <id>http://PhotoSynthesiis.github.io/blog/2014/04/03/backtrack</id>
+    <content type="html"><![CDATA[<p>谈到这个方法的初衷本来是想在iOS项目中使用,因为当时叫设计一种方法来摆放battleship,如果在当前位置不能摆放可以回溯到上一个地点再试,最后还是放弃了,因为用不了这么复杂的方法. 不过既然学习了,并且花了这么多时间来编码,就应该记录下来,以后可能还会用上,就不必又从开头来学了.</p>
+
+<h3>什么是回溯法</h3>
+
+<p>回溯法就是先在一条路上走到黑,发现还没达到目的,然后就退回到上一步,然后把另一个发展方向试一遍,直到找到一条通路为止.</p>
+
+<!--more-->
+
+
+<h3>回溯法的应用</h3>
+
+<p>回溯法最经典的应用就是黑八皇后问题,他要求八颗棋子分别代表八个皇后,然后要把这八个皇后分别放在棋盘上,并且满足如下条件:</p>
+
+<ul>
+<li>任意两个皇后不能在同一行</li>
+<li>任意两个皇后不能在同一列</li>
+<li>任意两个皇后不能在同一条斜线上</li>
+</ul>
+
+
+<h3>代码</h3>
+
+<h4>避免冲突</h4>
+
+<p>下面的代码是用来避免冲突的,即满足上面列出的三个条件.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">private</span> <span class="kt">boolean</span> <span class="nf">threaten</span><span class="o">(</span><span class="kt">int</span> <span class="n">row</span><span class="o">,</span> <span class="kt">int</span> <span class="n">column</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kt">int</span> <span class="n">rowT</span> <span class="o">=</span> <span class="n">row</span><span class="o">;</span>
+</span><span class='line'>        <span class="kt">int</span> <span class="n">columnT</span> <span class="o">=</span> <span class="n">column</span><span class="o">;</span>
+</span><span class='line'>        <span class="c1">// same row check</span>
+</span><span class='line'>        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">boardSize</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">if</span> <span class="o">(</span><span class="n">board</span><span class="o">[</span><span class="n">row</span><span class="o">][</span><span class="n">i</span><span class="o">])</span>
+</span><span class='line'>                <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c1">// up left diagonal check</span>
+</span><span class='line'>        <span class="k">while</span> <span class="o">(</span><span class="n">rowT</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">columnT</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">if</span> <span class="o">(</span><span class="n">board</span><span class="o">[</span><span class="n">rowT</span><span class="o">][</span><span class="n">columnT</span><span class="o">])</span>
+</span><span class='line'>                <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+</span><span class='line'>            <span class="n">rowT</span><span class="o">--;</span>
+</span><span class='line'>            <span class="n">columnT</span><span class="o">--;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="n">rowT</span> <span class="o">=</span> <span class="n">row</span><span class="o">;</span>
+</span><span class='line'>        <span class="n">columnT</span> <span class="o">=</span> <span class="n">column</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c1">// up right diagonal check</span>
+</span><span class='line'>        <span class="k">while</span> <span class="o">(</span><span class="n">rowT</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">columnT</span> <span class="o">&lt;</span> <span class="n">boardSize</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">if</span> <span class="o">(</span><span class="n">board</span><span class="o">[</span><span class="n">rowT</span><span class="o">][</span><span class="n">columnT</span><span class="o">])</span>
+</span><span class='line'>                <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+</span><span class='line'>            <span class="n">rowT</span><span class="o">--;</span>
+</span><span class='line'>            <span class="n">columnT</span><span class="o">++;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">rowT</span> <span class="o">=</span> <span class="n">row</span><span class="o">;</span>
+</span><span class='line'>        <span class="n">columnT</span> <span class="o">=</span> <span class="n">column</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c1">// down left diagonal check</span>
+</span><span class='line'>        <span class="k">while</span> <span class="o">(</span><span class="n">rowT</span> <span class="o">&lt;</span> <span class="n">boardSize</span> <span class="o">&amp;&amp;</span> <span class="n">columnT</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">if</span> <span class="o">(</span><span class="n">board</span><span class="o">[</span><span class="n">rowT</span><span class="o">][</span><span class="n">columnT</span><span class="o">])</span>
+</span><span class='line'>                <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+</span><span class='line'>            <span class="n">rowT</span><span class="o">++;</span>
+</span><span class='line'>            <span class="n">columnT</span><span class="o">--;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="n">rowT</span> <span class="o">=</span> <span class="n">row</span><span class="o">;</span>
+</span><span class='line'>        <span class="n">columnT</span> <span class="o">=</span> <span class="n">column</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c1">// down right diagonal check</span>
+</span><span class='line'>        <span class="k">while</span> <span class="o">(</span><span class="n">rowT</span> <span class="o">&lt;</span> <span class="n">boardSize</span> <span class="o">&amp;&amp;</span> <span class="n">columnT</span> <span class="o">&lt;</span> <span class="n">boardSize</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">if</span> <span class="o">(</span><span class="n">board</span><span class="o">[</span><span class="n">rowT</span><span class="o">][</span><span class="n">columnT</span><span class="o">])</span>
+</span><span class='line'>                <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+</span><span class='line'>            <span class="n">rowT</span><span class="o">++;</span>
+</span><span class='line'>            <span class="n">columnT</span><span class="o">++;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>在展示核心代码之前,需要首先谈谈是如何来找地方来摆放棋子的.我使用的方法是以&#8217;列&#8217;为anchor,然后再在这一列的八行中分别尝试摆放棋子,如果满足条件,就在这个点放上棋子,如果不满足,行数加一继续往下走,如果遇到走不通的情况就回退一步.为了具体说明他是怎么回退的,我用一个具体的例子来阐述:
+* 当摆放第一个棋子(row=0, column=0)的时候不会有冲突,所以直接在这里落子,现在棋盘的格局如下:</p>
+
+<p>Q X X X X X X X <br/>
+X X X X X X X X <br/>
+X X X X X X X X <br/>
+X X X X X X X X <br/>
+X X X X X X X X <br/>
+X X X X X X X X <br/>
+X X X X X X X X <br/>
+X X X X X X X X <br/></p>
+
+<ul>
+<li>当尝试摆放第二个棋子的时候,column到了第二列,所以它还是从第一行摆放,但是冲突了,所以他尝试第二行,但是还是冲突(斜线),所以他就开始尝试第三行,这里没问题,所以这一步之后,棋盘的格局如下:</li>
+</ul>
+
+
+<p>Q X X X X X X X <br/>
+X X X X X X X X <br/>
+X Q X X X X X X <br/>
+X X X X X X X X <br/>
+X X X X X X X X <br/>
+X X X X X X X X <br/>
+X X X X X X X X <br/>
+X X X X X X X X <br/></p>
+
+<ul>
+<li>当尝试摆放第三颗棋子的时候,第一到第四行都有冲突,所以只有放到第五行,棋盘的格局如下:</li>
+</ul>
+
+
+<p>Q X X X X X X X <br/>
+X X X X X X X X <br/>
+X Q X X X X X X <br/>
+X X X X X X X X <br/>
+X X Q X X X X X <br/>
+X X X X X X X X <br/>
+X X X X X X X X <br/>
+X X X X X X X X <br/></p>
+
+<ul>
+<li>继续摆放第四颗棋子:</li>
+</ul>
+
+
+<p>Q X X X X X X X <br/>
+X X X Q X X X X <br/>
+X Q X X X X X X <br/>
+X X X X X X X X <br/>
+X X Q X X X X X <br/>
+X X X X X X X X <br/>
+X X X X X X X X <br/>
+X X X X X X X X <br/></p>
+
+<ul>
+<li>继续摆放第五颗棋子:</li>
+</ul>
+
+
+<p>Q X X X X X X X <br/>
+X X X Q X X X X <br/>
+X Q X X X X X X <br/>
+X X X X Q X X X <br/>
+X X Q X X X X X <br/>
+X X X X X X X X <br/>
+X X X X X X X X <br/>
+X X X X X X X X <br/></p>
+
+<ul>
+<li>继续摆放第六颗棋子,这个时候问题来了,因为第六列的所有行都无法摆放,所以这时就应该回退到上一列,让第五列的棋子继续尝试向下搜索(不能向上是因为在从上到下摆放的时候使用的贪心法,即遇到可以摆放的地方立马落子,所以上面的空间都是证明没用的),当找到一个可以落子的地方时就摆放棋子,然后重新尝试落第六个子:</li>
+</ul>
+
+
+<p>Q X X X X X X X <br/>
+X X X Q X X X X <br/>
+X Q X X X X X X <br/>
+X X X X Q X X X <br/>
+X X Q X X X X X <br/>
+X X X X X X X X <br/>
+X X X X X X X X <br/>
+X X X X X X X X <br/></p>
+
+<ul>
+<li></li>
+</ul>
+
+
+<p>Q X X X X X X X <br/>
+X X X Q X X X X <br/>
+X Q X X X X X X <br/>
+X X X X X X X X <br/>
+X X Q X X X X X <br/>
+X X X X X X X X <br/>
+X X X X X X X X <br/>
+X X X X Q X X X <br/></p>
+
+<ul>
+<li>我们发现即使第六个子变了位置之后,第七个子仍然不能下落,所以又回到第六列,这时第六列的所有可能性都已经用完了,所以然后回到第五列,这样不断递归下去直到从某一列到最后一列能都找到摆放的地方结束.</li>
+</ul>
+
+
+<p>下面的代码是算法的核心,即怎样找到一种摆放的方法:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'>   <span class="kd">private</span> <span class="kt">boolean</span> <span class="nf">placeQueen_oneSolution</span><span class="o">(</span><span class="kt">int</span> <span class="n">column</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kt">int</span> <span class="n">row</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+</span><span class='line'>        <span class="kt">boolean</span> <span class="n">success</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">while</span> <span class="o">(</span><span class="n">row</span> <span class="o">&lt;</span> <span class="n">boardSize</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">if</span> <span class="o">(</span><span class="n">column</span> <span class="o">==</span> <span class="n">boardSize</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">printBoard</span><span class="o">();</span>
+</span><span class='line'>                <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="k">if</span> <span class="o">(</span><span class="n">threaten</span><span class="o">(</span><span class="n">row</span><span class="o">,</span> <span class="n">column</span><span class="o">))</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">row</span><span class="o">++;</span>
+</span><span class='line'>            <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">board</span><span class="o">[</span><span class="n">row</span><span class="o">][</span><span class="n">column</span><span class="o">]</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
+</span><span class='line'>                <span class="n">success</span> <span class="o">=</span> <span class="n">placeQueen_oneSolution</span><span class="o">(</span><span class="n">column</span> <span class="o">+</span> <span class="mi">1</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>                <span class="k">if</span> <span class="o">(!</span><span class="n">success</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>                    <span class="n">board</span><span class="o">[</span><span class="n">row</span><span class="o">][</span><span class="n">column</span><span class="o">]</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
+</span><span class='line'>                    <span class="n">row</span><span class="o">++;</span>
+</span><span class='line'>                <span class="o">}</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">success</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>当上一次不成功时就返回false,同时把刚刚摆放的棋子拿掉(设为false),然后继续本次while循环,如果while循环完了都还没找到,就return false到上一次递归的地点. 执行上面的代码得到的格局如下:</p>
+
+<p>Q X X X X X X X <br/>
+X X X X X X Q X <br/>
+X X X X Q X X X<br/>
+X X X X X X X Q <br/>
+X Q X X X X X X <br/>
+X X X Q X X X X<br/>
+X X X X X Q X X <br/>
+X X Q X X X X X<br/></p>
+
+<p>这样就算找到了一条路径.但是如果我们想要找出所有的路径又该怎么办呢?其实很简单,只需要在找到一条路径后不停止搜索,从当前位置开始往下走,尝试去找其他的可能性,然后对之前的所有列都执行同样的步骤即可,方法如下:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'>    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">placeQueen_allSolutions</span><span class="o">(</span><span class="kt">int</span> <span class="n">column</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kt">int</span> <span class="n">row</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">while</span> <span class="o">(</span><span class="n">row</span> <span class="o">&lt;</span> <span class="n">boardSize</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">if</span> <span class="o">(</span><span class="n">column</span> <span class="o">==</span> <span class="n">boardSize</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">printBoard</span><span class="o">();</span>
+</span><span class='line'>                <span class="k">return</span><span class="o">;</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="k">if</span> <span class="o">(</span><span class="n">threaten</span><span class="o">(</span><span class="n">row</span><span class="o">,</span> <span class="n">column</span><span class="o">))</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">row</span><span class="o">++;</span>
+</span><span class='line'>            <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">board</span><span class="o">[</span><span class="n">row</span><span class="o">][</span><span class="n">column</span><span class="o">]</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
+</span><span class='line'>                <span class="n">placeQueen_allSolutions</span><span class="o">(</span><span class="n">column</span> <span class="o">+</span> <span class="mi">1</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>                <span class="n">board</span><span class="o">[</span><span class="n">row</span><span class="o">][</span><span class="n">column</span><span class="o">]</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
+</span><span class='line'>                <span class="n">row</span><span class="o">++;</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>最后发现有92种解法,与维基百科所属一致,ok收工.</p>
+
+<p>最后贴出完整的代码:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+<span class='line-number'>77</span>
+<span class='line-number'>78</span>
+<span class='line-number'>79</span>
+<span class='line-number'>80</span>
+<span class='line-number'>81</span>
+<span class='line-number'>82</span>
+<span class='line-number'>83</span>
+<span class='line-number'>84</span>
+<span class='line-number'>85</span>
+<span class='line-number'>86</span>
+<span class='line-number'>87</span>
+<span class='line-number'>88</span>
+<span class='line-number'>89</span>
+<span class='line-number'>90</span>
+<span class='line-number'>91</span>
+<span class='line-number'>92</span>
+<span class='line-number'>93</span>
+<span class='line-number'>94</span>
+<span class='line-number'>95</span>
+<span class='line-number'>96</span>
+<span class='line-number'>97</span>
+<span class='line-number'>98</span>
+<span class='line-number'>99</span>
+<span class='line-number'>100</span>
+<span class='line-number'>101</span>
+<span class='line-number'>102</span>
+<span class='line-number'>103</span>
+<span class='line-number'>104</span>
+<span class='line-number'>105</span>
+<span class='line-number'>106</span>
+<span class='line-number'>107</span>
+<span class='line-number'>108</span>
+<span class='line-number'>109</span>
+<span class='line-number'>110</span>
+<span class='line-number'>111</span>
+<span class='line-number'>112</span>
+<span class='line-number'>113</span>
+<span class='line-number'>114</span>
+<span class='line-number'>115</span>
+<span class='line-number'>116</span>
+<span class='line-number'>117</span>
+<span class='line-number'>118</span>
+<span class='line-number'>119</span>
+<span class='line-number'>120</span>
+<span class='line-number'>121</span>
+<span class='line-number'>122</span>
+<span class='line-number'>123</span>
+<span class='line-number'>124</span>
+<span class='line-number'>125</span>
+<span class='line-number'>126</span>
+<span class='line-number'>127</span>
+<span class='line-number'>128</span>
+<span class='line-number'>129</span>
+<span class='line-number'>130</span>
+<span class='line-number'>131</span>
+<span class='line-number'>132</span>
+<span class='line-number'>133</span>
+<span class='line-number'>134</span>
+<span class='line-number'>135</span>
+<span class='line-number'>136</span>
+<span class='line-number'>137</span>
+<span class='line-number'>138</span>
+<span class='line-number'>139</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="cm">/**</span>
+</span><span class='line'><span class="cm"> * Created by liqiushi on 3/20/14.</span>
+</span><span class='line'><span class="cm"> */</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Backtracking</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">boardSize</span><span class="o">;</span>
+</span><span class='line'>    <span class="kt">boolean</span><span class="o">[][]</span> <span class="n">board</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">k</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">Backtracking</span><span class="o">(</span><span class="kt">int</span> <span class="n">boardSize</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">boardSize</span> <span class="o">=</span> <span class="n">boardSize</span><span class="o">;</span>
+</span><span class='line'>        <span class="n">board</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">boolean</span><span class="o">[</span><span class="n">boardSize</span><span class="o">][</span><span class="n">boardSize</span><span class="o">];</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">Backtracking</span> <span class="n">backtracking</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Backtracking</span><span class="o">(</span><span class="mi">8</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">backtracking</span><span class="o">.</span><span class="na">init</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">backtracking</span><span class="o">.</span><span class="na">placeQueen_oneSolution</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">backtracking</span><span class="o">.</span><span class="na">init</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">backtracking</span><span class="o">.</span><span class="na">placeQueen_allSolutions</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">printBoard</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">boardSize</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">boardSize</span><span class="o">;</span> <span class="n">j</span><span class="o">++)</span> <span class="o">{</span>
+</span><span class='line'>                <span class="k">if</span> <span class="o">(</span><span class="n">board</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">])</span> <span class="o">{</span>
+</span><span class='line'>                    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">&quot;Q &quot;</span><span class="o">);</span>
+</span><span class='line'>                <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+</span><span class='line'>                    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">&quot;. &quot;</span><span class="o">);</span>
+</span><span class='line'>                <span class="o">}</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">();</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">k</span><span class="o">++);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kt">boolean</span> <span class="nf">placeQueen_oneSolution</span><span class="o">(</span><span class="kt">int</span> <span class="n">column</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kt">int</span> <span class="n">row</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+</span><span class='line'>        <span class="kt">boolean</span> <span class="n">success</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">while</span> <span class="o">(</span><span class="n">row</span> <span class="o">&lt;</span> <span class="n">boardSize</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">if</span> <span class="o">(</span><span class="n">column</span> <span class="o">==</span> <span class="n">boardSize</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">printBoard</span><span class="o">();</span>
+</span><span class='line'>                <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="k">if</span> <span class="o">(</span><span class="n">threaten</span><span class="o">(</span><span class="n">row</span><span class="o">,</span> <span class="n">column</span><span class="o">))</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">row</span><span class="o">++;</span>
+</span><span class='line'>            <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">board</span><span class="o">[</span><span class="n">row</span><span class="o">][</span><span class="n">column</span><span class="o">]</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
+</span><span class='line'>                <span class="n">success</span> <span class="o">=</span> <span class="n">placeQueen_oneSolution</span><span class="o">(</span><span class="n">column</span> <span class="o">+</span> <span class="mi">1</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>                <span class="k">if</span> <span class="o">(!</span><span class="n">success</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>                    <span class="n">board</span><span class="o">[</span><span class="n">row</span><span class="o">][</span><span class="n">column</span><span class="o">]</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
+</span><span class='line'>                    <span class="n">row</span><span class="o">++;</span>
+</span><span class='line'>                <span class="o">}</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">success</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">placeQueen_allSolutions</span><span class="o">(</span><span class="kt">int</span> <span class="n">column</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kt">int</span> <span class="n">row</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">while</span> <span class="o">(</span><span class="n">row</span> <span class="o">&lt;</span> <span class="n">boardSize</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">if</span> <span class="o">(</span><span class="n">column</span> <span class="o">==</span> <span class="n">boardSize</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">printBoard</span><span class="o">();</span>
+</span><span class='line'>                <span class="k">return</span><span class="o">;</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="k">if</span> <span class="o">(</span><span class="n">threaten</span><span class="o">(</span><span class="n">row</span><span class="o">,</span> <span class="n">column</span><span class="o">))</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">row</span><span class="o">++;</span>
+</span><span class='line'>            <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">board</span><span class="o">[</span><span class="n">row</span><span class="o">][</span><span class="n">column</span><span class="o">]</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
+</span><span class='line'>                <span class="n">placeQueen_allSolutions</span><span class="o">(</span><span class="n">column</span> <span class="o">+</span> <span class="mi">1</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>                <span class="n">board</span><span class="o">[</span><span class="n">row</span><span class="o">][</span><span class="n">column</span><span class="o">]</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
+</span><span class='line'>                <span class="n">row</span><span class="o">++;</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kt">boolean</span> <span class="nf">threaten</span><span class="o">(</span><span class="kt">int</span> <span class="n">row</span><span class="o">,</span> <span class="kt">int</span> <span class="n">column</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kt">int</span> <span class="n">rowT</span> <span class="o">=</span> <span class="n">row</span><span class="o">;</span>
+</span><span class='line'>        <span class="kt">int</span> <span class="n">columnT</span> <span class="o">=</span> <span class="n">column</span><span class="o">;</span>
+</span><span class='line'>        <span class="c1">// same row check</span>
+</span><span class='line'>        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">boardSize</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">if</span> <span class="o">(</span><span class="n">board</span><span class="o">[</span><span class="n">row</span><span class="o">][</span><span class="n">i</span><span class="o">])</span>
+</span><span class='line'>                <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c1">// up left diagonal check</span>
+</span><span class='line'>        <span class="k">while</span> <span class="o">(</span><span class="n">rowT</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">columnT</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">if</span> <span class="o">(</span><span class="n">board</span><span class="o">[</span><span class="n">rowT</span><span class="o">][</span><span class="n">columnT</span><span class="o">])</span>
+</span><span class='line'>                <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+</span><span class='line'>            <span class="n">rowT</span><span class="o">--;</span>
+</span><span class='line'>            <span class="n">columnT</span><span class="o">--;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="n">rowT</span> <span class="o">=</span> <span class="n">row</span><span class="o">;</span>
+</span><span class='line'>        <span class="n">columnT</span> <span class="o">=</span> <span class="n">column</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c1">// up right diagonal check</span>
+</span><span class='line'>        <span class="k">while</span> <span class="o">(</span><span class="n">rowT</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">columnT</span> <span class="o">&lt;</span> <span class="n">boardSize</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">if</span> <span class="o">(</span><span class="n">board</span><span class="o">[</span><span class="n">rowT</span><span class="o">][</span><span class="n">columnT</span><span class="o">])</span>
+</span><span class='line'>                <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+</span><span class='line'>            <span class="n">rowT</span><span class="o">--;</span>
+</span><span class='line'>            <span class="n">columnT</span><span class="o">++;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">rowT</span> <span class="o">=</span> <span class="n">row</span><span class="o">;</span>
+</span><span class='line'>        <span class="n">columnT</span> <span class="o">=</span> <span class="n">column</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c1">// down left diagonal check</span>
+</span><span class='line'>        <span class="k">while</span> <span class="o">(</span><span class="n">rowT</span> <span class="o">&lt;</span> <span class="n">boardSize</span> <span class="o">&amp;&amp;</span> <span class="n">columnT</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">if</span> <span class="o">(</span><span class="n">board</span><span class="o">[</span><span class="n">rowT</span><span class="o">][</span><span class="n">columnT</span><span class="o">])</span>
+</span><span class='line'>                <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+</span><span class='line'>            <span class="n">rowT</span><span class="o">++;</span>
+</span><span class='line'>            <span class="n">columnT</span><span class="o">--;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="n">rowT</span> <span class="o">=</span> <span class="n">row</span><span class="o">;</span>
+</span><span class='line'>        <span class="n">columnT</span> <span class="o">=</span> <span class="n">column</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c1">// down right diagonal check</span>
+</span><span class='line'>        <span class="k">while</span> <span class="o">(</span><span class="n">rowT</span> <span class="o">&lt;</span> <span class="n">boardSize</span> <span class="o">&amp;&amp;</span> <span class="n">columnT</span> <span class="o">&lt;</span> <span class="n">boardSize</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">if</span> <span class="o">(</span><span class="n">board</span><span class="o">[</span><span class="n">rowT</span><span class="o">][</span><span class="n">columnT</span><span class="o">])</span>
+</span><span class='line'>                <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+</span><span class='line'>            <span class="n">rowT</span><span class="o">++;</span>
+</span><span class='line'>            <span class="n">columnT</span><span class="o">++;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">init</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">boardSize</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">boardSize</span><span class="o">;</span> <span class="n">j</span><span class="o">++)</span>
+</span><span class='line'>                <span class="n">board</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">]</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[iOS Programming 4(Views and the View Hierarchy)]]></title>
@@ -5053,50 +5688,6 @@ mail.smtp.starttls.enable: 将一般连接升级到加密连接，而无需另�
 <p>创建一个命令发送者对象，然后设置一个要发送的命令，而这个命令里面又包含了具体的命令接受执行者。当发送者调用buttonWasPressed时，就调用命令对象的execute方法。相当于对命令对象发出了命令，具体的执行就看命令对象自己调用哪个接受者来执行了。所以对于命令发送者来说，根本不在乎所拥有的是什么命令对象，只要该对象实现了Command接口就行。具体是什么Command类型都是调用者决定的(例如这里的SimpleController)。</p>
 
 <p>命令模式把“发出请求的对象”和“接受和执行请求的对象”分隔开来</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[深入浅出设计模式之单件模式(Singleton Pattern)]]></title>
-    <link href="http://PhotoSynthesiis.github.io/blog/2013/07/13/singleton-pattern/"/>
-    <updated>2013-07-13T15:21:00-05:00</updated>
-    <id>http://PhotoSynthesiis.github.io/blog/2013/07/13/singleton-pattern</id>
-    <content type="html"><![CDATA[<p>单件模式是最简单的一种设计模式，因为从头到尾都只涉及到一个类。单件模式想要达到的目的是在程序运行的过程中只创建一个类的对象，在很多场合这都很有用，比如注册表程序，你不会想要很多对象来，因为那样会造成混乱且很占内存，一个对象足矣。那么应该怎么应用单件模式呢？例子很简单，代码如下：</p>
-
-<!-- more -->
-
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Singleton</span> <span class="o">{</span>
-</span><span class='line'>  <span class="kd">private</span> <span class="kd">static</span> <span class="n">Singleton</span> <span class="n">uniqueInstance</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="kd">private</span> <span class="nf">Singleton</span><span class="o">();</span> <span class="c1">//这里把构造函数的修饰符设为private是为了在禁止外部类创建Singleton类的对象，而只允许在Singleton类里面创建</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="kd">public</span> <span class="kd">static</span> <span class="n">Singleton</span> <span class="nf">getInstance</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>      <span class="k">if</span> <span class="o">(</span><span class="n">uniqueInstance</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>          <span class="n">uniqueInstance</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Singleton</span><span class="o">();</span> <span class="c1">// 延迟初始化</span>
-</span><span class='line'>      <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>      <span class="k">return</span> <span class="n">uniqueInstance</span><span class="o">;</span>
-</span><span class='line'>  <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>
-如果外部类想要用到Singleton类的实例，不能自己创建，而必须向Singleton类请求这个实例。值得注意的是，Singleton类中单间的实现用到了static，意味着不要去继承Singleton类，因为这样所有潜在的子类都能使用这个uniqueInstance，会造成很多混乱。</p>
 ]]></content>
   </entry>
   
