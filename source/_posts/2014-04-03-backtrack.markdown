@@ -24,7 +24,6 @@ categories:
 下面的代码是用来避免冲突的,即满足上面列出的三个条件.
 
 ```java
-
 private boolean threaten(int row, int column) {
         int rowT = row;
         int columnT = column;
@@ -74,7 +73,6 @@ private boolean threaten(int row, int column) {
         }
         return false;
     }
-    
 ```
 
 在展示核心代码之前,需要首先谈谈是如何来找地方来摆放棋子的.我使用的方法是以'列'为anchor,然后再在这一列的八行中分别尝试摆放棋子,如果满足条件,就在这个点放上棋子,如果不满足,行数加一继续往下走,如果遇到走不通的情况就回退一步.为了具体说明他是怎么回退的,我用一个具体的例子来阐述:
