@@ -4,7 +4,7 @@
   <title><![CDATA[public static void man]]></title>
   <link href="http://PhotoSynthesiis.github.io/atom.xml" rel="self"/>
   <link href="http://PhotoSynthesiis.github.io/"/>
-  <updated>2014-04-03T23:23:40-05:00</updated>
+  <updated>2014-04-04T15:06:40-05:00</updated>
   <id>http://PhotoSynthesiis.github.io/</id>
   <author>
     <name><![CDATA[Qiushi Li]]></name>
@@ -12,6 +12,208 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[iOS Programming 5(Redrawing and UIScrollView)]]></title>
+    <link href="http://PhotoSynthesiis.github.io/blog/2014/04/04/ios-programming-5/"/>
+    <updated>2014-04-04T13:08:00-05:00</updated>
+    <id>http://PhotoSynthesiis.github.io/blog/2014/04/04/ios-programming-5</id>
+    <content type="html"><![CDATA[<p>在上一篇博客中,我们创建了一个画同心圆的app,这篇博客将继续在那上面扩展,当用户在屏幕上点击的时候同心圆会改变颜色.此外,还将在app里面加上UIScrollView,让用户通过scroll的方式浏览比屏幕本身大的view.</p>
+
+<h2>改变同心圆颜色</h2>
+
+<p>既然是通过点击来改变同心圆的颜色,那么我们肯定会想到用touch event来实现,在用户touch之后需要改变颜色,我们可以通过创建一个公有变量,然后在touch方法里改变他的颜色. 我们现在项目的格局如下:</p>
+
+<!--more-->
+
+
+<p> <img src="http://PhotoSynthesiis.github.io/images/ios-5_1.png" width="300" height="600"></p>
+
+<p>首先我们在<code>BNRHypnosisterView.m</code>的头部创建一个property文件:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="k">@interface</span> <span class="nc">BNRHypnosisterView</span> <span class="p">()</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="n">strong</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n">UIColor</span> <span class="o">*</span><span class="n">circleColor</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@implementation</span> <span class="nc">BNRHypnosisterView</span>
+</span><span class='line'><span class="p">...</span>
+</span><span class='line'><span class="k">@end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>在这里创建property而不是在header文件里面创建的原因是隐藏这个变量.一个类的header文件是对所有类可见,一种默认的做法是如果变量是定义在header文件里面,那么就表示他可以和其他所有的类互动,如果我想要这个变量或者方法只在这个类中使用,那么可以把它定义在.m的category里面.这相当于对其他类隐藏了这个变量或方法,即使其子类都不能看到.</p>
+
+<p>声明完之后就应该开始定义了,我们可以到<code>initWithFrame</code>方法里给它首先赋予一个默认值:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nf">initWithFrame:</span><span class="p">(</span><span class="n">CGRect</span><span class="p">)</span><span class="nv">frame</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="n">self</span> <span class="o">=</span> <span class="p">[</span><span class="n">super</span> <span class="nl">initWithFrame:</span><span class="n">frame</span><span class="p">];</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">self</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="c1">// Initialization code</span>
+</span><span class='line'>        <span class="n">self</span><span class="p">.</span><span class="n">backgroundColor</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIColor</span> <span class="n">clearColor</span><span class="p">];</span>
+</span><span class='line'>        <span class="n">self</span><span class="p">.</span><span class="n">circleColor</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIColor</span> <span class="n">lightGrayColor</span><span class="p">];</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">self</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这样在程序启动的时候同心圆的颜色是灰色.接下来就应该实现touch even了, 当用户点击后就改变<code>circleColor</code>的颜色我们通过实现默认的<code>touchesBegan</code>方法来实现.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="nf">touchesBegan:</span><span class="p">(</span><span class="n">NSSet</span> <span class="o">*</span><span class="p">)</span><span class="nv">touches</span> <span class="nf">withEvent:</span><span class="p">(</span><span class="n">UIEvent</span> <span class="o">*</span><span class="p">)</span><span class="nv">event</span> <span class="p">{</span>
+</span><span class='line'>    <span class="kt">float</span> <span class="n">red</span> <span class="o">=</span> <span class="p">(</span><span class="n">arc4random</span><span class="p">()</span> <span class="o">%</span> <span class="mi">100</span><span class="p">)</span> <span class="o">/</span> <span class="mf">100.0</span><span class="p">;</span>
+</span><span class='line'>    <span class="kt">float</span> <span class="n">green</span> <span class="o">=</span> <span class="p">(</span><span class="n">arc4random</span><span class="p">()</span> <span class="o">%</span> <span class="mi">100</span><span class="p">)</span> <span class="o">/</span> <span class="mf">100.0</span><span class="p">;</span>
+</span><span class='line'>    <span class="kt">float</span> <span class="n">blue</span> <span class="o">=</span> <span class="p">(</span><span class="n">arc4random</span><span class="p">()</span> <span class="o">%</span> <span class="mi">100</span><span class="p">)</span> <span class="o">/</span> <span class="mf">100.0</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">UIColor</span> <span class="o">*</span><span class="n">randomColor</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIColor</span> <span class="nl">colorWithRed:</span><span class="n">red</span> <span class="nl">green:</span><span class="n">green</span> <span class="nl">blue:</span><span class="n">blue</span> <span class="nl">alpha:</span><span class="mi">1</span><span class="p">];</span>
+</span><span class='line'>    <span class="n">self</span><span class="p">.</span><span class="n">circleColor</span> <span class="o">=</span> <span class="n">randomColor</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>上面这个方法就是在每次用户点击的时候都重新开始算rgb在<code>randomColor</code>中的分量,然后得到一个新的<code>randomColor</code>并把它赋值给circleColor.这样<code>circleColor</code>的颜色就变了,现在我们可以运行看看效果:</p>
+
+<p> <img src="http://PhotoSynthesiis.github.io/images/ios-5_2.png" width="300" height="600"></p>
+
+<p>我们发现无论怎么点击屏幕,颜色都不会改变,这是为什么呢?这里有两个原因:</p>
+
+<ul>
+<li>UIView的drawRect方法默认情况下只在加载的时候被调用,所以无论我们怎么点击屏幕,这个方法都不会被再次调用,所以所有的view都没有被重新render.</li>
+<li>在drawRect方法里面没有改变同心圆的颜色,改变的代码如下:</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'> <span class="c1">// [[UIColor lightGrayColor] setStroke];</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">circleColor</span> <span class="n">setStroke</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这里又涉及到iOS的一种机制:<code>run loop</code>. 它指的是当iOS app 在运行的时候,他会开始一个<code>run loop</code>,这个loop是专门用来监听事件的.当一次事件发生时(例如touch),<code>run loop</code>会找到相应的handler来处理这次事件,当这个事件被处理后,<code>run loop</code>继续执行. 在我们这个程序中,当<code>run loop</code>发现touch事件时,会停下来调用<code>touchesBegan</code>方法处理它,在处理完后重新回到<code>tun loop</code>中.在重新回到<code>run loop</code>后,它会检查那些在上次执行handler之后有改变并且需要重新render的view,然后<code>run loop</code>会发送drawRect:方法给这些view,然他们重新去render.但是为什么我们在点击屏幕后view并没有被重新render呢?原来这是因为需要被重新render的view不是系统默认的,如果他们是默认的(例如UIButton, UIText),render会自动执行,否则我们需要调用view的<code>setNeedsDisplay</code>方法来让他重新render.在<code>touchesBegan:</code>方法的最后一句,我们看到<code>circleColor</code>被重新赋值(其实是它的setter方法被调用了),那么我们可以重载它的setter方法,并在里面调用<code>setNeedsDisplay</code>方法.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="nf">setCircleColor:</span><span class="p">(</span><span class="n">UIColor</span> <span class="o">*</span><span class="p">)</span><span class="nv">circleColor</span> <span class="p">{</span>
+</span><span class='line'>    <span class="n">_circleColor</span> <span class="o">=</span> <span class="n">circleColor</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">self</span> <span class="n">setNeedsDisplay</span><span class="p">];</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>再次运行,一切OK.</p>
+
+<p> <img src="http://PhotoSynthesiis.github.io/images/ios-5_3.png" width="300" height="600">
+ <img src="http://PhotoSynthesiis.github.io/images/ios-5_4.png" width="300" height="600">
+ <img src="http://PhotoSynthesiis.github.io/images/ios-5_5.png" width="300" height="600"></p>
+
+<h2>使用UIScrollView</h2>
+
+<p>Scroll view通常是为比屏幕更大的view准备的,这样就能通过上下左右滚动来查看完整的图片.之前我们是直接把当前的view加到<code>UIWindow</code>中,不过为了实现scroll view,我们需要把当前view加到scroll view中,然后再把这个scroll view加到<code>UIWindow</code>中去.</p>
+
+<p> <img src="http://PhotoSynthesiis.github.io/images/ios-5_UIScrollView.png" width="900" height="1200"></p>
+
+<p>然后到app delegate的<code>didFinishLaunchingWithOptions</code>里加上如下代码:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'>    <span class="n">CGRect</span> <span class="n">screenRect</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">window</span><span class="p">.</span><span class="n">bounds</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">CGRect</span> <span class="n">bigRect</span> <span class="o">=</span> <span class="n">screenRect</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">bigRect</span><span class="p">.</span><span class="n">size</span><span class="p">.</span><span class="n">width</span> <span class="o">*=</span> <span class="mi">2</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">bigRect</span><span class="p">.</span><span class="n">size</span><span class="p">.</span><span class="n">height</span> <span class="o">*=</span> <span class="mi">2</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">UIScrollView</span> <span class="o">*</span><span class="n">scrollView</span> <span class="o">=</span> <span class="p">[[</span><span class="n">UIScrollView</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithFrame:</span><span class="n">screenRect</span><span class="p">];</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">window</span> <span class="nl">addSubview:</span><span class="n">scrollView</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">BNRHypnosisterView</span> <span class="o">*</span><span class="n">hypnosisView</span> <span class="o">=</span> <span class="p">[[</span><span class="n">BNRHypnosisterView</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithFrame:</span><span class="n">bigRect</span><span class="p">];</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">scrollView</span> <span class="nl">addSubview:</span><span class="n">hypnosisView</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>首先建立一个屏幕大小的CGRect作为<code>UIScrollView</code>的显示范围,然后建立一个两倍屏幕大小的CGRect作为view的显示范围,最后把view加到UIScrollView中.显示的效果如下:</p>
+
+<p> <img src="http://PhotoSynthesiis.github.io/images/ios-5_6.png" width="300" height="600"></p>
+
+<p>最后,我们可以把它做的更好看一些,我们给<code>UIScrollView</code>加两个view,并让他们在不同的屏幕显示:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'>    <span class="n">CGRect</span> <span class="n">screenRect</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">window</span><span class="p">.</span><span class="n">bounds</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">CGRect</span> <span class="n">bigRect</span> <span class="o">=</span> <span class="n">screenRect</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">bigRect</span><span class="p">.</span><span class="n">size</span><span class="p">.</span><span class="n">width</span> <span class="o">*=</span> <span class="mi">2</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'> <span class="n">UIScrollView</span> <span class="o">*</span><span class="n">scrollView</span> <span class="o">=</span> <span class="p">[[</span><span class="n">UIScrollView</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithFrame:</span><span class="n">screenRect</span><span class="p">];</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">window</span> <span class="nl">addSubview:</span><span class="n">scrollView</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">BNRHypnosisterView</span> <span class="o">*</span><span class="n">hypnosisView</span> <span class="o">=</span> <span class="p">[[</span><span class="n">BNRHypnosisterView</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithFrame:</span><span class="n">screenRect</span><span class="p">];</span>
+</span><span class='line'>    <span class="n">scrollView</span><span class="p">.</span><span class="n">pagingEnabled</span> <span class="o">=</span> <span class="n">YES</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">scrollView</span> <span class="nl">addSubview:</span><span class="n">hypnosisView</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">screenRect</span><span class="p">.</span><span class="n">origin</span><span class="p">.</span><span class="n">x</span> <span class="o">+=</span> <span class="n">screenRect</span><span class="p">.</span><span class="n">size</span><span class="p">.</span><span class="n">width</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">BNRHypnosisterView</span> <span class="o">*</span><span class="n">hypnosisView2</span> <span class="o">=</span> <span class="p">[[</span><span class="n">BNRHypnosisterView</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithFrame:</span><span class="n">screenRect</span><span class="p">];</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">scrollView</span> <span class="nl">addSubview:</span><span class="n">hypnosisView2</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">scrollView</span><span class="p">.</span><span class="n">contentSize</span> <span class="o">=</span> <span class="n">bigRect</span><span class="p">.</span><span class="n">size</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>其中<code>scrollView.pagingEnabled = YES</code>的意思是在左右滑动的时候有翻页的效果,屏幕不会停在两个view的中间.
+ <img src="http://PhotoSynthesiis.github.io/images/ios-5_7.png" width="300" height="600"></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[使用递归计算的回溯法]]></title>
@@ -93,7 +295,6 @@
 <span class='line-number'>47</span>
 <span class='line-number'>48</span>
 <span class='line-number'>49</span>
-<span class='line-number'>50</span>
 </pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">private</span> <span class="kt">boolean</span> <span class="nf">threaten</span><span class="o">(</span><span class="kt">int</span> <span class="n">row</span><span class="o">,</span> <span class="kt">int</span> <span class="n">column</span><span class="o">)</span> <span class="o">{</span>
 </span><span class='line'>        <span class="kt">int</span> <span class="n">rowT</span> <span class="o">=</span> <span class="n">row</span><span class="o">;</span>
 </span><span class='line'>        <span class="kt">int</span> <span class="n">columnT</span> <span class="o">=</span> <span class="n">column</span><span class="o">;</span>
@@ -143,7 +344,6 @@
 </span><span class='line'>        <span class="o">}</span>
 </span><span class='line'>        <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
 </span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
 </span></code></pre></td></tr></table></div></figure>
 
 
@@ -5511,183 +5711,6 @@ mail.smtp.starttls.enable: 将一般连接升级到加密连接，而无需另�
 <p>我们在Station类中添加一个方法getTemperature()。这个方法将调用Station类中含有的Thermometer对象的getTemperature()。这样getTemp()方法就只知道Station对象而不知道Thermometer对象。</p>
 
 <p>总结：笛米特法则告诉我们要尽量只和离自己最近的对象进行交互。离自己最近的对象包括：自身包含的对象，方法中创建的对象，通过参数传进的对象，还有自己本身。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[深入浅出设计模式之命令模式(Command Pattern)]]></title>
-    <link href="http://PhotoSynthesiis.github.io/blog/2013/07/13/command-pattern/"/>
-    <updated>2013-07-13T19:12:00-05:00</updated>
-    <id>http://PhotoSynthesiis.github.io/blog/2013/07/13/command-pattern</id>
-    <content type="html"><![CDATA[<p>命令模式，顾名思义，一定是有大哥发命令，一定有小弟在执行这个命令，理解了这个，命令模式就不难了。命令模式里面分为三种角色，发送者、命令对象和接受执行者。比如说有一个遥控板，它可以控制室内的灯光，那么遥控板在这里就是一个发送者，它发送命令给命令对象，命令对象接到命令后就只管执行。下面来看这个命令模式的实现吧：</p>
-
-<!-- more -->
-
-
-<p>1、首先是命令对象，它是一个接口，由子类具体实现</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Command</span> <span class="o">{</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">execute</span><span class="o">();</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">undo</span><span class="o">();</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>2、具体的命令，接收真实的接受者并运行接受者的方法来达到执行</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">LightOffCommand</span> <span class="kd">implements</span> <span class="n">Command</span> <span class="o">{</span>
-</span><span class='line'>    <span class="kd">private</span> <span class="n">Light</span> <span class="n">light</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="nf">LightOffCommand</span><span class="o">(</span><span class="n">Light</span> <span class="n">light</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">light</span> <span class="o">=</span> <span class="n">light</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@Override</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">execute</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">light</span><span class="o">.</span><span class="na">off</span><span class="o">();</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@Override</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">undo</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">light</span><span class="o">.</span><span class="na">on</span><span class="o">();</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">LightOnCommand</span> <span class="kd">implements</span> <span class="n">Command</span> <span class="o">{</span>
-</span><span class='line'>    <span class="kd">private</span> <span class="n">Light</span> <span class="n">light</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="nf">LightOnCommand</span><span class="o">(</span><span class="n">Light</span> <span class="n">light</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">light</span> <span class="o">=</span> <span class="n">light</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@Override</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">execute</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">light</span><span class="o">.</span><span class="na">on</span><span class="o">();</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@Override</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">undo</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">light</span><span class="o">.</span><span class="na">off</span><span class="o">();</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>他们都实现了Command，并且实现了execute方法和undo方法，并且封装了命令的接收者。这两个方法是命令模式里命令对象的标配，前者负责执行命令，后者负责撤销命令。其实它们都不直接完成命令，而是委托给通过构造函数传进来的真正的执行者去完成(这里是Light对象)。这个Command对象暴露给命令发送者就是2个接口，一个execute一个undo。命令发送者只管通过对命令对象的引用来执行这两个方法就是了，具体的都封装在命令对象中(例如LightOnCommand中)。
-3、命令的真正接收和执行者</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Light</span> <span class="o">{</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">on</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;light&#39;s on&quot;</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">off</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;light&#39;s off&quot;</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>4、命令发送者</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">SimpleRemoteControl</span> <span class="o">{</span>
-</span><span class='line'>    <span class="kd">private</span> <span class="n">Command</span> <span class="n">slot</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setCommand</span><span class="o">(</span><span class="n">Command</span> <span class="n">command</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">slot</span> <span class="o">=</span> <span class="n">command</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">buttonWasPressed</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">slot</span><span class="o">.</span><span class="na">execute</span><span class="o">();</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>发送命令</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">SimpleController</span> <span class="o">{</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">SimpleRemoteControl</span> <span class="n">simpleRemoteControl</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SimpleRemoteControl</span><span class="o">();</span>
-</span><span class='line'>        <span class="n">simpleRemoteControl</span><span class="o">.</span><span class="na">setCommand</span><span class="o">(</span><span class="k">new</span> <span class="n">LightOnCommand</span><span class="o">(</span><span class="k">new</span> <span class="n">Light</span><span class="o">()));</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">simpleRemoteControl</span><span class="o">.</span><span class="na">buttonWasPressed</span><span class="o">();</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>创建一个命令发送者对象，然后设置一个要发送的命令，而这个命令里面又包含了具体的命令接受执行者。当发送者调用buttonWasPressed时，就调用命令对象的execute方法。相当于对命令对象发出了命令，具体的执行就看命令对象自己调用哪个接受者来执行了。所以对于命令发送者来说，根本不在乎所拥有的是什么命令对象，只要该对象实现了Command接口就行。具体是什么Command类型都是调用者决定的(例如这里的SimpleController)。</p>
-
-<p>命令模式把“发出请求的对象”和“接受和执行请求的对象”分隔开来</p>
 ]]></content>
   </entry>
   
