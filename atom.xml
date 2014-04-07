@@ -4,7 +4,7 @@
   <title><![CDATA[public static void man]]></title>
   <link href="http://PhotoSynthesiis.github.io/atom.xml" rel="self"/>
   <link href="http://PhotoSynthesiis.github.io/"/>
-  <updated>2014-04-04T15:06:40-05:00</updated>
+  <updated>2014-04-06T21:27:26-05:00</updated>
   <id>http://PhotoSynthesiis.github.io/</id>
   <author>
     <name><![CDATA[Qiushi Li]]></name>
@@ -12,6 +12,185 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[iOS Programming 6-1(View Controllers)]]></title>
+    <link href="http://PhotoSynthesiis.github.io/blog/2014/04/06/ios-6/"/>
+    <updated>2014-04-06T19:55:00-05:00</updated>
+    <id>http://PhotoSynthesiis.github.io/blog/2014/04/06/ios-6</id>
+    <content type="html"><![CDATA[<p>前面讲过了view和View hierachy,为了让view在window上显示,我们都是直接把一个view加到应用的window里面去,今天要讲的东西比view更高级一层,他叫view controller.他的职责是创建view,响应view的事件,管理view的层级关系,把view加到window里.</p>
+
+<p>我会结合一个实际的应用来阐述view controller,这个应用最后出来的效果会想下面这样:</p>
+
+<!--more-->
+
+
+<p> <img src="http://PhotoSynthesiis.github.io/images/ios-6_1.png" width="300" height="600"></p>
+
+<p>屏幕下面有一个tab,可以用来切换屏幕,左边按钮对应的屏幕和上一章讲到的view一样,右边的view是一个计时器.</p>
+
+<p> <img src="http://PhotoSynthesiis.github.io/images/ios-6_2.png" width="300" height="600"></p>
+
+<h2>Subclass UIViewController</h2>
+
+<p>我们首先创建一个空项目,并把上一章创建的view类引用到这个项目中来,接着创建第一个view controller (WUSTLHypnosisViewController), 让他继承自UIViewController.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="k">@interface</span> <span class="nc">WUSTLHypnosisViewController</span> : <span class="nc">UIViewController</span>
+</span><span class='line'><span class="k">@end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>View of View Controller</h2>
+
+<p>每一个继承自UIVIewController的类都有一个对应的view,它定义在父类中:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">strong</span><span class="p">)</span> <span class="n">UIView</span> <span class="o">*</span><span class="n">view</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这个属性指向controller的view hierachy中的root view,所以当一个view controller的root view被加到应用的window中后,这个view controller中在view hierachy中的所有view都被加进去了.</p>
+
+<h3>Lazy Loading</h3>
+
+<p>View Controller中的view不是应用一启动就全部加载的,而是遇到用户请求才开始加载,这样做的好处是节约了内存,提高了性能.</p>
+
+<p>对于一个View Controller来说,有两种方法可以加载其对应的view:</p>
+
+<ul>
+<li>覆写父类UIViewController的loadView方法</li>
+<li>如果view是在Interface Builder中创建的,可以通过加载Nib文件来读取view</li>
+</ul>
+
+
+<p>我们首先使用第一种方法来创建WUSTLHypnosisViewController的view,在<code>WUSTLHypnosisViewController.m</code>文件里先import 之前创建的view,然后覆写loadView方法:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">loadView</span> <span class="p">{</span>
+</span><span class='line'>    <span class="n">BNRHypnosisterView</span> <span class="o">*</span><span class="n">backgroundView</span> <span class="o">=</span> <span class="p">[[</span><span class="n">BNRHypnosisterView</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'>    <span class="n">self</span><span class="p">.</span><span class="n">view</span> <span class="o">=</span> <span class="n">backgroundView</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p></p>
+
+<h2>Setting the Root View Controller</h2>
+
+<p>这一步完成后,我们已经建立了一个view controller并把它和一个view连接起来.如果要想显示这个view controller里面的view,我们只需要把这个view controller加到window里面去即可.我们来到AppDelegate的</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nf">application:</span><span class="p">(</span><span class="n">UIApplication</span> <span class="o">*</span><span class="p">)</span><span class="nv">application</span> <span class="nf">didFinishLaunchingWithOptions:</span><span class="p">(</span><span class="n">NSDictionary</span> <span class="o">*</span><span class="p">)</span><span class="nv">launchOptions</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>方法中,在里面创建view controller的实例,然后把这个实例加到应用的window中去:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nf">application:</span><span class="p">(</span><span class="n">UIApplication</span> <span class="o">*</span><span class="p">)</span><span class="nv">application</span> <span class="nf">didFinishLaunchingWithOptions:</span><span class="p">(</span><span class="n">NSDictionary</span> <span class="o">*</span><span class="p">)</span><span class="nv">launchOptions</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="n">self</span><span class="p">.</span><span class="n">window</span> <span class="o">=</span> <span class="p">[[</span><span class="n">UIWindow</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithFrame:</span><span class="p">[[</span><span class="n">UIScreen</span> <span class="n">mainScreen</span><span class="p">]</span> <span class="n">bounds</span><span class="p">]];</span>
+</span><span class='line'>    <span class="c1">// Override point for customization after application launch.</span>
+</span><span class='line'>    <span class="n">WUSTLHypnosisViewController</span> <span class="o">*</span><span class="n">hvc</span> <span class="o">=</span> <span class="p">[[</span><span class="n">WUSTLHypnosisViewController</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'>    <span class="n">self</span><span class="p">.</span><span class="n">window</span><span class="p">.</span><span class="n">rootViewController</span> <span class="o">=</span> <span class="n">hvc</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">self</span><span class="p">.</span><span class="n">window</span><span class="p">.</span><span class="n">backgroundColor</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIColor</span> <span class="n">whiteColor</span><span class="p">];</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">window</span> <span class="n">makeKeyAndVisible</span><span class="p">];</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">YES</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>在之前的教学中,我们是直接把一个view加到window中,例如:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">window</span> <span class="nl">addSubview:</span><span class="n">firstView</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>现在我们是把一个view controller加到window的root view controller中,其实在window的setRootViewController方法中,他还是会把view controller里面的view取出来,然后执行上面那段代码.</p>
+
+<p>这样我们就完成了第一个屏幕,接下来应该开始第二个屏幕内容了.首先还是建立一个UIViewController的子类,不过这一次我们选择使用另一种方式创建view &mdash; 读取XIB文件.</p>
+
+<h2>Create a View in Interface Builder</h2>
+
+<p>首先建立一个XIB文件.</p>
+
+<p> <img src="http://PhotoSynthesiis.github.io/images/ios-6_3.png" width="300" height="600">
+ <img src="http://PhotoSynthesiis.github.io/images/ios-6_4.png" width="300" height="600"></p>
+
+<p>然后点击XIB文件,拖一个UIView到空白处,这样我们就可以在Interface Builder上面加入各种view了.接下来我们选择DatePicker和UIButton拖到view里面,效果如下:</p>
+
+<p> <img src="http://PhotoSynthesiis.github.io/images/ios-6_5.png" width="300" height="600"></p>
+
+<p>接下来我们到对应的.m文件里创建一个DatePicker的property和addReminder方法:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="k">@interface</span> <span class="nc">WUSTLReminderViewController</span> <span class="p">()</span>
+</span><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">weak</span><span class="p">)</span> <span class="kt">IBOutlet</span> <span class="n">UIDatePicker</span> <span class="o">*</span><span class="n">datePicker</span><span class="p">;</span>
+</span><span class='line'><span class="k">@end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这里datePicker的属性是weak,这样做的好处是在这个view被销毁的时候,其子类也被销毁了.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">IBAction</span><span class="p">)</span><span class="nf">addReminder:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">sender</span> <span class="p">{</span>
+</span><span class='line'>    <span class="n">NSDate</span> <span class="o">*</span><span class="n">date</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">datePicker</span><span class="p">.</span><span class="n">date</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>现在我们有了view,并且在类里面也有对应的属性和方法,接下来就是把他俩连接起来,不过与第一个讲义不同的是,这个XIB文件不是在创建controller的时候创建的,而是后来单独创建的,所以还需要把它和一个view controller连接起来才行.打开view左侧的File&rsquo;s Owner,</p>
+
+<p> <img src="http://PhotoSynthesiis.github.io/images/ios-6_6.png" width="300" height="600"></p>
+
+<p>然后来到右边的属性栏,在class里面填写对应的view controller即可:</p>
+
+<p> <img src="http://PhotoSynthesiis.github.io/images/ios-6_7.png" width="300" height="600"></p>
+
+<p>创建view的最后一步就是把interface builder中的元素和类里面的属性和方法hook起来,方法如第一个讲义里面那样.</p>
+
+<h2>Loading a Nib File</h2>
+
+<p>我们还是来到AppDelegate那个didFinishLaunch方法里面去,并加上如下的代码:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="n">NSBundle</span> <span class="o">*</span><span class="n">appBundle</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSBundle</span> <span class="n">mainBundle</span><span class="p">];</span>
+</span><span class='line'><span class="n">WUSTLReminderViewController</span> <span class="o">*</span><span class="n">rvc</span> <span class="o">=</span> <span class="p">[[</span><span class="n">WUSTLReminderViewController</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithNibName:</span><span class="s">@&quot;WUSTLReminderViewController&quot;</span> <span class="nl">bundle:</span><span class="n">appBundle</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>第一句话的意思是找到应用的bundle,bundle是一个应用里面的一个文件夹,里面主要装着可执行文件和一些资源(XIB文件).第二句话是初始化view controller并读取相应的NIB文件.其实上面的代码和接下来的代码效果是一样的:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="n">WUSTLReminderViewController</span> <span class="o">*</span><span class="n">rvc</span> <span class="o">=</span> <span class="p">[[</span><span class="n">WUSTLReminderViewController</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>因为如果直接调用init方法,系统最终还是会调用initWithNibName,所以调用init只是相当于把initWithNibName方法的两个参数都设为nil,不过系统会默认到当前应用的bundle下面去找对应的资源,他会去尝试找与当前view controller同名的Nib文件(Nib是XIB编译后的产物),所以为了方便起见,我们一般把XIB文件的名字和view controller的名字保持一致.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[iOS Programming 5(Redrawing and UIScrollView)]]></title>
@@ -134,9 +313,9 @@
 
 <p>再次运行,一切OK.</p>
 
-<p> <img src="http://PhotoSynthesiis.github.io/images/ios-5_3.png" width="300" height="600">
- <img src="http://PhotoSynthesiis.github.io/images/ios-5_4.png" width="300" height="600">
- <img src="http://PhotoSynthesiis.github.io/images/ios-5_5.png" width="300" height="600"></p>
+<p> <img src="http://PhotoSynthesiis.github.io/images/ios-5_3.png" width="250" height="500">
+ <img src="http://PhotoSynthesiis.github.io/images/ios-5_4.png" width="250" height="500">
+ <img src="http://PhotoSynthesiis.github.io/images/ios-5_5.png" width="250" height="500"></p>
 
 <h2>使用UIScrollView</h2>
 
@@ -5404,313 +5583,6 @@ mail.smtp.starttls.enable: 将一般连接升级到加密连接，而无需另�
 
 
 <p>上面倒数第二行那个y是在控制台输入的。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[深入浅出设计模式之适配器模式(Adaptor Pattern)与外观模式(Facade Pattern)]]></title>
-    <link href="http://PhotoSynthesiis.github.io/blog/2013/07/14/adaptor-pattern/"/>
-    <updated>2013-07-14T10:31:00-05:00</updated>
-    <id>http://PhotoSynthesiis.github.io/blog/2013/07/14/adaptor-pattern</id>
-    <content type="html"><![CDATA[<p>一、适配器模式
-我们每个人在生活中都经历过这样的事，手中的电子产品和插座要求的接口类型不相符，比如插座要求的是三孔，而自己的插头是两孔，这个时候就需要一个电源适配器插在原先的插座上，然后再适配器的另一端暴露一个两孔的插孔供我们使用。对于客户来说，不管原来插座式几孔的，他只在乎自己能用的是两孔的就行了，其它的都交给了适配器去做。</p>
-
-<!-- more -->
-
-
-<p><img src="http://PhotoSynthesiis.github.io/images/adaptor_pattern-1.png"></p>
-
-<p>1、首先是美国标准的电源接口和实现</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">TwoHolePlugIn</span> <span class="o">{</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">provideElectricityForTwoHole</span><span class="o">();</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">USAStandardTwoHolePlugIn</span> <span class="kd">implements</span> <span class="n">TwoHolePlugIn</span> <span class="o">{</span>
-</span><span class='line'>    <span class="nd">@Override</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">provideElectricityForTwoHole</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;USA Standard Electricity&quot;</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>2、其次是中国标准的接口和实现</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">ThreeHolePlugIn</span> <span class="o">{</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">provideElectricityForThreeHole</span><span class="o">();</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ChinaStandardThreeHolePlugIn</span> <span class="kd">implements</span> <span class="n">ThreeHolePlugIn</span> <span class="o">{</span>
-</span><span class='line'>    <span class="nd">@Override</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">provideElectricityForThreeHole</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;China Standard Electricity&quot;</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>3、我们想把美国的接口通过适配器转换为中国接口，就需要一个适配器类，它提供中国接口，但实际供电的是美国插座</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">TwoHolePlugInAdaptor</span> <span class="kd">implements</span> <span class="n">TwoHolePlugIn</span> <span class="o">{</span>
-</span><span class='line'>    <span class="kd">private</span> <span class="n">TwoHolePlugIn</span> <span class="n">plugInAdaptor</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="nf">TwoHolePlugInAdaptor</span><span class="o">(</span><span class="n">TwoHolePlugIn</span> <span class="n">plugInAdaptor</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">plugInAdaptor</span> <span class="o">=</span> <span class="n">plugInAdaptor</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@Override</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">provideElectricityForTwoHole</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">plugInAdaptor</span><span class="o">.</span><span class="na">provideElectricityForTwoHole</span><span class="o">();</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>4、这时可以开始充电了</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">StarCharging</span> <span class="o">{</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">TwoHolePlugIn</span> <span class="n">twoHole</span> <span class="o">=</span> <span class="k">new</span> <span class="n">USAStandardTwoHolePlugIn</span><span class="o">();</span>
-</span><span class='line'>        <span class="n">twoHole</span><span class="o">.</span><span class="na">provideElectricityForTwoHole</span><span class="o">();</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">ThreeHolePlugIn</span> <span class="n">threeHole</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ChinaStandardThreeHolePlugIn</span><span class="o">();</span>
-</span><span class='line'>        <span class="n">threeHole</span><span class="o">.</span><span class="na">provideElectricityForThreeHole</span><span class="o">();</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">TwoHolePlugIn</span> <span class="n">adaptor</span> <span class="o">=</span> <span class="k">new</span> <span class="n">TwoHolePlugInAdaptor</span><span class="o">(</span><span class="n">twoHole</span><span class="o">);</span>
-</span><span class='line'>        <span class="n">adaptor</span><span class="o">.</span><span class="na">provideElectricityForTwoHole</span><span class="o">();</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>运行结果:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">USA</span> <span class="n">Standard</span> <span class="n">Electricity</span>
-</span><span class='line'><span class="n">China</span> <span class="n">Standard</span> <span class="n">Electricity</span>
-</span><span class='line'><span class="n">USA</span> <span class="n">Standard</span> <span class="n">Electricity</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>从上面我们可以看到，客户只关心两孔接口，剩余的交给了适配器去做，而适配器不仅可以适配三孔插座，另一个适配器可以适配五孔插座，唯一需要统一的就是这两个适配器暴露给客户的接口类型一样就可以了。这样做的好处是解耦了客户和被适配者的具体实现，封装了架构中变化的部分。</p>
-
-<p>二、外观模式
-顾名思义，给客户提供一个更好地外观(接口)。例如有一个家庭影院，如果你想看电影，需要首先打开电视，打开蓝光DVD，调暗灯光这三步。这时有一个家庭影院类HomeMovie:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">HomeMovie</span> <span class="o">{</span>
-</span><span class='line'>  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">turnOnTV</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>      <span class="o">...</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">turnOnBlueRayDVD</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>      <span class="o">...</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">turnDownLight</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>      <span class="o">...</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>如果每次看电影都需要做这么多事情，而且它们都是固定不变的，是多么麻烦的事啊。这时我们就可以利用外观模式来解决这个问题，方法是提供另外一个接口，把这三步一次做完，这样客户只需做一件事情(比如按一次按钮)，一切都搞定了。新类如下：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">HomeMovie</span> <span class="o">{</span>
-</span><span class='line'>  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">turnOnTV</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>      <span class="o">...</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">turnOnBlueRayDVD</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>      <span class="o">...</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">turnDownLight</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>      <span class="o">...</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">watchMovie</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>      <span class="n">turnOnTV</span><span class="o">();</span>
-</span><span class='line'>      <span class="n">turnOnBlueRayDVD</span><span class="o">();</span>
-</span><span class='line'>      <span class="n">turnDownLight</span><span class="o">();</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>好处是简化了客户调用，提供了一个干净的接口。值得注意的是外观模式没有封装如何类，只是简化了接口。同时也隔离了变化与不变化的地方，例如我换了一台电视机，但是客户只关心watchMovie成功与否，所以客户端代码无需任何改变。</p>
-
-<p>迪米特法则(最少知识原则):
-1、一个软件实体要尽可能的只与和它最近的实体进行通讯。通常被表述为：talk only to your immediate friends ( 只和离你最近的朋友进行交互)</p>
-
-<p>“talk”，其实就是对象间方法的调用。这条规则表明了对象间方法调用的原则：
-(1)  调用对象本身的方法；
-(2)  调用通过参数传入的对象的方法；
-(3)  在方法中创建的对象的方法；
-(4)  所包含对象的方法。</p>
-
-<p>上面的4点看起来有点别扭，下面通过一个具体的例子，就可以对上述4条guideline有进一步感性的认识：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'> <span class="mi">1</span> <span class="kd">public</span> <span class="kd">class</span> <span class="nc">Car</span> <span class="o">{</span>
-</span><span class='line'> <span class="mi">2</span>   <span class="n">Engine</span> <span class="n">engine</span><span class="o">;</span>
-</span><span class='line'> <span class="mi">3</span>
-</span><span class='line'> <span class="mi">4</span>   <span class="kd">public</span> <span class="n">Car</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'> <span class="mi">5</span>     <span class="c1">//initialize engine,etc.</span>
-</span><span class='line'> <span class="mi">6</span>   <span class="o">}</span>
-</span><span class='line'> <span class="mi">7</span>
-</span><span class='line'> <span class="mi">8</span>   <span class="kd">public</span> <span class="kt">void</span> <span class="n">start</span><span class="o">(</span><span class="n">Key</span> <span class="n">key</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'> <span class="mi">9</span>     <span class="n">Doors</span> <span class="n">doors</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Doors</span><span class="o">();</span>
-</span><span class='line'><span class="mi">10</span>     <span class="kt">boolean</span> <span class="n">authorized</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="na">turns</span><span class="o">();</span>
-</span><span class='line'><span class="mi">11</span>
-</span><span class='line'><span class="mi">12</span>     <span class="k">if</span><span class="o">(</span><span class="n">authorized</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'><span class="mi">13</span>       <span class="n">engine</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
-</span><span class='line'><span class="mi">14</span>       <span class="n">updateDashboardDisplay</span><span class="o">();</span>
-</span><span class='line'><span class="mi">15</span>       <span class="n">doors</span><span class="o">.</span><span class="na">lock</span><span class="o">();</span>
-</span><span class='line'><span class="mi">16</span>      <span class="o">}</span>
-</span><span class='line'><span class="mi">17</span>
-</span><span class='line'><span class="mi">18</span>     <span class="kd">public</span> <span class="kt">void</span> <span class="n">updateDashboardDisplay</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'><span class="mi">19</span>       <span class="c1">//update display</span>
-</span><span class='line'><span class="mi">20</span>     <span class="o">}</span>
-</span><span class='line'><span class="mi">21</span> <span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>下面对start()方法中的语句进行分析：
-第10行－key.turns()：符合上述的第（2）条，key对象是通过参数传入start()方法的。
-第13行－engine.start()：符合上述的第（4）条，engine对象是包含在Car的对象之中的。
-第14行－UpdateDashboardDisplay()：符合上述的第（1）条，UpdateDashboardDisplay()方法是Car对像自身的方法。
-第15行－doors.lock()：符合上述的第（3）条，doors对象是在start()方法中创建的对象。</p>
-
-<p>接下来看一个违反Principle of Least Knowledge的例子：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="mi">1</span> <span class="kd">public</span> <span class="kt">float</span> <span class="n">getTemp</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'><span class="mi">2</span>   <span class="n">Thermometer</span> <span class="n">thermometer</span> <span class="o">=</span> <span class="n">station</span><span class="o">.</span><span class="na">getThermometer</span><span class="o">();</span>
-</span><span class='line'><span class="mi">3</span>   <span class="k">return</span> <span class="n">thermometer</span><span class="o">.</span><span class="na">getTemperature</span><span class="o">();</span>
-</span><span class='line'><span class="mi">4</span> <span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>上面的方法中station对象是immediate friends。但是上面的代码却从station对象中返回了一个Thermometer对象，然后调用了thermometer对象的getTemperature()方法，违反了Principle of Least Knowledge。</p>
-
-<p>下面对上面的方法作出符合Principle of Least Knowledge的改进：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="mi">1</span> <span class="kd">public</span> <span class="kt">float</span> <span class="n">getTemp</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'><span class="mi">2</span>   <span class="k">return</span> <span class="n">station</span><span class="o">.</span> <span class="n">getTemperature</span><span class="o">();</span>
-</span><span class='line'><span class="mi">3</span> <span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>我们在Station类中添加一个方法getTemperature()。这个方法将调用Station类中含有的Thermometer对象的getTemperature()。这样getTemp()方法就只知道Station对象而不知道Thermometer对象。</p>
-
-<p>总结：笛米特法则告诉我们要尽量只和离自己最近的对象进行交互。离自己最近的对象包括：自身包含的对象，方法中创建的对象，通过参数传进的对象，还有自己本身。</p>
 ]]></content>
   </entry>
   
