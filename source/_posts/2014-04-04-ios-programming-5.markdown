@@ -91,9 +91,9 @@ categories:
 再次运行,一切OK.
 
 
- {% img /images/ios-5_3.png 300 600%}
- {% img /images/ios-5_4.png 300 600%}
- {% img /images/ios-5_5.png 300 600%}
+ {% img /images/ios-5_3.png 250 500%}
+ {% img /images/ios-5_4.png 250 500%}
+ {% img /images/ios-5_5.png 250 500%}
 
 ##使用UIScrollView##
 Scroll view通常是为比屏幕更大的view准备的,这样就能通过上下左右滚动来查看完整的图片.之前我们是直接把当前的view加到``UIWindow``中,不过为了实现scroll view,我们需要把当前view加到scroll view中,然后再把这个scroll view加到``UIWindow``中去.
