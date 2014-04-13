@@ -9,7 +9,19 @@
   <meta name="author" content="Qiushi Li">
 
   
-  <meta name="description" content="重排序通常是编译器或运行时环境为了优化程序性能而采取的对指令进行重新排序执行的一种手段。重排序分为两类：编译期重排序和运行期重排序，分别对应编译时和运行时环境。 在并发程序中，程序员会特别关注不同进程或线程之间的数据同步，特别是多个线程同时修改同一变量时， &hellip;">
+  <meta name="description" content="一、选择排序 选择排序之所以被称为选择排序是因为在每一次的迭代过程中，总是‘选择’最小的一个元素到数组的最左边。下面是一个选择排序的实例： 1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+private static void sort(String[] a) { int N = a. &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +77,78 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/08/13/selection-insertion-and-shellsort/">选择排序(Selection sort)插入排序(Insertion sort)与希尔排序(Shellsort)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-08-13T00:03:00-05:00" pubdate data-updated="true">Aug 13<span>th</span>, 2013</time>
+        
+         | <a href="/blog/2013/08/13/selection-insertion-and-shellsort/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>一、选择排序</p>
+
+<p>选择排序之所以被称为选择排序是因为在每一次的迭代过程中，总是‘选择’最小的一个元素到数组的最左边。下面是一个选择排序的实例：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">private</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">sort</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">a</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">N</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="na">length</span><span class="o">;</span>
+</span><span class='line'>    <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kt">int</span> <span class="n">min</span> <span class="o">=</span> <span class="n">i</span><span class="o">;</span>
+</span><span class='line'>        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">N</span><span class="o">;</span> <span class="n">j</span><span class="o">++)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">if</span> <span class="o">(</span><span class="n">a</span><span class="o">[</span><span class="n">j</span><span class="o">]</span> <span class="o">&lt;</span> <span class="n">a</span><span class="o">[</span><span class="n">min</span><span class="o">])</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">min</span> <span class="o">=</span> <span class="n">j</span><span class="o">;</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="n">exchange</span><span class="o">(</span><span class="n">i</span><span class="o">,</span> <span class="n">min</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/08/13/selection-insertion-and-shellsort/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -501,49 +585,6 @@ javamail包中，主要是用来发送邮件的。为了发送邮件，需要提
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/07/14/template-method/">深入浅出设计模式之模板方法模式(Template Method)</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-07-14T14:41:00-05:00" pubdate data-updated="true">Jul 14<span>th</span>, 2013</time>
-        
-         | <a href="/blog/2013/07/14/template-method/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>模板方法模式，顾名思义，必定有一个类提供了一个模板，完成一件工作。其他类使用这个模板完成自己的工作，但是由于各个类之间所要完成的工作之间并不完全一致，所有在模板方法类中会可以留下一些抽象方法供其他类自己来实现，这样通过模板方法达到的效果就产生了区别。例如，如果我要泡一杯咖啡，需要的步骤是</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/07/14/template-method/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/3/">&larr; Older</a>
@@ -561,6 +602,10 @@ javamail包中，主要是用来发送邮件的。为了发送邮件，需要提
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/04/12/google-analytics/">google analytics</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/04/06/ios-6/">iOS Programming 6-1(View Controllers)</a>
       </li>
     
@@ -574,10 +619,6 @@ javamail包中，主要是用来发送邮件的。为了发送邮件，需要提
     
       <li class="post">
         <a href="/blog/2014/03/09/ios-4/">iOS Programming 4(Views and the View Hierarchy)</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/03/08/ios-3/">iOS Programming 3(Managing Memory wih ARC)</a>
       </li>
     
   </ul>

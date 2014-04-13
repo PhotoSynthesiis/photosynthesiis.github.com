@@ -4,7 +4,7 @@
   <title><![CDATA[public static void man]]></title>
   <link href="http://PhotoSynthesiis.github.io/atom.xml" rel="self"/>
   <link href="http://PhotoSynthesiis.github.io/"/>
-  <updated>2014-04-06T21:27:26-05:00</updated>
+  <updated>2014-04-13T00:07:29-05:00</updated>
   <id>http://PhotoSynthesiis.github.io/</id>
   <author>
     <name><![CDATA[Qiushi Li]]></name>
@@ -12,6 +12,285 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[google analytics]]></title>
+    <link href="http://PhotoSynthesiis.github.io/blog/2014/04/12/google-analytics/"/>
+    <updated>2014-04-12T20:52:00-05:00</updated>
+    <id>http://PhotoSynthesiis.github.io/blog/2014/04/12/google-analytics</id>
+    <content type="html"><![CDATA[<p>最近在iOS的final project中用到了google analytics来分析用户行为,自己也做了一些research,今天就把它记录在这里.</p>
+
+<p>在介绍之前先说说这个iOS app的概况,他是一个时间记录仪,有显示当前时间(ClockViewController)和stopwatch的功能(StopWatchViewController),可以在app下面的tab切换.我今天要做的是首先为显示时间的view加一个track,然后再到stopwatch里面加两个track用户点击按钮的功能.</p>
+
+<!--more-->
+
+
+<p> <img src="http://PhotoSynthesiis.github.io/images/ga-10.png" width="300" height="600"></p>
+
+<h2>什么是Google Analytics</h2>
+
+<p>Google Analytics是一款用来监测网页或者app中用户行为的软件,这里的用户行为包括用户在哪个页面停留了多久,哪些功能用户使用得最多,哪个版本的app最受用户欢迎等内容.</p>
+
+<h2>如何使用Google Analytics</h2>
+
+<h3>Step 1. 点击首页banner上面的Admin,进入管理页面</h3>
+
+<p> <img src="http://PhotoSynthesiis.github.io/images/ga-1.png" width="600" height="1200"></p>
+
+<p>上图是Google Analytics的dashboard,里面有三个column,分别是account,property和view.</p>
+
+<ul>
+<li>account: 一个account可以是其他account的member,比如我的account可以是客户或者其他合作者的account的一个member.今天我不会深入讨论这个,所以可以暂时放一放.</li>
+<li>property: 一个property代表一个被track的网站或者app,所以如果你要对这个account新增一个网页或者app去track,你需要新建一个property.</li>
+<li>view: 如果你的app有多个版本,你可以创建多个view来分别track他们.</li>
+</ul>
+
+
+<h3>Step 2. 新建一个property</h3>
+
+<p>只需要点击property,然后会出来一个下拉框,然后点击里面的<code>create new property</code></p>
+
+<p> <img src="http://PhotoSynthesiis.github.io/images/ga-2.png" width="600" height="1200"></p>
+
+<p>之后你会被带到下面这个页面:</p>
+
+<p> <img src="http://PhotoSynthesiis.github.io/images/ga-3.png" width="600" height="1200"></p>
+
+<p>因为今天我们使用它来track一个iOS app,所以这里选择<code>Mobile app</code>,然后填上<code>App Name</code>,点击<code>Get Tracking ID</code>,然后会被带到下面这个页面:</p>
+
+<p> <img src="http://PhotoSynthesiis.github.io/images/ga-4.png" width="600" height="1200"></p>
+
+<p>在这个页面你会得到你app的专属tracking id,每个应用都有自己的一个tracking id,在你的app中会使用到这个id,之后我们会具体谈到其原理和使用.</p>
+
+<p>现在下载Google Analytics iOS SDK,点击第一个下载连接,而不是<code>Download with admob features</code>.这样你就得到了一个SDK包,接下来就是引用包了.</p>
+
+<h3>Step 3. 引用Google Analytics iOS SDK</h3>
+
+<p>解压刚才下载下来的那个包:</p>
+
+<p> <img src="http://PhotoSynthesiis.github.io/images/ga-5.png" width="600" height="1200"></p>
+
+<p>打开GoogleAnalytics下面的library文件夹:</p>
+
+<p> <img src="http://PhotoSynthesiis.github.io/images/ga-6.png" width="600" height="1200"></p>
+
+<p>把下面几个文件拷贝到你的项目中去,注意在拷贝的时候要选择<code>Copy items into destination group’s folder and Add the files to the Clock target.</code>,这样才能保证文件被真正拷贝到了项目里面,而不是只产生了对文件的引用.</p>
+
+<ul>
+<li> GAI.h</li>
+<li> GAITracker.h</li>
+<li> GAITrackedViewController.h</li>
+<li> GAIDictionaryBuilder.h</li>
+<li> GAIFields.h</li>
+<li> GAILogger.h</li>
+</ul>
+
+
+<p><img src="http://PhotoSynthesiis.github.io/images/ga-7.png" width="300" height="600"></p>
+
+<p>接下来把<code>libGoogleAnalyticsServices.a</code>文件拖到项目的framework文件夹下,其实你把它放到项目的哪儿都无所谓,只是这样更好管理一些.点击项目名称(Clock),然后在右边的窗口中点击<code>build phases</code>,展开<code>Link Binary With Libraries</code>点击左下角的<code>+</code>然后在搜索栏中输入CoreData,然后选中并点击<code>Add</code>.重复上面的过程,并把<code>SystemConfiguration.framework</code>和<code>libz.dylib</code>引用进来.</p>
+
+<p><img src="http://PhotoSynthesiis.github.io/images/ga-8.png" width="600" height="1200"></p>
+
+<p>最后需要修改<code>supporting files</code>文件夹下面的<code>Clock-Prefix.pch</code>文件,把下面两个语句加入到文件中:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="cp">#import &quot;GAI.h&quot;</span>
+</span><span class='line'><span class="cp">#import &quot;GAIFields.h&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Step 3.1 GAI (Google Analytics for iOS)</h4>
+
+<p>GAI是一个top-class,它利用一个tracking id创建一个共有的tracker,然后这个tracker被暴露给所有类,这样一个项目中就只有一个tracker.</p>
+
+<h3>Step 4. 初始化Tracker</h3>
+
+<p>在AppDelegate类的<code>application:didFinishLaunchingWithOptions:</code>方法中插入以下代码:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="c1">// 1</span>
+</span><span class='line'><span class="p">[</span><span class="n">GAI</span> <span class="n">sharedInstance</span><span class="p">].</span><span class="n">trackUncaughtExceptions</span> <span class="o">=</span> <span class="n">YES</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 2</span>
+</span><span class='line'><span class="p">[[</span><span class="n">GAI</span> <span class="n">sharedInstance</span><span class="p">].</span><span class="n">logger</span> <span class="nl">setLogLevel:</span><span class="n">kGAILogLevelVerbose</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 3</span>
+</span><span class='line'><span class="p">[</span><span class="n">GAI</span> <span class="n">sharedInstance</span><span class="p">].</span><span class="n">dispatchInterval</span> <span class="o">=</span> <span class="mi">20</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 4</span>
+</span><span class='line'><span class="kt">id</span><span class="o">&lt;</span><span class="n">GAITracker</span><span class="o">&gt;</span> <span class="n">tracker</span> <span class="o">=</span> <span class="p">[[</span><span class="n">GAI</span> <span class="n">sharedInstance</span><span class="p">]</span> <span class="nl">trackerWithTrackingId:</span><span class="s">@&quot;UA-39787880-2&quot;</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>上面的代码首先把GAI的sharedInstance拿出来,然后往里面设置了一些属性,第一个是处理异常,第二个是设置log的等级,第三个设置了多少时间间隔往Google服务器上传一次数据,这里是20秒.第四个是使用tracking id新建一个tracker.</p>
+
+<h4>Step 4.1. automatic screen tracking</h4>
+
+<p>一个screen相当于app中的一个页面,或者说是view controller中的一个view,它可以用来track用户在一个view上停留了多长时间,还可以track用户在不同view中切换的动作.因为每个view都被一个view controller管理,所以为了实现automatic screen tracking,我们需要修改每个view的view controller.Google Analytics的SDK中提供了一个叫<code>GAITrackedViewController</code>的类,让我们自己的view controller继承它就行了,此外还需要修改这个类的一个内置属性<code>screenName</code>,它代表了当前这个被track的view的名字.</p>
+
+<p>在我们的项目中修改<code>ClockViewController.h</code>,import并让它继承<code>GAITrackedViewController</code>,然后在<code>ClockViewController.m</code>的viewDidLoad方法中设置screenName属性:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="cp">#import &lt;UIKit/UIKit.h&gt;</span>
+</span><span class='line'><span class="cp">#import &quot;GAITrackedViewController.h&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@interface</span> <span class="nc">ClockViewController</span> : <span class="nc">GAITrackedViewController</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">viewDidLoad</span> <span class="p">{</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">super</span> <span class="n">viewDidLoad</span><span class="p">];</span>
+</span><span class='line'>    <span class="n">self</span><span class="p">.</span><span class="n">screenName</span> <span class="o">=</span> <span class="s">@&quot;Clock&quot;</span><span class="p">;</span>
+</span><span class='line'>  <span class="c1">// Do any additional setup after loading the view, typically from a nib.</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>在上面的两部做完以后,我们就给这个view绑定了一个名字(Clock),在父类GAITrackedViewController中有一个viewWillAppear的方法,它会注册这个名叫Clock的view,此外在这个方法中还做了如下的几件事:</p>
+
+<ul>
+<li>得到共有的tracker对象</li>
+<li>告诉tracker去track名叫Clock的view(这里的view是Google Analytics中的概念,相当于一个屏幕)</li>
+<li>创建日志</li>
+<li>使用tracker往服务器上传数据.</li>
+</ul>
+
+
+<h4>Step 4.2. manual screen tracking</h4>
+
+<p>4.1中我们实现了自动track,但是它的作用有点局限,现在我们实现一个手动的screen tracking,它让我们对其他的用户行为track(例如点击按钮).</p>
+
+<p>这一步我们在另一个类<code>StopWatchViewController.m</code>中做实验.打开这个类,然后在顶端加上如下引用:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="cp">#import GAIDictionaryBuilder.h</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>然后在<code>viewDidAppear</code>方法中加上下面的代码:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">viewDidAppear:</span><span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nv">animated</span> <span class="p">{</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">super</span> <span class="nl">viewDidAppear:</span><span class="n">animated</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kt">id</span><span class="o">&lt;</span><span class="n">GAITracker</span><span class="o">&gt;</span> <span class="n">tracker</span> <span class="o">=</span> <span class="p">[[</span><span class="n">GAI</span> <span class="n">sharedInstance</span><span class="p">]</span> <span class="n">defaultTracker</span><span class="p">];</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">tracker</span> <span class="nl">set:</span><span class="n">kGAIScreenName</span> <span class="nl">value:</span><span class="s">@&quot;Stopwatch&quot;</span><span class="p">];</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">tracker</span> <span class="nl">send:</span><span class="p">[[</span><span class="n">GAIDictionaryBuilder</span> <span class="n">createAppView</span><span class="p">]</span> <span class="n">build</span><span class="p">]];</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>因为我们现在是手动配置,所以需要首先得到默认的tracker,然后设置这个view的screenName,最后一个是创建这个view record,然后send数据给server.之所以把这些步骤放到viewDIdAppear方法中,是因为我们想在每次用户方法这个view的时候都发送数据到server.</p>
+
+<p>运行app,然后不断切换下面的tab(每一次到StopWatchViewController.m中都会调用viewDidAppear方法继而发送数据到server)</p>
+
+<p><img src="http://PhotoSynthesiis.github.io/images/ga-10.png" width="300" height="600"></p>
+
+<p>最后再到Google Analytics的dashboard上看结果:</p>
+
+<p><img src="http://PhotoSynthesiis.github.io/images/ga-9.png" width="600" height="1200"></p>
+
+<h3>Step 5. 其他配置</h3>
+
+<p>接下来我们想要track在stopwatch上面的两个button,只需要做如下的事情:</p>
+
+<ul>
+<li>在<code>StopWatchViewController.m</code>中创建一个logButtonPressed方法:</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="k">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">logButtonPress:</span><span class="p">(</span><span class="n">UIButton</span> <span class="o">*</span><span class="p">)</span><span class="nv">button</span><span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kt">id</span><span class="o">&lt;</span><span class="n">GAITracker</span><span class="o">&gt;</span> <span class="n">tracker</span> <span class="o">=</span> <span class="p">[[</span><span class="n">GAI</span> <span class="n">sharedInstance</span><span class="p">]</span> <span class="n">defaultTracker</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="p">[</span><span class="n">tracker</span> <span class="nl">set:</span><span class="n">kGAIScreenName</span> <span class="nl">value:</span><span class="s">@&quot;Stopwatch&quot;</span><span class="p">];</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">tracker</span> <span class="nl">send:</span><span class="p">[[</span><span class="n">GAIDictionaryBuilder</span> <span class="nl">createEventWithCategory:</span><span class="s">@&quot;UX&quot;</span>
+</span><span class='line'>                                                          <span class="nl">action:</span><span class="s">@&quot;touch&quot;</span>
+</span><span class='line'>                                                           <span class="nl">label:</span><span class="p">[</span><span class="n">button</span><span class="p">.</span><span class="n">titleLabel</span> <span class="n">text</span><span class="p">]</span>
+</span><span class='line'>                                                           <span class="nl">value:</span><span class="nb">nil</span><span class="p">]</span> <span class="n">build</span><span class="p">]];</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">tracker</span> <span class="nl">set:</span><span class="n">kGAIScreenName</span> <span class="nl">value:</span><span class="nb">nil</span><span class="p">];</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>上面的代码首先得到一个tracker,然后设置当前view的名字,因为这次我们不是记录用户浏览屏幕的行为,所以不像之前那样发送view到server,这次我们track的是用户点击按钮的事件,所以我们创建一个touch事件,这个事件被Google framework归类到了UX事件中,然后我们以被按的按钮的title作为事件的title然后传送到server上去.最后一步把screen name重设为nil是为了防止其他事件使用这个名字,因为tracker是共有的对象,在一个地方设置的state会影响另一个地方的使用,所以除了应该共享的state之外,在设置后应该还原.</p>
+
+<ul>
+<li>在button对应的hooker中调用上面的方法.</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="k">-</span><span class="p">(</span><span class="kt">IBAction</span><span class="p">)</span><span class="nf">startToggle:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">sender</span><span class="p">{</span>
+</span><span class='line'><span class="p">[</span><span class="n">self</span> <span class="nl">logButtonPress:</span><span class="p">(</span><span class="n">UIButton</span> <span class="o">*</span><span class="p">)</span><span class="n">sender</span><span class="p">];</span>
+</span><span class='line'><span class="p">...</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'> <span class="o">-</span><span class="p">(</span><span class="kt">IBAction</span><span class="p">)</span><span class="nl">reset:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="n">sender</span><span class="p">{</span>
+</span><span class='line'> <span class="p">[</span><span class="n">self</span> <span class="nl">logButtonPress:</span><span class="p">(</span><span class="n">UIButton</span> <span class="o">*</span><span class="p">)</span><span class="n">sender</span><span class="p">];</span>
+</span><span class='line'> <span class="p">...</span>
+</span><span class='line'> <span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>运行app,不断点击start和reset按钮,然后来到dashboard上的Behavior->Events->Overview上看运行结果:</p>
+
+<p><img src="http://PhotoSynthesiis.github.io/images/ga-11.png" width="600" height="1200"></p>
+
+<p>值得注意的是track的事件范围默认不包括今天,所以需要在右上角那里修改一下.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[iOS Programming 6-1(View Controllers)]]></title>
@@ -5229,360 +5508,6 @@ mail.smtp.starttls.enable: 将一般连接升级到加密连接，而无需另�
 <p><img src="http://PhotoSynthesiis.github.io/images/iterator_pattern-2.png"></p>
 
 <p>总而言之，当与偶数个对象的组合，他们彼此之间有“整体/部分”的关系，并且你想用一致的方式对待这些对象时，就需要用到组合模式。这样客户就不再需要操心面对的是组合对象还是叶节点对象。不必写一大堆if语句来保证他们对正确的对象调用了正确的方法。通常，他们只需要对整个结构调用一个方法并执行操作就可以了。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[深入浅出设计模式之模板方法模式(Template Method)]]></title>
-    <link href="http://PhotoSynthesiis.github.io/blog/2013/07/14/template-method/"/>
-    <updated>2013-07-14T14:41:00-05:00</updated>
-    <id>http://PhotoSynthesiis.github.io/blog/2013/07/14/template-method</id>
-    <content type="html"><![CDATA[<p>模板方法模式，顾名思义，必定有一个类提供了一个模板，完成一件工作。其他类使用这个模板完成自己的工作，但是由于各个类之间所要完成的工作之间并不完全一致，所有在模板方法类中会可以留下一些抽象方法供其他类自己来实现，这样通过模板方法达到的效果就产生了区别。例如，如果我要泡一杯咖啡，需要的步骤是</p>
-
-<!-- more -->
-
-
-<p>1、把开水煮沸；
-2、用沸水冲泡咖啡；
-3、把咖啡倒进杯子；
-4、向咖啡中加牛奶和糖</p>
-
-<p>那么如果我同时想泡一杯茶，步骤也许是</p>
-
-<p>1、把开水煮沸；
-2、用沸水侵泡茶叶；
-3、把茶倒进杯子；
-4、加柠檬</p>
-
-<p>其实我们可以观察到，这上面的许多步骤都是相同或相似的，那么这时，我们就可以弄一个模板方法出来了。</p>
-
-<p>1、首先是模板类</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">Beverage</span> <span class="o">{</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">prepareBeverage</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">boilWater</span><span class="o">();</span>
-</span><span class='line'>        <span class="n">brew</span><span class="o">();</span>
-</span><span class='line'>        <span class="n">pourInCup</span><span class="o">();</span>
-</span><span class='line'>        <span class="n">addCondiment</span><span class="o">();</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">pourInCup</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Pouring in cup&quot;</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">boilWater</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Boiling water&quot;</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">protected</span> <span class="kd">abstract</span> <span class="kt">void</span> <span class="nf">brew</span><span class="o">();</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">protected</span> <span class="kd">abstract</span> <span class="kt">void</span> <span class="nf">addCondiment</span><span class="o">();</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>模板类里面定义了准备的四个步骤，其中倒饮料进杯子和烧水都是相同的，所以这两步在父类中实现了。剩余的酿造和加作料留作子类自己实现。</p>
-
-<p>2、茶类，继承自模板方法类</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Tea</span> <span class="kd">extends</span> <span class="n">Beverage</span> <span class="o">{</span>
-</span><span class='line'>    <span class="nd">@Override</span>
-</span><span class='line'>    <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">brew</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Stepping the tea&quot;</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@Override</span>
-</span><span class='line'>    <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">addCondiment</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Adding lemon&quot;</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>咖啡类，继承自模板方法类</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Coffee</span> <span class="kd">extends</span> <span class="n">Beverage</span> <span class="o">{</span>
-</span><span class='line'>    <span class="nd">@Override</span>
-</span><span class='line'>    <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">brew</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Dripping coffee through filter&quot;</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@Override</span>
-</span><span class='line'>    <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">addCondiment</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Adding sugar and milk&quot;</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>它们实现了父类中的抽象方法。</p>
-
-<p>3、开始制造</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Start</span> <span class="o">{</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">Beverage</span> <span class="n">tea</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Tea</span><span class="o">();</span>
-</span><span class='line'>        <span class="n">tea</span><span class="o">.</span><span class="na">prepareBeverage</span><span class="o">();</span>
-</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">();</span>
-</span><span class='line'>        <span class="n">Beverage</span> <span class="n">coffee</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Coffee</span><span class="o">();</span>
-</span><span class='line'>        <span class="n">coffee</span><span class="o">.</span><span class="na">prepareBeverage</span><span class="o">();</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>运行结果:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">Boiling</span> <span class="n">water</span>
-</span><span class='line'><span class="n">Stepping</span> <span class="n">the</span> <span class="n">tea</span>
-</span><span class='line'><span class="n">Pouring</span> <span class="n">in</span> <span class="n">cup</span>
-</span><span class='line'><span class="n">Adding</span> <span class="n">lemon</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">Boiling</span> <span class="n">water</span>
-</span><span class='line'><span class="n">Dripping</span> <span class="n">coffee</span> <span class="n">through</span> <span class="n">filter</span>
-</span><span class='line'><span class="n">Pouring</span> <span class="n">in</span> <span class="n">cup</span>
-</span><span class='line'><span class="n">Adding</span> <span class="n">sugar</span> <span class="n">and</span> <span class="n">milk</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>其实，模板方法是定义了一个算法步骤，并允许子类为一个或多个步骤提供实现。这样算法之存在于一个地方，容易修改，隔离了变化(子类)与不变化(父类)的地方。其实在实际编程中，我们也用到了很多模板方法，例如我们常常会为很多对象排序，这中间会用到compareTo方法，需要自己去实现它。当时现完后就会用Java提供的Collections.sort()方法来排序。是因为sort中用到了compareTo方法提供的实现来完成目的，而Colletions中的sort方法其实是一个模板方法。</p>
-
-<p>接下来要介绍的东西叫做“钩子(hook)”。它是定义在父类中的一个默认方法，子类可以视情况将它覆盖。它为模板方法中可选的实现提供了一个接口，也就是说，模板方法类中已经实现了的方法是每个子类必须的，模板方法类中的抽象方法是必须由子类实现的，钩子就是默认的选择，子类可以不修改它，或者覆盖它。例如：
-1、我在父类中留下了一个hook，即customerRequiresCondiment方法，如果其他类不管它，默认返回true，对结果没有影响。但是对于blacktea的人来说需要询问一下</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">Beverage</span> <span class="o">{</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">prepareBeverage</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">boilWater</span><span class="o">();</span>
-</span><span class='line'>        <span class="n">brew</span><span class="o">();</span>
-</span><span class='line'>        <span class="n">pourInCup</span><span class="o">();</span>
-</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">customerRequiresCondiment</span><span class="o">())</span> <span class="o">{</span>
-</span><span class='line'>            <span class="n">addCondiment</span><span class="o">();</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">pourInCup</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Pouring in cup&quot;</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">boilWater</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Boiling water&quot;</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">protected</span> <span class="kt">boolean</span> <span class="nf">customerRequiresCondiment</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">protected</span> <span class="kd">abstract</span> <span class="kt">void</span> <span class="nf">brew</span><span class="o">();</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">protected</span> <span class="kd">abstract</span> <span class="kt">void</span> <span class="nf">addCondiment</span><span class="o">();</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>2、红茶，需要询问</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">BlackTea</span> <span class="kd">extends</span> <span class="n">Beverage</span> <span class="o">{</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@Override</span>
-</span><span class='line'>    <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">brew</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Brew black tea&quot;</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@Override</span>
-</span><span class='line'>    <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">addCondiment</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Add sugar&quot;</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@Override</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">customerRequiresCondiment</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">String</span> <span class="n">flag</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">).</span><span class="na">nextLine</span><span class="o">();</span>
-</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">flag</span><span class="o">.</span><span class="na">equalsIgnoreCase</span><span class="o">(</span><span class="s">&quot;y&quot;</span><span class="o">))</span> <span class="o">{</span>
-</span><span class='line'>            <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
-</span><span class='line'>        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
-</span><span class='line'>            <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>3、开始制作</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Start</span> <span class="o">{</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">Beverage</span> <span class="n">tea</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Tea</span><span class="o">();</span>
-</span><span class='line'>        <span class="n">tea</span><span class="o">.</span><span class="na">prepareBeverage</span><span class="o">();</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">();</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">Beverage</span> <span class="n">coffee</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Coffee</span><span class="o">();</span>
-</span><span class='line'>        <span class="n">coffee</span><span class="o">.</span><span class="na">prepareBeverage</span><span class="o">();</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">Beverage</span> <span class="n">blackTea</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BlackTea</span><span class="o">();</span>
-</span><span class='line'>        <span class="n">blackTea</span><span class="o">.</span><span class="na">prepareBeverage</span><span class="o">();</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>运行结果：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-</pre></td><td class='code'><pre><code class='text'><span class='line'>Boiling water
-</span><span class='line'>Stepping the tea
-</span><span class='line'>Pouring in cup
-</span><span class='line'>Adding lemon
-</span><span class='line'>
-</span><span class='line'>Boiling water
-</span><span class='line'>Dripping coffee through filter
-</span><span class='line'>Pouring in cup
-</span><span class='line'>Adding sugar and milk
-</span><span class='line'>
-</span><span class='line'>Boiling water
-</span><span class='line'>Brew black tea
-</span><span class='line'>Pouring in cup
-</span><span class='line'>y
-</span><span class='line'>Add sugar
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>上面倒数第二行那个y是在控制台输入的。</p>
 ]]></content>
   </entry>
   

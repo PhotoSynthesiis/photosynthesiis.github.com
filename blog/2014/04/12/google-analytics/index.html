@@ -1,0 +1,568 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>google analytics - public static void man</title>
+  <meta name="author" content="Qiushi Li">
+
+  
+  <meta name="description" content="最近在iOS的final project中用到了google analytics来分析用户行为,自己也做了一些research,今天就把它记录在这里. 在介绍之前先说说这个iOS app的概况,他是一个时间记录仪,有显示当前时间(ClockViewController)和stopwatch的功能( &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://PhotoSynthesiis.github.io/blog/2014/04/12/google-analytics">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="public static void man" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Fjalla+One' rel='stylesheet' type='text/css'>
+  
+
+</head>
+
+<body   class="collapse-sidebar sidebar-footer" >
+  <header role="banner"><hgroup>
+  <h1><a href="/">public static void man</a></h1>
+  
+    <h2>_hope is a good thing</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:PhotoSynthesiis.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Google Analytics</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-04-12T20:52:00-05:00" pubdate data-updated="true">Apr 12<span>th</span>, 2014</time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>最近在iOS的final project中用到了google analytics来分析用户行为,自己也做了一些research,今天就把它记录在这里.</p>
+
+<p>在介绍之前先说说这个iOS app的概况,他是一个时间记录仪,有显示当前时间(ClockViewController)和stopwatch的功能(StopWatchViewController),可以在app下面的tab切换.我今天要做的是首先为显示时间的view加一个track,然后再到stopwatch里面加两个track用户点击按钮的功能.</p>
+
+<!--more-->
+
+
+<p> <img src="/images/ga-10.png" width="300" height="600"></p>
+
+<h2>什么是Google Analytics</h2>
+
+<p>Google Analytics是一款用来监测网页或者app中用户行为的软件,这里的用户行为包括用户在哪个页面停留了多久,哪些功能用户使用得最多,哪个版本的app最受用户欢迎等内容.</p>
+
+<h2>如何使用Google Analytics</h2>
+
+<h3>Step 1. 点击首页banner上面的Admin,进入管理页面</h3>
+
+<p> <img src="/images/ga-1.png" width="600" height="1200"></p>
+
+<p>上图是Google Analytics的dashboard,里面有三个column,分别是account,property和view.</p>
+
+<ul>
+<li>account: 一个account可以是其他account的member,比如我的account可以是客户或者其他合作者的account的一个member.今天我不会深入讨论这个,所以可以暂时放一放.</li>
+<li>property: 一个property代表一个被track的网站或者app,所以如果你要对这个account新增一个网页或者app去track,你需要新建一个property.</li>
+<li>view: 如果你的app有多个版本,你可以创建多个view来分别track他们.</li>
+</ul>
+
+
+<h3>Step 2. 新建一个property</h3>
+
+<p>只需要点击property,然后会出来一个下拉框,然后点击里面的<code>create new property</code></p>
+
+<p> <img src="/images/ga-2.png" width="600" height="1200"></p>
+
+<p>之后你会被带到下面这个页面:</p>
+
+<p> <img src="/images/ga-3.png" width="600" height="1200"></p>
+
+<p>因为今天我们使用它来track一个iOS app,所以这里选择<code>Mobile app</code>,然后填上<code>App Name</code>,点击<code>Get Tracking ID</code>,然后会被带到下面这个页面:</p>
+
+<p> <img src="/images/ga-4.png" width="600" height="1200"></p>
+
+<p>在这个页面你会得到你app的专属tracking id,每个应用都有自己的一个tracking id,在你的app中会使用到这个id,之后我们会具体谈到其原理和使用.</p>
+
+<p>现在下载Google Analytics iOS SDK,点击第一个下载连接,而不是<code>Download with admob features</code>.这样你就得到了一个SDK包,接下来就是引用包了.</p>
+
+<h3>Step 3. 引用Google Analytics iOS SDK</h3>
+
+<p>解压刚才下载下来的那个包:</p>
+
+<p> <img src="/images/ga-5.png" width="600" height="1200"></p>
+
+<p>打开GoogleAnalytics下面的library文件夹:</p>
+
+<p> <img src="/images/ga-6.png" width="600" height="1200"></p>
+
+<p>把下面几个文件拷贝到你的项目中去,注意在拷贝的时候要选择<code>Copy items into destination group’s folder and Add the files to the Clock target.</code>,这样才能保证文件被真正拷贝到了项目里面,而不是只产生了对文件的引用.</p>
+
+<ul>
+<li> GAI.h</li>
+<li> GAITracker.h</li>
+<li> GAITrackedViewController.h</li>
+<li> GAIDictionaryBuilder.h</li>
+<li> GAIFields.h</li>
+<li> GAILogger.h</li>
+</ul>
+
+
+<p><img src="/images/ga-7.png" width="300" height="600"></p>
+
+<p>接下来把<code>libGoogleAnalyticsServices.a</code>文件拖到项目的framework文件夹下,其实你把它放到项目的哪儿都无所谓,只是这样更好管理一些.点击项目名称(Clock),然后在右边的窗口中点击<code>build phases</code>,展开<code>Link Binary With Libraries</code>点击左下角的<code>+</code>然后在搜索栏中输入CoreData,然后选中并点击<code>Add</code>.重复上面的过程,并把<code>SystemConfiguration.framework</code>和<code>libz.dylib</code>引用进来.</p>
+
+<p><img src="/images/ga-8.png" width="600" height="1200"></p>
+
+<p>最后需要修改<code>supporting files</code>文件夹下面的<code>Clock-Prefix.pch</code>文件,把下面两个语句加入到文件中:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="cp">#import &quot;GAI.h&quot;</span>
+</span><span class='line'><span class="cp">#import &quot;GAIFields.h&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Step 3.1 GAI (Google Analytics for iOS)</h4>
+
+<p>GAI是一个top-class,它利用一个tracking id创建一个共有的tracker,然后这个tracker被暴露给所有类,这样一个项目中就只有一个tracker.</p>
+
+<h3>Step 4. 初始化Tracker</h3>
+
+<p>在AppDelegate类的<code>application:didFinishLaunchingWithOptions:</code>方法中插入以下代码:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="c1">// 1</span>
+</span><span class='line'><span class="p">[</span><span class="n">GAI</span> <span class="n">sharedInstance</span><span class="p">].</span><span class="n">trackUncaughtExceptions</span> <span class="o">=</span> <span class="n">YES</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 2</span>
+</span><span class='line'><span class="p">[[</span><span class="n">GAI</span> <span class="n">sharedInstance</span><span class="p">].</span><span class="n">logger</span> <span class="nl">setLogLevel:</span><span class="n">kGAILogLevelVerbose</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 3</span>
+</span><span class='line'><span class="p">[</span><span class="n">GAI</span> <span class="n">sharedInstance</span><span class="p">].</span><span class="n">dispatchInterval</span> <span class="o">=</span> <span class="mi">20</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 4</span>
+</span><span class='line'><span class="kt">id</span><span class="o">&lt;</span><span class="n">GAITracker</span><span class="o">&gt;</span> <span class="n">tracker</span> <span class="o">=</span> <span class="p">[[</span><span class="n">GAI</span> <span class="n">sharedInstance</span><span class="p">]</span> <span class="nl">trackerWithTrackingId:</span><span class="s">@&quot;UA-39787880-2&quot;</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>上面的代码首先把GAI的sharedInstance拿出来,然后往里面设置了一些属性,第一个是处理异常,第二个是设置log的等级,第三个设置了多少时间间隔往Google服务器上传一次数据,这里是20秒.第四个是使用tracking id新建一个tracker.</p>
+
+<h4>Step 4.1. automatic screen tracking</h4>
+
+<p>一个screen相当于app中的一个页面,或者说是view controller中的一个view,它可以用来track用户在一个view上停留了多长时间,还可以track用户在不同view中切换的动作.因为每个view都被一个view controller管理,所以为了实现automatic screen tracking,我们需要修改每个view的view controller.Google Analytics的SDK中提供了一个叫<code>GAITrackedViewController</code>的类,让我们自己的view controller继承它就行了,此外还需要修改这个类的一个内置属性<code>screenName</code>,它代表了当前这个被track的view的名字.</p>
+
+<p>在我们的项目中修改<code>ClockViewController.h</code>,import并让它继承<code>GAITrackedViewController</code>,然后在<code>ClockViewController.m</code>的viewDidLoad方法中设置screenName属性:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="cp">#import &lt;UIKit/UIKit.h&gt;</span>
+</span><span class='line'><span class="cp">#import &quot;GAITrackedViewController.h&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@interface</span> <span class="nc">ClockViewController</span> : <span class="nc">GAITrackedViewController</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">viewDidLoad</span> <span class="p">{</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">super</span> <span class="n">viewDidLoad</span><span class="p">];</span>
+</span><span class='line'>    <span class="n">self</span><span class="p">.</span><span class="n">screenName</span> <span class="o">=</span> <span class="s">@&quot;Clock&quot;</span><span class="p">;</span>
+</span><span class='line'>  <span class="c1">// Do any additional setup after loading the view, typically from a nib.</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>在上面的两部做完以后,我们就给这个view绑定了一个名字(Clock),在父类GAITrackedViewController中有一个viewWillAppear的方法,它会注册这个名叫Clock的view,此外在这个方法中还做了如下的几件事:</p>
+
+<ul>
+<li>得到共有的tracker对象</li>
+<li>告诉tracker去track名叫Clock的view(这里的view是Google Analytics中的概念,相当于一个屏幕)</li>
+<li>创建日志</li>
+<li>使用tracker往服务器上传数据.</li>
+</ul>
+
+
+<h4>Step 4.2. manual screen tracking</h4>
+
+<p>4.1中我们实现了自动track,但是它的作用有点局限,现在我们实现一个手动的screen tracking,它让我们对其他的用户行为track(例如点击按钮).</p>
+
+<p>这一步我们在另一个类<code>StopWatchViewController.m</code>中做实验.打开这个类,然后在顶端加上如下引用:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="cp">#import GAIDictionaryBuilder.h</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>然后在<code>viewDidAppear</code>方法中加上下面的代码:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">viewDidAppear:</span><span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nv">animated</span> <span class="p">{</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">super</span> <span class="nl">viewDidAppear:</span><span class="n">animated</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kt">id</span><span class="o">&lt;</span><span class="n">GAITracker</span><span class="o">&gt;</span> <span class="n">tracker</span> <span class="o">=</span> <span class="p">[[</span><span class="n">GAI</span> <span class="n">sharedInstance</span><span class="p">]</span> <span class="n">defaultTracker</span><span class="p">];</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">tracker</span> <span class="nl">set:</span><span class="n">kGAIScreenName</span> <span class="nl">value:</span><span class="s">@&quot;Stopwatch&quot;</span><span class="p">];</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">tracker</span> <span class="nl">send:</span><span class="p">[[</span><span class="n">GAIDictionaryBuilder</span> <span class="n">createAppView</span><span class="p">]</span> <span class="n">build</span><span class="p">]];</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>因为我们现在是手动配置,所以需要首先得到默认的tracker,然后设置这个view的screenName,最后一个是创建这个view record,然后send数据给server.之所以把这些步骤放到viewDIdAppear方法中,是因为我们想在每次用户方法这个view的时候都发送数据到server.</p>
+
+<p>运行app,然后不断切换下面的tab(每一次到StopWatchViewController.m中都会调用viewDidAppear方法继而发送数据到server)</p>
+
+<p><img src="/images/ga-10.png" width="300" height="600"></p>
+
+<p>最后再到Google Analytics的dashboard上看结果:</p>
+
+<p><img src="/images/ga-9.png" width="600" height="1200"></p>
+
+<h3>Step 5. 其他配置</h3>
+
+<p>接下来我们想要track在stopwatch上面的两个button,只需要做如下的事情:</p>
+
+<ul>
+<li>在<code>StopWatchViewController.m</code>中创建一个logButtonPressed方法:</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="k">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">logButtonPress:</span><span class="p">(</span><span class="n">UIButton</span> <span class="o">*</span><span class="p">)</span><span class="nv">button</span><span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kt">id</span><span class="o">&lt;</span><span class="n">GAITracker</span><span class="o">&gt;</span> <span class="n">tracker</span> <span class="o">=</span> <span class="p">[[</span><span class="n">GAI</span> <span class="n">sharedInstance</span><span class="p">]</span> <span class="n">defaultTracker</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="p">[</span><span class="n">tracker</span> <span class="nl">set:</span><span class="n">kGAIScreenName</span> <span class="nl">value:</span><span class="s">@&quot;Stopwatch&quot;</span><span class="p">];</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">tracker</span> <span class="nl">send:</span><span class="p">[[</span><span class="n">GAIDictionaryBuilder</span> <span class="nl">createEventWithCategory:</span><span class="s">@&quot;UX&quot;</span>
+</span><span class='line'>                                                          <span class="nl">action:</span><span class="s">@&quot;touch&quot;</span>
+</span><span class='line'>                                                           <span class="nl">label:</span><span class="p">[</span><span class="n">button</span><span class="p">.</span><span class="n">titleLabel</span> <span class="n">text</span><span class="p">]</span>
+</span><span class='line'>                                                           <span class="nl">value:</span><span class="nb">nil</span><span class="p">]</span> <span class="n">build</span><span class="p">]];</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">tracker</span> <span class="nl">set:</span><span class="n">kGAIScreenName</span> <span class="nl">value:</span><span class="nb">nil</span><span class="p">];</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>上面的代码首先得到一个tracker,然后设置当前view的名字,因为这次我们不是记录用户浏览屏幕的行为,所以不像之前那样发送view到server,这次我们track的是用户点击按钮的事件,所以我们创建一个touch事件,这个事件被Google framework归类到了UX事件中,然后我们以被按的按钮的title作为事件的title然后传送到server上去.最后一步把screen name重设为nil是为了防止其他事件使用这个名字,因为tracker是共有的对象,在一个地方设置的state会影响另一个地方的使用,所以除了应该共享的state之外,在设置后应该还原.</p>
+
+<ul>
+<li>在button对应的hooker中调用上面的方法.</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="k">-</span><span class="p">(</span><span class="kt">IBAction</span><span class="p">)</span><span class="nf">startToggle:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">sender</span><span class="p">{</span>
+</span><span class='line'><span class="p">[</span><span class="n">self</span> <span class="nl">logButtonPress:</span><span class="p">(</span><span class="n">UIButton</span> <span class="o">*</span><span class="p">)</span><span class="n">sender</span><span class="p">];</span>
+</span><span class='line'><span class="p">...</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'> <span class="o">-</span><span class="p">(</span><span class="kt">IBAction</span><span class="p">)</span><span class="nl">reset:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="n">sender</span><span class="p">{</span>
+</span><span class='line'> <span class="p">[</span><span class="n">self</span> <span class="nl">logButtonPress:</span><span class="p">(</span><span class="n">UIButton</span> <span class="o">*</span><span class="p">)</span><span class="n">sender</span><span class="p">];</span>
+</span><span class='line'> <span class="p">...</span>
+</span><span class='line'> <span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>运行app,不断点击start和reset按钮,然后来到dashboard上的Behavior->Events->Overview上看运行结果:</p>
+
+<p><img src="/images/ga-11.png" width="600" height="1200"></p>
+
+<p>值得注意的是track的事件范围默认不包括今天,所以需要在右上角那里修改一下.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Qiushi Li</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-04-12T20:52:00-05:00" pubdate data-updated="true">Apr 12<span>th</span>, 2014</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://PhotoSynthesiis.github.io/blog/2014/04/12/google-analytics/" data-via="photosynthesiis@gmail.com" data-counturl="http://PhotoSynthesiis.github.io/blog/2014/04/12/google-analytics/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2014/04/06/ios-6/" title="Previous Post: iOS Programming 6-1(View Controllers)">&laquo; iOS Programming 6-1(View Controllers)</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/04/12/google-analytics/">google analytics</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/04/06/ios-6/">iOS Programming 6-1(View Controllers)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/04/04/ios-programming-5/">iOS Programming 5(Redrawing and UIScrollView)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/04/03/backtrack/">使用递归计算的回溯法</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/03/09/ios-4/">iOS Programming 4(Views and the View Hierarchy)</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/photosynthesiis@gmail.com">@photosynthesiis@gmail.com</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'photosynthesiis@gmail.com',
+            count: 3,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/photosynthesiis@gmail.com?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - Qiushi Li -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'photosynthesiis';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://PhotoSynthesiis.github.io/blog/2014/04/12/google-analytics/';
+        var disqus_url = 'http://PhotoSynthesiis.github.io/blog/2014/04/12/google-analytics/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
