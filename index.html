@@ -9,7 +9,7 @@
   <meta name="author" content="Qiushi Li">
 
   
-  <meta name="description" content="最近在iOS的final project中用到了google analytics来分析用户行为,自己也做了一些research,今天就把它记录在这里. 在介绍之前先说说这个iOS app的概况,他是一个时间记录仪,有显示当前时间(ClockViewController)和stopwatch的功能( &hellip;">
+  <meta name="description" content="我们在上一章中讲到了如何使用viewcontroller,这里我讲讲解一种技术,它可以管理多个viewcontroller,并在这些viewcontroller之间切换,这项技术叫做UITabBarController. 在使用这项技术后,效果如下.我们可以看到在屏幕的下端有两个按钮可以互相切换, &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +65,51 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/05/06/ios-programming-6-2-uitabviewcontrollers/">iOS Programming 6-2(UITabBarController)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-05-06T15:57:00-05:00" pubdate data-updated="true">May 6<span>th</span>, 2014</time>
+        
+         | <a href="/blog/2014/05/06/ios-programming-6-2-uitabviewcontrollers/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>我们在上一章中讲到了如何使用viewcontroller,这里我讲讲解一种技术,它可以管理多个viewcontroller,并在这些viewcontroller之间切换,这项技术叫做UITabBarController.</p>
+
+<p>在使用这项技术后,效果如下.我们可以看到在屏幕的下端有两个按钮可以互相切换,他们分别对应一个viewcontroller:</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/05/06/ios-programming-6-2-uitabviewcontrollers/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -476,57 +521,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/08/23/merge-sort/">归并排序(Mergesort)</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-08-23T08:51:00-05:00" pubdate data-updated="true">Aug 23<span>rd</span>, 2013</time>
-        
-         | <a href="/blog/2013/08/23/merge-sort/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Merge sort即归并排序，它的中心思想是分而治之(divide and conquer)，即将一个原来很大的待排序数列分成若干个小的数列然后分别对他们进行排序，最后把小的排好序的数列合并起来。这个过程可以分为三个步骤：</p>
-
-<p>第一, 分解: 把待排序的 n 个元素的序列分解成两个子序列, 每个子序列包括 n/2 个元素.</p>
-
-<p>第二, 治理: 对每个子序列分别调用归并排序MergeSort, 进行递归操作。</p>
-
-<p>第三, 合并: 合并两个排好序的子序列,生成排序结果。</p>
-
-<p>在我看来，归并排序中最重要的还是‘合并’，因为在多次递归分解之后，剩下的大小为2的数组都是通过‘合并’过程达到排序的目的。合并的过程很简单，从下面这张图就能大概看出来：</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/08/23/merge-sort/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -542,6 +536,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/05/06/ios-programming-6-2-uitabviewcontrollers/">iOS Programming 6-2(UITabBarController)</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/04/12/google-analytics/">google analytics</a>
       </li>
     
@@ -555,10 +553,6 @@
     
       <li class="post">
         <a href="/blog/2014/04/03/backtrack/">使用递归计算的回溯法</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/03/09/ios-4/">iOS Programming 4(Views and the View Hierarchy)</a>
       </li>
     
   </ul>

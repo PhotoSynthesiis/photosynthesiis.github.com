@@ -9,7 +9,7 @@
   <meta name="author" content="Qiushi Li">
 
   
-  <meta name="description" content="模板方法模式，顾名思义，必定有一个类提供了一个模板，完成一件工作。其他类使用这个模板完成自己的工作，但是由于各个类之间所要完成的工作之间并不完全一致，所有在模板方法类中会可以留下一些抽象方法供其他类自己来实现，这样通过模板方法达到的效果就产生了区别。例如，如果我要泡一杯咖啡，需要的步骤是 ">
+  <meta name="description" content="一、迭代器模式 迭代器模式应用了封装的原理，封装了可迭代组件的具体实现，游走于聚合内每一个元素，而又不暴露内部的表示。举个例子吧，有两家餐馆，它们现在合并了，这样提供的菜品就是原来的2倍。但是餐馆A使用数组来存储菜品，而餐馆B用列表来存储。如果想看所有的菜品，还得通过两种方式便利得到全部内容， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +65,51 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/07/16/iterator-pattern/">深入浅出设计模式之迭代器模式(Iterator Pattern)和组合模式(Composite Pattern)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-16T16:52:00-05:00" pubdate data-updated="true">Jul 16<span>th</span>, 2013</time>
+        
+         | <a href="/blog/2013/07/16/iterator-pattern/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>一、迭代器模式</p>
+
+<p>迭代器模式应用了封装的原理，封装了可迭代组件的具体实现，游走于聚合内每一个元素，而又不暴露内部的表示。举个例子吧，有两家餐馆，它们现在合并了，这样提供的菜品就是原来的2倍。但是餐馆A使用数组来存储菜品，而餐馆B用列表来存储。如果想看所有的菜品，还得通过两种方式便利得到全部内容，这样很不方便，于是就想到了通过迭代器模式封装它们。</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/07/16/iterator-pattern/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -460,61 +505,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/07/09/deep-copy-and-shallow-copy/">Java中对象的浅拷贝与深拷贝</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-07-09T19:17:00-05:00" pubdate data-updated="true">Jul 9<span>th</span>, 2013</time>
-        
-         | <a href="/blog/2013/07/09/deep-copy-and-shallow-copy/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Java中的拷贝方式分为深拷贝和浅拷贝。简单来说，深拷贝就是把一个对象中的所有值，如果被拷贝对象中有对其他对象的引用，那么这个引用指向的对象本身会被重新创建。浅拷贝和深拷贝类似，但是如果被拷贝对象中有对其他对象的引用，只是这个引用会被拷贝，而不是这个被引用的对象。</p>
-
-<p>说起来有点绕口，那么我们就看看下面的图解吧：</p>
-
-<p><img src="/images/deep_shallow_copy-1.png"></p>
-
-<p>shallow copy:</p>
-
-<p><img src="/images/deep_shallow_copy-2.png"></p>
-
-<p>deep copy:</p>
-
-<p><img src="/images/deep_shallow_copy-3.png"></p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/07/09/deep-copy-and-shallow-copy/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/4/">&larr; Older</a>
@@ -532,6 +522,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/05/06/ios-programming-6-2-uitabviewcontrollers/">iOS Programming 6-2(UITabBarController)</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/04/12/google-analytics/">google analytics</a>
       </li>
     
@@ -545,10 +539,6 @@
     
       <li class="post">
         <a href="/blog/2014/04/03/backtrack/">使用递归计算的回溯法</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/03/09/ios-4/">iOS Programming 4(Views and the View Hierarchy)</a>
       </li>
     
   </ul>

@@ -4,7 +4,7 @@
   <title><![CDATA[public static void man]]></title>
   <link href="http://PhotoSynthesiis.github.io/atom.xml" rel="self"/>
   <link href="http://PhotoSynthesiis.github.io/"/>
-  <updated>2014-04-13T00:07:29-05:00</updated>
+  <updated>2014-05-06T16:18:38-05:00</updated>
   <id>http://PhotoSynthesiis.github.io/</id>
   <author>
     <name><![CDATA[Qiushi Li]]></name>
@@ -12,6 +12,56 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[iOS Programming 6-2(UITabBarController)]]></title>
+    <link href="http://PhotoSynthesiis.github.io/blog/2014/05/06/ios-programming-6-2-uitabviewcontrollers/"/>
+    <updated>2014-05-06T15:57:00-05:00</updated>
+    <id>http://PhotoSynthesiis.github.io/blog/2014/05/06/ios-programming-6-2-uitabviewcontrollers</id>
+    <content type="html"><![CDATA[<p>我们在上一章中讲到了如何使用viewcontroller,这里我讲讲解一种技术,它可以管理多个viewcontroller,并在这些viewcontroller之间切换,这项技术叫做UITabBarController.</p>
+
+<p>在使用这项技术后,效果如下.我们可以看到在屏幕的下端有两个按钮可以互相切换,他们分别对应一个viewcontroller:</p>
+
+<!-- more -->
+
+
+<p> <img src="http://PhotoSynthesiis.github.io/images/6-2_1.png" width="300" height="600"></p>
+
+<p>我们来到AppDelegate,在里面创建一个UITabBarController,然后把另外两个viewcontroller加到这个UITabBarController里面去.最后把这个UITabBarController作为window的rootViewController,这样就完成了.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="n">WUSTLHypnosisViewController</span> <span class="o">*</span><span class="n">hvc</span> <span class="o">=</span> <span class="p">[[</span><span class="n">WUSTLHypnosisViewController</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'><span class="n">WUSTLReminderViewController</span> <span class="o">*</span><span class="n">rvc</span> <span class="o">=</span> <span class="p">[[</span><span class="n">WUSTLReminderViewController</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">UITabBarController</span> <span class="o">*</span><span class="n">tabBarController</span> <span class="o">=</span> <span class="p">[[</span><span class="n">UITabBarController</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'><span class="n">tabBarController</span><span class="p">.</span><span class="n">viewControllers</span> <span class="o">=</span> <span class="err">@</span><span class="p">[</span><span class="n">hvc</span><span class="p">,</span> <span class="n">rvc</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">self</span><span class="p">.</span><span class="n">window</span><span class="p">.</span><span class="n">rootViewController</span> <span class="o">=</span> <span class="n">tabBarController</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>我们发现,在每一个tab上都有一个图片,图片下面有一行介绍性的文字,这些都是可以改变和设置的.虽然UITabBarController管理着两个不同的viewcontroller,我们可以把viewcontroller连同tabbar上面的图片和文字想成一个整体,所以图片和文字就需要到相应的viewcontroller里面去设置,我们来到WUSTLHypnosisViewController类,在initWithNibName方法里面进行初始化:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'>    <span class="n">self</span><span class="p">.</span><span class="n">tabBarItem</span><span class="p">.</span><span class="n">title</span> <span class="o">=</span> <span class="s">@&quot;Hypnosister&quot;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">UIImage</span> <span class="o">*</span><span class="n">image</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIImage</span> <span class="nl">imageNamed:</span><span class="s">@&quot;Hypno.png&quot;</span><span class="p">];</span>
+</span><span class='line'>    <span class="n">self</span><span class="p">.</span><span class="n">tabBarItem</span><span class="p">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">image</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>到另一个viewcontroller里面做同样的事,到这里为止就算完成了UITabBarController的设置了.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[google analytics]]></title>
@@ -4894,620 +4944,6 @@ mail.smtp.starttls.enable: 将一般连接升级到加密连接，而无需另�
 <p>这里的Context相当于GumballMachine类。值得注意的是，如果需要创建许多Context实例，而又要共享之间的状态，就需要把状态变量设为静态。</p>
 
 <p>一句话总结状态模式:封装基于状态的行为，并将行为委托到当前状态。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[深入浅出设计模式之迭代器模式(Iterator Pattern)和组合模式(Composite Pattern)]]></title>
-    <link href="http://PhotoSynthesiis.github.io/blog/2013/07/16/iterator-pattern/"/>
-    <updated>2013-07-16T16:52:00-05:00</updated>
-    <id>http://PhotoSynthesiis.github.io/blog/2013/07/16/iterator-pattern</id>
-    <content type="html"><![CDATA[<p>一、迭代器模式</p>
-
-<p>迭代器模式应用了封装的原理，封装了可迭代组件的具体实现，游走于聚合内每一个元素，而又不暴露内部的表示。举个例子吧，有两家餐馆，它们现在合并了，这样提供的菜品就是原来的2倍。但是餐馆A使用数组来存储菜品，而餐馆B用列表来存储。如果想看所有的菜品，还得通过两种方式便利得到全部内容，这样很不方便，于是就想到了通过迭代器模式封装它们。</p>
-
-<!-- more -->
-
-
-<p>1、菜单接口，两家餐馆都实现了其中的迭代器创建方法</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Menu</span> <span class="o">{</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="n">Iterator</span> <span class="nf">createIterator</span><span class="o">();</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>餐馆A</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">DinerMenu</span> <span class="kd">implements</span> <span class="n">Menu</span><span class="o">{</span>
-</span><span class='line'>    <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">MAX_ITEMS</span> <span class="o">=</span> <span class="mi">6</span><span class="o">;</span>
-</span><span class='line'>    <span class="kt">int</span> <span class="n">numberOfItems</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="n">MenuItem</span><span class="o">[]</span> <span class="n">menuItems</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="nf">DinerMenu</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">menuItems</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MenuItem</span><span class="o">[</span><span class="n">MAX_ITEMS</span><span class="o">];</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">addItem</span><span class="o">(</span><span class="s">&quot;Vegetarian BLT&quot;</span><span class="o">,</span> <span class="s">&quot;Bacon with lettuce&quot;</span><span class="o">,</span> <span class="kc">true</span><span class="o">,</span> <span class="mf">2.99</span><span class="o">);</span>
-</span><span class='line'>        <span class="n">addItem</span><span class="o">(</span><span class="s">&quot;BLT&quot;</span><span class="o">,</span> <span class="s">&quot;Bacon with tomato&quot;</span><span class="o">,</span> <span class="kc">false</span><span class="o">,</span> <span class="mf">2.99</span><span class="o">);</span>
-</span><span class='line'>        <span class="n">addItem</span><span class="o">(</span><span class="s">&quot;Soup of the day&quot;</span><span class="o">,</span> <span class="s">&quot;With a side of potato salad&quot;</span><span class="o">,</span> <span class="kc">false</span><span class="o">,</span> <span class="mf">3.49</span><span class="o">);</span>
-</span><span class='line'>        <span class="n">addItem</span><span class="o">(</span><span class="s">&quot;hotdog&quot;</span><span class="o">,</span> <span class="s">&quot;hot dog with relish&quot;</span><span class="o">,</span> <span class="kc">false</span><span class="o">,</span> <span class="mf">2.99</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">addItem</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">,</span> <span class="n">String</span> <span class="n">description</span><span class="o">,</span> <span class="kt">boolean</span> <span class="n">vegetarian</span><span class="o">,</span> <span class="kt">double</span> <span class="n">price</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">MenuItem</span> <span class="n">item</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MenuItem</span><span class="o">(</span><span class="n">name</span><span class="o">,</span> <span class="n">description</span><span class="o">,</span> <span class="n">vegetarian</span><span class="o">,</span> <span class="n">price</span><span class="o">);</span>
-</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">numberOfItems</span> <span class="o">&gt;</span> <span class="n">MAX_ITEMS</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>            <span class="n">System</span><span class="o">.</span><span class="na">err</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Sorry, menu is full&quot;</span><span class="o">);</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>        <span class="n">menuItems</span><span class="o">[</span><span class="n">numberOfItems</span><span class="o">]</span> <span class="o">=</span> <span class="n">item</span><span class="o">;</span>
-</span><span class='line'>        <span class="n">numberOfItems</span><span class="o">++;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@Override</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="n">Iterator</span> <span class="nf">createIterator</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="k">new</span> <span class="nf">DinerMenuIterator</span><span class="o">(</span><span class="n">menuItems</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>餐馆B</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">PancakeHouseMenu</span> <span class="kd">implements</span> <span class="n">Menu</span><span class="o">{</span>
-</span><span class='line'>    <span class="kd">private</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">MenuItem</span><span class="o">&gt;</span> <span class="n">menuItem</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="nf">PancakeHouseMenu</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">menuItem</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">MenuItem</span><span class="o">&gt;();</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">addItem</span><span class="o">(</span><span class="s">&quot;K&amp;B&#39;s pancake breakfast&quot;</span><span class="o">,</span> <span class="s">&quot;Pancake with scrambled eggs, sausage&quot;</span><span class="o">,</span> <span class="kc">true</span><span class="o">,</span> <span class="mf">2.99</span><span class="o">);</span>
-</span><span class='line'>        <span class="n">addItem</span><span class="o">(</span><span class="s">&quot;Regular pancake breakfast&quot;</span><span class="o">,</span> <span class="s">&quot;Pancake with fried eggs, sausage&quot;</span><span class="o">,</span> <span class="kc">false</span><span class="o">,</span> <span class="mf">2.99</span><span class="o">);</span>
-</span><span class='line'>        <span class="n">addItem</span><span class="o">(</span><span class="s">&quot;Blueberry pancake&quot;</span><span class="o">,</span> <span class="s">&quot;Pancake made with fresh blueberries&quot;</span><span class="o">,</span> <span class="kc">true</span><span class="o">,</span> <span class="mf">3.49</span><span class="o">);</span>
-</span><span class='line'>        <span class="n">addItem</span><span class="o">(</span><span class="s">&quot;Wafles&quot;</span><span class="o">,</span> <span class="s">&quot;Wafles, with your choice of blueberries or strawberries&quot;</span><span class="o">,</span> <span class="kc">true</span><span class="o">,</span> <span class="mf">3.49</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">addItem</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">,</span> <span class="n">String</span> <span class="n">description</span><span class="o">,</span> <span class="kt">boolean</span> <span class="n">vegetarian</span><span class="o">,</span> <span class="kt">double</span> <span class="n">price</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">MenuItem</span> <span class="n">item</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MenuItem</span><span class="o">(</span><span class="n">name</span><span class="o">,</span> <span class="n">description</span><span class="o">,</span> <span class="n">vegetarian</span><span class="o">,</span> <span class="n">price</span><span class="o">);</span>
-</span><span class='line'>        <span class="n">menuItem</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">item</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@Override</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="n">Iterator</span> <span class="nf">createIterator</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="k">new</span> <span class="nf">PancakeHouseMenuIterator</span><span class="o">(</span><span class="n">menuItem</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>3、两家餐馆的迭代器实现
-餐馆A的迭代器</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">DinerMenuIterator</span> <span class="kd">implements</span> <span class="n">Iterator</span> <span class="o">{</span>
-</span><span class='line'>    <span class="kd">private</span> <span class="n">MenuItem</span><span class="o">[]</span> <span class="n">menuItems</span><span class="o">;</span>
-</span><span class='line'>    <span class="kd">private</span> <span class="kt">int</span> <span class="n">currentIndex</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="nf">DinerMenuIterator</span><span class="o">(</span><span class="n">MenuItem</span><span class="o">[]</span> <span class="n">menuItems</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">menuItems</span> <span class="o">=</span> <span class="n">menuItems</span><span class="o">;</span>
-</span><span class='line'>        <span class="n">currentIndex</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@Override</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">hasNext</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">menuItems</span><span class="o">[</span><span class="n">currentIndex</span> <span class="o">+</span> <span class="mi">1</span><span class="o">]</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@Override</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="n">Object</span> <span class="nf">next</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">MenuItem</span> <span class="n">item</span> <span class="o">=</span> <span class="n">menuItems</span><span class="o">[</span><span class="n">currentIndex</span><span class="o">];</span>
-</span><span class='line'>        <span class="n">currentIndex</span><span class="o">++;</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">item</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@Override</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">remove</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>餐馆B的迭代器</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">PancakeHouseMenuIterator</span> <span class="kd">implements</span> <span class="n">Iterator</span> <span class="o">{</span>
-</span><span class='line'>    <span class="kd">private</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">MenuItem</span><span class="o">&gt;</span> <span class="n">pancakeHouseMenus</span><span class="o">;</span>
-</span><span class='line'>    <span class="kd">private</span> <span class="kt">int</span> <span class="n">currentIndex</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="nf">PancakeHouseMenuIterator</span><span class="o">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">MenuItem</span><span class="o">&gt;</span> <span class="n">pancakeHouseMenus</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">pancakeHouseMenus</span> <span class="o">=</span> <span class="n">pancakeHouseMenus</span><span class="o">;</span>
-</span><span class='line'>        <span class="n">currentIndex</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@Override</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">hasNext</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">pancakeHouseMenus</span><span class="o">.</span><span class="na">size</span><span class="o">()</span> <span class="o">&gt;</span> <span class="n">currentIndex</span> <span class="o">&amp;&amp;</span> <span class="n">pancakeHouseMenus</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">currentIndex</span><span class="o">)</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@Override</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="n">Object</span> <span class="nf">next</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">MenuItem</span> <span class="n">item</span> <span class="o">=</span> <span class="n">pancakeHouseMenus</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">currentIndex</span><span class="o">);</span>
-</span><span class='line'>        <span class="n">currentIndex</span><span class="o">++;</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">item</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@Override</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">remove</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>我们可以看到，它们其实都实现自Iterator接口，这个接口是在java.util包中，相当于迭代器模式也是java内置的，我们只需要直接拿出来用就可以了。两个迭代器类提供给外界的接口都一样，所以客户并不需要知道具体实现，而只关心自己接收的类是否实现了Iterator就行了。
-4、女服务员提供点菜功能，他需要打印给客户所有的菜品</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Waitress</span> <span class="o">{</span>
-</span><span class='line'>    <span class="kd">private</span> <span class="n">PancakeHouseMenu</span> <span class="n">pancakeHouseMenu</span><span class="o">;</span>
-</span><span class='line'>    <span class="kd">private</span> <span class="n">DinerMenu</span> <span class="n">dinerMenu</span><span class="o">;</span>
-</span><span class='line'>    <span class="kd">private</span> <span class="n">CafeMenu</span> <span class="n">cafeMenu</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="nf">Waitress</span><span class="o">(</span><span class="n">PancakeHouseMenu</span> <span class="n">pancakeHouseMenu</span><span class="o">,</span> <span class="n">DinerMenu</span> <span class="n">dinerMenu</span><span class="o">,</span> <span class="n">CafeMenu</span> <span class="n">cafeMenu</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">pancakeHouseMenu</span> <span class="o">=</span> <span class="n">pancakeHouseMenu</span><span class="o">;</span>
-</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">dinerMenu</span> <span class="o">=</span> <span class="n">dinerMenu</span><span class="o">;</span>
-</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">cafeMenu</span> <span class="o">=</span> <span class="n">cafeMenu</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">printMenu</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;MENU\n----\nBREAKFAST&quot;</span><span class="o">);</span>
-</span><span class='line'>        <span class="n">printMenu</span><span class="o">(</span><span class="n">pancakeHouseMenu</span><span class="o">.</span><span class="na">createIterator</span><span class="o">());</span>
-</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;\nLUNCH&quot;</span><span class="o">);</span>
-</span><span class='line'>        <span class="n">printMenu</span><span class="o">(</span><span class="n">dinerMenu</span><span class="o">.</span><span class="na">createIterator</span><span class="o">());</span>
-</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;\nCAFE TIME&quot;</span><span class="o">);</span>
-</span><span class='line'>        <span class="n">printMenu</span><span class="o">(</span><span class="n">cafeMenu</span><span class="o">.</span><span class="na">createIterator</span><span class="o">());</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">printMenu</span><span class="o">(</span><span class="n">Iterator</span> <span class="n">iterator</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">while</span> <span class="o">(</span><span class="n">iterator</span><span class="o">.</span><span class="na">hasNext</span><span class="o">())</span> <span class="o">{</span>
-</span><span class='line'>            <span class="n">MenuItem</span> <span class="n">menuItem</span> <span class="o">=</span> <span class="o">(</span><span class="n">MenuItem</span><span class="o">)</span> <span class="n">iterator</span><span class="o">.</span><span class="na">next</span><span class="o">();</span>
-</span><span class='line'>            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">menuItem</span><span class="o">.</span><span class="na">getName</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot;, &quot;</span> <span class="o">+</span> <span class="n">menuItem</span><span class="o">.</span><span class="na">getPrice</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot; -- &quot;</span> <span class="o">+</span> <span class="n">menuItem</span><span class="o">.</span><span class="na">getDescription</span><span class="o">());</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>女服务员拿到迭代器，她从菜单项的实现中解耦了。这样对她来说是很好的，因为她能使用同样的代码去遍历容易组能的元素。
-5、开始点菜</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">WaitressAction</span> <span class="o">{</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">PancakeHouseMenu</span> <span class="n">pancakeHouseMenu</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PancakeHouseMenu</span><span class="o">();</span>
-</span><span class='line'>        <span class="n">DinerMenu</span> <span class="n">dinerMenu</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DinerMenu</span><span class="o">();</span>
-</span><span class='line'>        <span class="n">CafeMenu</span> <span class="n">cafeMenu</span> <span class="o">=</span> <span class="k">new</span> <span class="n">CafeMenu</span><span class="o">();</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">Waitress</span> <span class="n">waitress</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Waitress</span><span class="o">(</span><span class="n">pancakeHouseMenu</span><span class="o">,</span> <span class="n">dinerMenu</span><span class="o">,</span> <span class="n">cafeMenu</span><span class="o">);</span>
-</span><span class='line'>        <span class="n">waitress</span><span class="o">.</span><span class="na">printMenu</span><span class="o">();</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>整个程序的构造如下图所示：
-<img src="http://PhotoSynthesiis.github.io/images/iterator_pattern-1.png"></p>
-
-<p>二、组合模式
-组合模式的定义是允许将对象组合成树形结构来表现“整体/部分”层次结构。组合让客户以一致的方式去处理个别对象以及对象组合。例如，开始我们遍历的是菜单里的菜品，但是现在要求向菜单里加入子菜单，这样一个菜单里也许不光有菜品，还可能有子菜单。如果想要以一种相同的方式去处理菜品和菜单(也许是打印名称、描述)，就需要定义一个组件接口来作为菜单和菜单项的共同接口，这样就能够用统一的做法来处理菜单和菜单项。
-1、统一接口</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">MenuComponent</span> <span class="o">{</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">add</span><span class="o">(</span><span class="n">MenuComponent</span> <span class="n">menuComponent</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">throw</span> <span class="k">new</span> <span class="nf">UnsupportedOperationException</span><span class="o">();</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">remove</span><span class="o">(</span><span class="n">MenuComponent</span> <span class="n">menuComponent</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">throw</span> <span class="k">new</span> <span class="nf">UnsupportedOperationException</span><span class="o">();</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="n">MenuComponent</span> <span class="nf">getChild</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">throw</span> <span class="k">new</span> <span class="nf">UnsupportedOperationException</span><span class="o">();</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getName</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">throw</span> <span class="k">new</span> <span class="nf">UnsupportedOperationException</span><span class="o">();</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getDescription</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">throw</span> <span class="k">new</span> <span class="nf">UnsupportedOperationException</span><span class="o">();</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">double</span> <span class="nf">getPrice</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">throw</span> <span class="k">new</span> <span class="nf">UnsupportedOperationException</span><span class="o">();</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isVegetarian</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">throw</span> <span class="k">new</span> <span class="nf">UnsupportedOperationException</span><span class="o">();</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">print</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">throw</span> <span class="k">new</span> <span class="nf">UnsupportedOperationException</span><span class="o">();</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="n">Iterator</span> <span class="nf">createIterator</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">throw</span> <span class="k">new</span> <span class="nf">UnsupportedOperationException</span><span class="o">();</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>2、Menu(菜单)继承自统一接口</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Menu2</span> <span class="kd">extends</span> <span class="n">MenuComponent</span> <span class="o">{</span>
-</span><span class='line'>    <span class="kd">private</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">MenuComponent</span><span class="o">&gt;</span> <span class="n">menuComponents</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">MenuComponent</span><span class="o">&gt;();</span>
-</span><span class='line'>    <span class="kd">private</span> <span class="n">String</span> <span class="n">name</span><span class="o">;</span>
-</span><span class='line'>    <span class="kd">private</span> <span class="n">String</span> <span class="n">description</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="nf">Menu2</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">,</span> <span class="n">String</span> <span class="n">description</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">;</span>
-</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">description</span> <span class="o">=</span> <span class="n">description</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">add</span><span class="o">(</span><span class="n">MenuComponent</span> <span class="n">component</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">menuComponents</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">component</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">remove</span><span class="o">(</span><span class="n">MenuComponent</span> <span class="n">component</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">menuComponents</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">menuComponents</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="n">MenuComponent</span> <span class="nf">getChild</span><span class="o">(</span><span class="kt">int</span> <span class="n">index</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">menuComponents</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">index</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getName</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">name</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getDescription</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">description</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="n">Iterator</span> <span class="nf">createIterator</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="k">new</span> <span class="nf">CompositeIterator</span><span class="o">(</span><span class="n">menuComponents</span><span class="o">.</span><span class="na">iterator</span><span class="o">());</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">print</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;\n&quot;</span> <span class="o">+</span> <span class="n">getName</span><span class="o">());</span>
-</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;, &quot;</span> <span class="o">+</span> <span class="n">getDescription</span><span class="o">());</span>
-</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;----------------------&quot;</span><span class="o">);</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">Iterator</span> <span class="n">iterator</span> <span class="o">=</span> <span class="n">menuComponents</span><span class="o">.</span><span class="na">iterator</span><span class="o">();</span>
-</span><span class='line'>        <span class="k">while</span> <span class="o">(</span><span class="n">iterator</span><span class="o">.</span><span class="na">hasNext</span><span class="o">())</span> <span class="o">{</span>
-</span><span class='line'>            <span class="n">MenuComponent</span> <span class="n">component</span> <span class="o">=</span> <span class="o">(</span><span class="n">MenuComponent</span><span class="o">)</span> <span class="n">iterator</span><span class="o">.</span><span class="na">next</span><span class="o">();</span>
-</span><span class='line'>            <span class="n">component</span><span class="o">.</span><span class="na">print</span><span class="o">();</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>然后对应的DinerMenu和PancakeHouseMenu再继承Menu，这里就不写出来了。</p>
-
-<p>3、(MenuItem)菜品继承统一接口</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MenuItem</span> <span class="kd">extends</span> <span class="n">MenuComponent</span> <span class="o">{</span>
-</span><span class='line'>    <span class="n">String</span> <span class="n">name</span><span class="o">;</span>
-</span><span class='line'>    <span class="n">String</span> <span class="n">description</span><span class="o">;</span>
-</span><span class='line'>    <span class="kt">boolean</span> <span class="n">vegetarian</span><span class="o">;</span>
-</span><span class='line'>    <span class="kt">double</span> <span class="n">price</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="nf">MenuItem</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">,</span> <span class="n">String</span> <span class="n">description</span><span class="o">,</span> <span class="kt">boolean</span> <span class="n">vegetarian</span><span class="o">,</span> <span class="kt">double</span> <span class="n">price</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">;</span>
-</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">description</span> <span class="o">=</span> <span class="n">description</span><span class="o">;</span>
-</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">vegetarian</span> <span class="o">=</span> <span class="n">vegetarian</span><span class="o">;</span>
-</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">price</span> <span class="o">=</span> <span class="n">price</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getName</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">name</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getDescription</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">description</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isVegetarian</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">vegetarian</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">double</span> <span class="nf">getPrice</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">price</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="n">Iterator</span> <span class="nf">createIterator</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="k">new</span> <span class="nf">NullIterator</span><span class="o">();</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">print</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot; &quot;</span> <span class="o">+</span> <span class="n">getName</span><span class="o">());</span>
-</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">isVegetarian</span><span class="o">())</span> <span class="o">{</span>
-</span><span class='line'>            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">&quot;(v)&quot;</span><span class="o">);</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;, &quot;</span> <span class="o">+</span> <span class="n">getPrice</span><span class="o">());</span>
-</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;   -- &quot;</span> <span class="o">+</span> <span class="n">getDescription</span><span class="o">());</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>这样，菜单和菜品都会被统一对待。尽管他们由于继承，会得到一些不相干的方法，但是这个已经无关紧要。下面是结构图：</p>
-
-<p><img src="http://PhotoSynthesiis.github.io/images/iterator_pattern-2.png"></p>
-
-<p>总而言之，当与偶数个对象的组合，他们彼此之间有“整体/部分”的关系，并且你想用一致的方式对待这些对象时，就需要用到组合模式。这样客户就不再需要操心面对的是组合对象还是叶节点对象。不必写一大堆if语句来保证他们对正确的对象调用了正确的方法。通常，他们只需要对整个结构调用一个方法并执行操作就可以了。</p>
 ]]></content>
   </entry>
   
