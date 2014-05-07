@@ -9,7 +9,7 @@
   <meta name="author" content="Qiushi Li">
 
   
-  <meta name="description" content="Merge sort即归并排序，它的中心思想是分而治之(divide and conquer)，即将一个原来很大的待排序数列分成若干个小的数列然后分别对他们进行排序，最后把小的排好序的数列合并起来。这个过程可以分为三个步骤： 第一, 分解: 把待排序的 n 个元素的序列分解成两个子序列, &hellip;">
+  <meta name="description" content="Quick Sort即快速排序，它是对归并排序的一种补充，采用的也是分治策略。基本思想是在整个数组中选择第一个数作为一个基准，然后分别从第二个数向后和最后一个数向前开始扫描。如果在向后扫描的过程中如果遇到比基准大的数字(我们这里假设默认为升序排列)，同时在从后向前扫描的过程中遇到比基准小的数字， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +65,49 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/08/23/quick-sort/">快速排序(Quicksort)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-08-23T21:57:00-05:00" pubdate data-updated="true">Aug 23<span>rd</span>, 2013</time>
+        
+         | <a href="/blog/2013/08/23/quick-sort/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Quick Sort即快速排序，它是对归并排序的一种补充，采用的也是分治策略。基本思想是在整个数组中选择第一个数作为一个基准，然后分别从第二个数向后和最后一个数向前开始扫描。如果在向后扫描的过程中如果遇到比基准大的数字(我们这里假设默认为升序排列)，同时在从后向前扫描的过程中遇到比基准小的数字，那么这两个数字就交换。这个过程一直持续下去直到从左扫描的下标大于从右开始扫描的下标作为结束。最后，把基准和右边下标指向的数交换，这样基准左边的数字都小于该基准，基准右边的数字都大于它。不断地递归这个过程就是快速排序。我们可以看看下面这个图帮助理解：</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/08/23/quick-sort/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -534,51 +577,6 @@ javamail包中，主要是用来发送邮件的。为了发送邮件，需要提
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/07/16/state-pattern/">深入浅出设计模式之状态模式(State Pattern)</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-07-16T22:39:00-05:00" pubdate data-updated="true">Jul 16<span>th</span>, 2013</time>
-        
-         | <a href="/blog/2013/07/16/state-pattern/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>在现实生活中，常常遇到许多与状态相关的问题，一些状态因为一些行为的触发转移到下一个状态。就拿一个糖果机为例子吧，糖果机有四种状态：没有25分钱、有25分钱、售出糖果和糖果售罄。由不同的触发条件到达另一种状态.例如如果没有25分钱，投入25分钱，会达到有25分钱的状态，其他状态如下图所示：</p>
-
-<p><img src="/images/state_pattern-1.png"></p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/07/16/state-pattern/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/3/">&larr; Older</a>
@@ -596,6 +594,10 @@ javamail包中，主要是用来发送邮件的。为了发送邮件，需要提
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/05/06/ios-programming-7-delegation-and-text-input/">iOS programming 7 (Delegation and Text Input)</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/05/06/ios-programming-6-2-uitabviewcontrollers/">iOS Programming 6-2(UITabBarController)</a>
       </li>
     
@@ -609,10 +611,6 @@ javamail包中，主要是用来发送邮件的。为了发送邮件，需要提
     
       <li class="post">
         <a href="/blog/2014/04/04/ios-programming-5/">iOS Programming 5(Redrawing and UIScrollView)</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/04/03/backtrack/">使用递归计算的回溯法</a>
       </li>
     
   </ul>
