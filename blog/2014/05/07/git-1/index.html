@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Apprenticeship Pattern读书笔记 - public static void man</title>
+  <title>Git 1 (Basic Concept) - public static void man</title>
   <meta name="author" content="Qiushi Li">
 
   
-  <meta name="description" content="花2个星期读完了这本书，作者是一名前ThoughtWorker，所以书里谈到的很多概念还是很清楚。 书本身非常好，里面谈到了从一名软件小工到专家的成长方法，这些方法都是读者能够拿之能用的。 在读这本书的时候，我一直担心会因为时间的流失而渐渐忘记书中的内容，所以特意写下这篇博客来记录对书的感悟。 &hellip;">
+  <meta name="description" content="原来学过Git,但学得不扎实,而且学过之后也没怎么用,导致每次要用的时候都得重新学一遍.现在再次学习,把学到的记录下来,以后忘了复习起来也方便. Centralized Version Control vs Distributed Version Control &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://PhotoSynthesiis.github.io/blog/2013/07/09/apprenticeship-pattern">
+  <link rel="canonical" href="http://PhotoSynthesiis.github.io/blog/2014/05/07/git-1">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="public static void man" type="application/atom+xml">
@@ -68,7 +68,7 @@
   
   <header>
     
-      <h1 class="entry-title">Apprenticeship Pattern读书笔记</h1>
+      <h1 class="entry-title">Git 1 (Basic Concept)</h1>
     
     
       <p class="meta">
@@ -84,7 +84,7 @@
   
 
 
-<time datetime="2013-07-09T19:06:00-05:00" pubdate data-updated="true">Jul 9<span>th</span>, 2013</time>
+<time datetime="2014-05-07T00:27:00-05:00" pubdate data-updated="true">May 7<span>th</span>, 2014</time>
         
          | <a href="#disqus_thread">Comments</a>
         
@@ -93,27 +93,51 @@
   </header>
 
 
-<div class="entry-content"><p>花2个星期读完了这本书，作者是一名前ThoughtWorker，所以书里谈到的很多概念还是很清楚。</p>
+<div class="entry-content"><p>原来学过Git,但学得不扎实,而且学过之后也没怎么用,导致每次要用的时候都得重新学一遍.现在再次学习,把学到的记录下来,以后忘了复习起来也方便.</p>
 
-<p>书本身非常好，里面谈到了从一名软件小工到专家的成长方法，这些方法都是读者能够拿之能用的。</p>
+<h2>Centralized Version Control vs Distributed Version Control</h2>
+
+<p>集中式的版本管理把所有的文件放到一个server上面,所有的其他电脑都从这个server上面得到最新的代码.这样的坏处显而易见,如果server宕机了,其他一切有关的活动都得终止.</p>
 
 <!-- more -->
 
 
-<p>在读这本书的时候，我一直担心会因为时间的流失而渐渐忘记书中的内容，所以特意写下这篇博客来记录对书的感悟。</p>
+<p> <img src="/images/git-1_1.png"></p>
 
-<p>其中，最令我难忘的是confront your ignorance和share with others about what you learn。结合到自己这一年坎坎坷坷的TW之路，感触还是颇深。</p>
+<p>此外,在集中式版本管理控制下,用户每次checkout的都是最新版本的文件快照,而对之前版本一无所知,如果用户想查看项目之前其他人做的改变,还得连接server然后从server上得到信息.但是分布式版本管理不同,它在每一次checkout的时候,都是checkout的server上项目的所有内容,相当于一次mirror,这样用户几乎不需要连接server就能知道很多事情,包括项目之前的改变等.</p>
 
-<p>不管是在工作还是学习中，我很多时候都没有摆正心态和位置。例如如果大家一起讨论一个问题，我并不知道他们讲的是什么，但是我并没有立即问出来，担心其他人觉得自己太菜，连这么基本的道理或工具都不知道，这样会觉得很没面子。书中关于这一点特别做出了阐述，那就是—-在一个安全的环境下（至少TW是），勇敢地表达自己的无知，因为在别人眼里，并不觉得你不知道这个有什么不妥。但是如果你这次问出来了，你知道了答案，你就进步了一些。别人看来你也很好学，而不是自己想象的那样被鄙视。在得到答案之后，应该以某种方式记录下来，或者自己私下继续探索，而不是这样就过了。当下次别人问起时，你不知道，别人会觉得你的学习能力甚至智商有问题。</p>
+<p> <img src="/images/git-1_2.png"></p>
 
-<p>其次，应该多share自己学到的东西。别人可以看到你的进步，同时自己也能通过分享的方式加强自己对知识本身的吸收。这一点在书中还有很多章节与之呼应，例如find mentor和find kindred
-spirit。他们都强调在学习的过程中，有人带是多么的重要。自己应该尽量多地去找你的mentor问问题，多暴露自己的不足。</p>
+<h2>Git vs other VCS (Version Control System)</h2>
 
-<p>此外，书中还谈到了一点：不要满足于现状，应该不断地去探索新知识。软件行业瞬息万变，始终要记住，自己今天所掌握的知识都在以某种方式贬值。不断地学习乃立足行业的前提。</p>
+<p>对于一般的VCS来说,在不同版本之间它存放的是文件在各个版本之间的差异:</p>
 
-<p>最后，关于知识的整理和记录。这一点是我在TW这一年被反复强调的学习方法。但是自己都没有做好，不是因为笔记不够多，而是在记笔记后就把它扔了，这样的结果是虽然你学了，笔记也写了（看似很好的学习方法），但是到后来还是完全没有印象。归根到底还是因为平时没有去回顾博客中的内容。在回顾的过程中，结合自己在后来学习到的新知识，会有更深的理解或者不同的见解。</p>
+<p> <img src="/images/git-1_3.png"></p>
 
-<p>最后的最后，一定要努力。记得读过一篇博客，讲的是一名MS的员工在刚加入的时候，自己直接背了个睡袋到办公室去睡了一年，想到自己在TW这一年稍显酱油的方式，真的很惭愧。以后一定不要再犯这些错误了！！！</p>
+<p>但是Git在每一个版本存放的都是整体的文件,如果某个文件在版本1和2之间没有改变,那么就只存放一个对上一版本快照的引用.</p>
+
+<p> <img src="/images/git-1_4.png"></p>
+
+<p>同时因为Git在每次checkout的时候都获取的是整个项目包括项目之前的历史,相当于把服务器上所有的东西都拿下来了,而不是像CVS系统一样自取最新版本,所以Git可以在本地做很多事情,例如查看项目历史提交,本地提交等.</p>
+
+<h2>Three States</h2>
+
+<p>Git的三大state是modified,staged和committed.modified指文件被修改过,staged表示文件被修改过并且在下一次commit的时候自动提交.committed表示已经提交.</p>
+
+<p>比如我们文件A和B,但是这次我只想提交A,我可以stage A并且提交,然后stage B让它在下一次commit的时候提交.Git add 就是把文件stage的指令.</p>
+
+<p> <img src="/images/git-1_5.png"></p>
+
+<p>在上图中的最左边和最右边分别是Working Directory和Git Repository.后者是从server上下载下来的所有文件,前者是后者中的其中一个版本,用户做的修改和增加都在Working Directory里面进行.</p>
+
+<p>总之,Git的提交流程一般分为3部</p>
+
+<ul>
+<li>修改文件</li>
+<li>stage文件 (git add &hellip;)</li>
+<li>commit文件 (git commit)</li>
+</ul>
+
 </div>
 
 
@@ -136,7 +160,7 @@ spirit。他们都强调在学习的过程中，有人带是多么的重要。�
   
 
 
-<time datetime="2013-07-09T19:06:00-05:00" pubdate data-updated="true">Jul 9<span>th</span>, 2013</time>
+<time datetime="2014-05-07T00:27:00-05:00" pubdate data-updated="true">May 7<span>th</span>, 2014</time>
       
 
 
@@ -144,7 +168,7 @@ spirit。他们都强调在学习的过程中，有人带是多么的重要。�
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://PhotoSynthesiis.github.io/blog/2013/07/09/apprenticeship-pattern/" data-via="photosynthesiis@gmail.com" data-counturl="http://PhotoSynthesiis.github.io/blog/2013/07/09/apprenticeship-pattern/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://PhotoSynthesiis.github.io/blog/2014/05/07/git-1/" data-via="photosynthesiis@gmail.com" data-counturl="http://PhotoSynthesiis.github.io/blog/2014/05/07/git-1/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -157,10 +181,8 @@ spirit。他们都强调在学习的过程中，有人带是多么的重要。�
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2013/07/09/recursion/" title="Previous Post: 递归的执行过程">&laquo; 递归的执行过程</a>
+        <a class="basic-alignment left" href="/blog/2014/05/06/ios-programming-7-delegation-and-text-input/" title="Previous Post: iOS programming 7 (Delegation and Text Input)">&laquo; iOS programming 7 (Delegation and Text Input)</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2013/07/09/java-string-reside/" title="Next Post: Java中的字符串驻留">Java中的字符串驻留 &raquo;</a>
       
     </p>
   </footer>
@@ -265,8 +287,8 @@ spirit。他们都强调在学习的过程中，有人带是多么的重要。�
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://PhotoSynthesiis.github.io/blog/2013/07/09/apprenticeship-pattern/';
-        var disqus_url = 'http://PhotoSynthesiis.github.io/blog/2013/07/09/apprenticeship-pattern/';
+        var disqus_identifier = 'http://PhotoSynthesiis.github.io/blog/2014/05/07/git-1/';
+        var disqus_url = 'http://PhotoSynthesiis.github.io/blog/2014/05/07/git-1/';
         var disqus_script = 'embed.js';
       
     (function () {

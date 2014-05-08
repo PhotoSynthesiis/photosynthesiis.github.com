@@ -4,7 +4,7 @@
   <title><![CDATA[public static void man]]></title>
   <link href="http://PhotoSynthesiis.github.io/atom.xml" rel="self"/>
   <link href="http://PhotoSynthesiis.github.io/"/>
-  <updated>2014-05-06T22:08:20-05:00</updated>
+  <updated>2014-05-07T20:36:56-05:00</updated>
   <id>http://PhotoSynthesiis.github.io/</id>
   <author>
     <name><![CDATA[Qiushi Li]]></name>
@@ -12,6 +12,59 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Git 1 (Basic Concept)]]></title>
+    <link href="http://PhotoSynthesiis.github.io/blog/2014/05/07/git-1/"/>
+    <updated>2014-05-07T00:27:00-05:00</updated>
+    <id>http://PhotoSynthesiis.github.io/blog/2014/05/07/git-1</id>
+    <content type="html"><![CDATA[<p>原来学过Git,但学得不扎实,而且学过之后也没怎么用,导致每次要用的时候都得重新学一遍.现在再次学习,把学到的记录下来,以后忘了复习起来也方便.</p>
+
+<h2>Centralized Version Control vs Distributed Version Control</h2>
+
+<p>集中式的版本管理把所有的文件放到一个server上面,所有的其他电脑都从这个server上面得到最新的代码.这样的坏处显而易见,如果server宕机了,其他一切有关的活动都得终止.</p>
+
+<!-- more -->
+
+
+<p> <img src="http://PhotoSynthesiis.github.io/images/git-1_1.png"></p>
+
+<p>此外,在集中式版本管理控制下,用户每次checkout的都是最新版本的文件快照,而对之前版本一无所知,如果用户想查看项目之前其他人做的改变,还得连接server然后从server上得到信息.但是分布式版本管理不同,它在每一次checkout的时候,都是checkout的server上项目的所有内容,相当于一次mirror,这样用户几乎不需要连接server就能知道很多事情,包括项目之前的改变等.</p>
+
+<p> <img src="http://PhotoSynthesiis.github.io/images/git-1_2.png"></p>
+
+<h2>Git vs other VCS (Version Control System)</h2>
+
+<p>对于一般的VCS来说,在不同版本之间它存放的是文件在各个版本之间的差异:</p>
+
+<p> <img src="http://PhotoSynthesiis.github.io/images/git-1_3.png"></p>
+
+<p>但是Git在每一个版本存放的都是整体的文件,如果某个文件在版本1和2之间没有改变,那么就只存放一个对上一版本快照的引用.</p>
+
+<p> <img src="http://PhotoSynthesiis.github.io/images/git-1_4.png"></p>
+
+<p>同时因为Git在每次checkout的时候都获取的是整个项目包括项目之前的历史,相当于把服务器上所有的东西都拿下来了,而不是像CVS系统一样自取最新版本,所以Git可以在本地做很多事情,例如查看项目历史提交,本地提交等.</p>
+
+<h2>Three States</h2>
+
+<p>Git的三大state是modified,staged和committed.modified指文件被修改过,staged表示文件被修改过并且在下一次commit的时候自动提交.committed表示已经提交.</p>
+
+<p>比如我们文件A和B,但是这次我只想提交A,我可以stage A并且提交,然后stage B让它在下一次commit的时候提交.Git add 就是把文件stage的指令.</p>
+
+<p> <img src="http://PhotoSynthesiis.github.io/images/git-1_5.png"></p>
+
+<p>在上图中的最左边和最右边分别是Working Directory和Git Repository.后者是从server上下载下来的所有文件,前者是后者中的其中一个版本,用户做的修改和增加都在Working Directory里面进行.</p>
+
+<p>总之,Git的提交流程一般分为3部</p>
+
+<ul>
+<li>修改文件</li>
+<li>stage文件 (git add &hellip;)</li>
+<li>commit文件 (git commit)</li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[iOS programming 7 (Delegation and Text Input)]]></title>
@@ -3926,579 +3979,6 @@ mail.smtp.starttls.enable: 将一般连接升级到加密连接，而无需另�
 
 
 <p>这就是我在项目中使用到的发送邮件和其测试的技术。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[深入浅出设计模式之代理模式(Proxy Pattern)]]></title>
-    <link href="http://PhotoSynthesiis.github.io/blog/2013/07/18/proxy-pattern/"/>
-    <updated>2013-07-18T18:09:00-05:00</updated>
-    <id>http://PhotoSynthesiis.github.io/blog/2013/07/18/proxy-pattern</id>
-    <content type="html"><![CDATA[<p>所谓代理，即控制盒管理对目标对象访问的一个中间层。它代表一个真实的对象，并呈现给外界一个假象&mdash;它就是真正的对象，但其实他的一切动作都是调用真实对象来完成的。</p>
-
-<p>一、远程代理</p>
-
-<p>代理模式有很多种，首先我们来讲远程代理。如果我有两个类ClassA和ClassB,它们分别位于不同的机器上(意味着它们在不同的JVM的堆中)。如果ClassA想要调用ClassB中的方法，这时就需要一个远程代理。远程代理就好像是“远程对象的本地代表”，它是一个可以由本地方法调用的对象，其行为会转发到远程对象中。</p>
-
-<!-- more -->
-
-
-<p>还是拿在状态模式中的那个糖果机作为例子吧，现在有一个新的需求，想要建立一个糖果监视器来监察糖果机的状态，通常是CEO坐在办公室完成的，所以这就是一个远程调用的应用。这个模型如下图：</p>
-
-<p><img src="http://PhotoSynthesiis.github.io/images/proxy_pattern-1.png"></p>
-
-<p>在Java中，远程代理是内置的一种模式(RMI)，所以我们只需要直接拿出来用就行了。在这之前还是先看看这个模式的具体工作流程吧：</p>
-
-<p><img src="http://PhotoSynthesiis.github.io/images/proxy_pattern-2.png">
-<img src="http://PhotoSynthesiis.github.io/images/proxy_pattern-3.png">
-<img src="http://PhotoSynthesiis.github.io/images/proxy_pattern-4.png">
-<img src="http://PhotoSynthesiis.github.io/images/proxy_pattern-5.png"></p>
-
-<p>从上面我们可以看到，图中有四个对象，分别是客户对象、客户辅助对象、服务辅助对象和服务对象。辅助对象对象将每个请求转发到远程对象上进行，它使客户就像在调用本地对象方法一样。客户使用客户辅助对象上的方法，仿佛客户辅助对象就是真正的服务。同时对于服务对象来说，调用是本地的，来自服务辅助对象，而不是远程客户。</p>
-
-<p>Java RMI提供了客户辅助对象和服务辅助对象，为客户辅助对象创建和服务对象相同的方法。RMI将客户辅助对象称为桩(stub)，将服务辅助对象称为骨架(skeleton)。</p>
-
-<p><img src="http://PhotoSynthesiis.github.io/images/proxy_pattern-6.png"></p>
-
-<p>下面，我们就来完成对Java RMI远程代理的演示。它们分为下面这几个步骤；
-1、制作远程接口</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">MyRemote</span> <span class="kd">extends</span> <span class="n">Remote</span><span class="o">{</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">sayHello</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">RemoteException</span><span class="o">;</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>远程接口需要继承自Remote接口，Remote里面其实什么都没有，需要继承自他是为了把当前接口标记为一个远程服务接口，它支持远程调用。
-同时，因为每次远程调用都由于网络状况等原因会有一些状况，所以这些东西都必须考虑在内，方法是为接口中的方法都抛出一个RemoteException。</p>
-
-<p>此外，由于远程服务服务中返回的变量都要被打包并通过网络传输，所以要求所有方法的返回值要么是原语(primitive)类型，要么是可序列化的(如果返回的是自己创建的类，那么这个类需要实现Serializable接口)。</p>
-
-<p>2、制作远程实现</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyRemoteImpl</span> <span class="kd">extends</span> <span class="n">UnicastRemoteObject</span> <span class="kd">implements</span> <span class="n">MyRemote</span> <span class="o">{</span>
-</span><span class='line'>    <span class="kd">protected</span> <span class="nf">MyRemoteImpl</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">RemoteException</span> <span class="o">{</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">try</span> <span class="o">{</span>
-</span><span class='line'>            <span class="n">MyRemote</span> <span class="n">service</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MyRemoteImpl</span><span class="o">();</span>
-</span><span class='line'>            <span class="n">Naming</span><span class="o">.</span><span class="na">rebind</span><span class="o">(</span><span class="s">&quot;RemoteHello&quot;</span><span class="o">,</span> <span class="n">service</span><span class="o">);</span>
-</span><span class='line'>        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@Override</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">sayHello</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">RemoteException</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="s">&quot;Server says, &#39;Hey&#39;&quot;</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>为了要称为远程服务对象，对象需要一些“远程”的功能。最简单的方式就是扩展UnicastRemoteObject，让超类去做这些事。当类被实例化的时候，超类的构造器总是会被调用，如果超类的构造器抛出异常，那么只能声明子类的构造器也抛出异常。</p>
-
-<p>在上面代码的main函数中，有一句Name.rebind，它的作用是用RMI Registry注册服务(即把刚实例化出来的对象放进RMI registry中)这样才能被远程客户调用。其实挡在注册时，真正注册的是stub，因为这才是客户真正需要的。</p>
-
-<p>3、产生stub和skeleton
-当我们创建完服务对象后，还需要创建stub和skeleton(即创建客户辅助对象和服务辅助对象)。方法是在远程实现类上执行rmic。rmic是JDK内的一个工具，用来为一个服务类产生stub和skeleton，命名习惯是在服务类后面加上“<em>stub”和“</em>skel”。</p>
-
-<p>首先跳到.class所在的目录(注意目录里不包括包)，然后使用rmic xxx命令来生成stub和skeleton:</p>
-
-<p><img src="http://PhotoSynthesiis.github.io/images/proxy_pattern-7.png"></p>
-
-<p>当执行完上面这段话的时候，就产生了stub</p>
-
-<p><img src="http://PhotoSynthesiis.github.io/images/proxy_pattern-8.png"></p>
-
-<p>4、启动RMI Registry，提供注册服务。因为启动目录必须访问类的class文件，所以最好是从包含class文件的目录启动(注意目录里不包括包)。</p>
-
-<p><img src="http://PhotoSynthesiis.github.io/images/proxy_pattern-9.png"></p>
-
-<p>5、启动服务
-这里的启动服务指的是创建服务对象，并把它注册到RMI注册表中的过程。启动的地方是在main方法中创建对象并rebind的地方，不一定在实现类中，也可以是另一个独立的启动类中。</p>
-
-<p><img src="http://PhotoSynthesiis.github.io/images/proxy_pattern-10.png"></p>
-
-<p>6、客户端开始调用</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyRemoteClient</span> <span class="o">{</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">new</span> <span class="nf">MyRemoteClient</span><span class="o">().</span><span class="na">go</span><span class="o">();</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">go</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">try</span> <span class="o">{</span>
-</span><span class='line'>            <span class="n">MyRemote</span> <span class="n">remote</span> <span class="o">=</span> <span class="o">(</span><span class="n">MyRemote</span><span class="o">)</span> <span class="n">Naming</span><span class="o">.</span><span class="na">lookup</span><span class="o">(</span><span class="s">&quot;rmi://127.0.0.1/RemoteHello&quot;</span><span class="o">);</span>
-</span><span class='line'>            <span class="n">String</span> <span class="n">s</span> <span class="o">=</span> <span class="n">remote</span><span class="o">.</span><span class="na">sayHello</span><span class="o">();</span>
-</span><span class='line'>            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">s</span><span class="o">);</span>
-</span><span class='line'>        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>执行结果:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='text'><span class='line'>Server says, &#39;Hey&#39;
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>上面go方法中，首先从RMI注册表中找到名字为RemoteHello的远程服务类，其实找到的是一个stub。找到后就调用stub的sayHello。它的结构就像下面这张图：</p>
-
-<p><img src="http://PhotoSynthesiis.github.io/images/proxy_pattern-11.png"></p>
-
-<p>二、虚拟代理</p>
-
-<p>虚拟代理作为创建开销大的对象的代表。虚拟代理知道我们需要一个对象的时候才创建。当对象在创建前和创建中的时候由虚拟代理来扮演对象的替身。对象创建后，代理就会将请求直接委托给对象本身。</p>
-
-<p>例如我们现在有一个面板，上面需要显示一张图片。如果客户请求，就开始下载，在下载过程中显示&#8221;please wait&#8221;信息。这本是很简单的一个功能，但问题是用于显示图片的ImageIcon对象和加载图像是同步的，也就是说只有当图片加载完成后构造器才会返回，客户才能继续做其他的事。所以，我们需要一个虚拟对象，它扩展了原对象的功能，他能另开一个线程来下载图片，同时允许客户在这中间做其他事情。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ImageProxy</span> <span class="kd">implements</span> <span class="n">Icon</span> <span class="o">{</span>
-</span><span class='line'>    <span class="n">ImageIcon</span> <span class="n">imageIcon</span><span class="o">;</span>
-</span><span class='line'>    <span class="n">URL</span> <span class="n">imageURL</span><span class="o">;</span>
-</span><span class='line'>    <span class="n">Thread</span> <span class="n">retrievalThread</span><span class="o">;</span>
-</span><span class='line'>    <span class="kt">boolean</span> <span class="n">retrieving</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="nf">ImageProxy</span><span class="o">(</span><span class="n">URL</span> <span class="n">imageURL</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">imageURL</span> <span class="o">=</span> <span class="n">imageURL</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@Override</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">getIconWidth</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">imageIcon</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>            <span class="k">return</span> <span class="n">imageIcon</span><span class="o">.</span><span class="na">getIconWidth</span><span class="o">();</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>        <span class="k">return</span> <span class="mi">800</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@Override</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">getIconHeight</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">imageIcon</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>            <span class="k">return</span> <span class="n">imageIcon</span><span class="o">.</span><span class="na">getIconHeight</span><span class="o">();</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>        <span class="k">return</span> <span class="mi">600</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@Override</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">paintIcon</span><span class="o">(</span><span class="kd">final</span> <span class="n">Component</span> <span class="n">c</span><span class="o">,</span> <span class="n">Graphics</span> <span class="n">g</span><span class="o">,</span> <span class="kt">int</span> <span class="n">x</span><span class="o">,</span> <span class="kt">int</span> <span class="n">y</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">imageIcon</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>            <span class="n">imageIcon</span><span class="o">.</span><span class="na">paintIcon</span><span class="o">(</span><span class="n">c</span><span class="o">,</span> <span class="n">g</span><span class="o">,</span> <span class="n">x</span><span class="o">,</span> <span class="n">y</span><span class="o">);</span>
-</span><span class='line'>        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
-</span><span class='line'>            <span class="n">g</span><span class="o">.</span><span class="na">drawString</span><span class="o">(</span><span class="s">&quot;Loading CD cover, please wait&quot;</span><span class="o">,</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">300</span><span class="o">,</span> <span class="n">y</span> <span class="o">+</span> <span class="mi">190</span><span class="o">);</span>
-</span><span class='line'>            <span class="k">if</span> <span class="o">(!</span><span class="n">retrieving</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>                <span class="n">retrieving</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
-</span><span class='line'>                <span class="n">retrievalThread</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">(</span><span class="k">new</span> <span class="n">Runnable</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>                    <span class="nd">@Override</span>
-</span><span class='line'>                    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>                        <span class="n">imageIcon</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ImageIcon</span><span class="o">(</span><span class="n">imageURL</span><span class="o">,</span> <span class="s">&quot;CD cover&quot;</span><span class="o">);</span>
-</span><span class='line'>                        <span class="n">c</span><span class="o">.</span><span class="na">repaint</span><span class="o">();</span>
-</span><span class='line'>                    <span class="o">}</span>
-</span><span class='line'>                <span class="o">});</span>
-</span><span class='line'>                <span class="n">retrievalThread</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
-</span><span class='line'>            <span class="o">}</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>三、Java API代理</p>
-
-<p>Java在java.lang.reflect包中有自己默认的代理支持，利用这个包可以创建动态代理。所谓动态，其实是指代理类在开始执行代码前是不存在的，他是在代码执行的时候根据需要从传入的接口集创建的(不清楚的话可以继续往下看)。下面是整个Java API代理的通用结构：</p>
-
-<p><img src="http://PhotoSynthesiis.github.io/images/proxy_pattern-12.png"></p>
-
-<p>其中Proxy类并不需要我们来实现，Java默认会在运行的时候创建，真正需要我们创建的是InvocationHandler类。InvocationHandler的作用是响应代理的任何调用。可以把InvocationHandler看成是代理收到方法调用后，请求做实际工作的对象。</p>
-
-<p>下面我要通过Java API代理来实现一个保护代理。例如在一个社交网络中，我们可以查看别人的资料，但是并不能修改别人的资料，但能对别人的资料或头像点“赞”。同理，我们可以对自己的资料做一切修改，但是就是不能“赞”自己，避免作弊。我们都知道资料会封装在人这个对象中，里面的setter方法全都是公有的，我们要通过保护代理来实现不能对某些setter进行操作，这样就达到了保护的目的。</p>
-
-<p>实际对象接口</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">PersonBean</span> <span class="o">{</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getName</span><span class="o">();</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getGender</span><span class="o">();</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getInterests</span><span class="o">();</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">getHotOrNotRating</span><span class="o">();</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kt">void</span> <span class="nf">setName</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">);</span>
-</span><span class='line'>    <span class="kt">void</span> <span class="nf">setGender</span><span class="o">(</span><span class="n">String</span> <span class="n">gender</span><span class="o">);</span>
-</span><span class='line'>    <span class="kt">void</span> <span class="nf">setInterests</span><span class="o">(</span><span class="n">String</span> <span class="n">interests</span><span class="o">);</span>
-</span><span class='line'>    <span class="kt">void</span> <span class="nf">setHotOrNotRating</span><span class="o">(</span><span class="kt">int</span> <span class="n">rating</span><span class="o">);</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>实际实现类</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-<span class='line-number'>49</span>
-<span class='line-number'>50</span>
-<span class='line-number'>51</span>
-<span class='line-number'>52</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">PersonBeanImpl</span> <span class="kd">implements</span> <span class="n">PersonBean</span> <span class="o">{</span>
-</span><span class='line'>    <span class="n">String</span> <span class="n">name</span><span class="o">;</span>
-</span><span class='line'>    <span class="n">String</span> <span class="n">gender</span><span class="o">;</span>
-</span><span class='line'>    <span class="n">String</span> <span class="n">interests</span><span class="o">;</span>
-</span><span class='line'>    <span class="kt">int</span> <span class="n">rating</span><span class="o">;</span>
-</span><span class='line'>    <span class="kt">int</span> <span class="n">ratingCount</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getName</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">name</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setName</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getGender</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">gender</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setGender</span><span class="o">(</span><span class="n">String</span> <span class="n">gender</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">gender</span> <span class="o">=</span> <span class="n">gender</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getInterests</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">interests</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setInterests</span><span class="o">(</span><span class="n">String</span> <span class="n">interests</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">interests</span> <span class="o">=</span> <span class="n">interests</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@Override</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">getHotOrNotRating</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">ratingCount</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span>
-</span><span class='line'>            <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">rating</span> <span class="o">/</span> <span class="n">ratingCount</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@Override</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setHotOrNotRating</span><span class="o">(</span><span class="kt">int</span> <span class="n">rating</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">rating</span> <span class="o">+=</span> <span class="n">rating</span><span class="o">;</span>
-</span><span class='line'>        <span class="n">ratingCount</span><span class="o">++;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">getRatingCount</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">ratingCount</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setRatingCount</span><span class="o">(</span><span class="kt">int</span> <span class="n">ratingCount</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">ratingCount</span> <span class="o">=</span> <span class="n">ratingCount</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>能修改自己资料的InvocationHandler，但不能“赞”自己</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">OwnerInvocationHandler</span> <span class="kd">implements</span> <span class="n">InvocationHandler</span> <span class="o">{</span>
-</span><span class='line'>    <span class="n">PersonBean</span> <span class="n">personBean</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="nf">OwnerInvocationHandler</span><span class="o">(</span><span class="n">PersonBean</span> <span class="n">personBean</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">personBean</span> <span class="o">=</span> <span class="n">personBean</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@Override</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="n">Object</span> <span class="nf">invoke</span><span class="o">(</span><span class="n">Object</span> <span class="n">proxy</span><span class="o">,</span> <span class="n">Method</span> <span class="n">method</span><span class="o">,</span> <span class="n">Object</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Throwable</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">method</span><span class="o">.</span><span class="na">getName</span><span class="o">().</span><span class="na">equalsIgnoreCase</span><span class="o">(</span><span class="s">&quot;setHotOrNotRating&quot;</span><span class="o">)){</span>
-</span><span class='line'>            <span class="k">throw</span> <span class="k">new</span> <span class="nf">IllegalAccessException</span><span class="o">(</span><span class="s">&quot;You can&#39;t vote for yourself&quot;</span><span class="o">);</span>
-</span><span class='line'>        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
-</span><span class='line'>            <span class="k">return</span> <span class="n">method</span><span class="o">.</span><span class="na">invoke</span><span class="o">(</span><span class="n">personBean</span><span class="o">,</span> <span class="n">args</span><span class="o">);</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>能“赞”别人的InvocationHandler，但是不能修改别人的资料</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">NoneOwnerInvocationHandler</span> <span class="kd">implements</span> <span class="n">InvocationHandler</span> <span class="o">{</span>
-</span><span class='line'>    <span class="n">PersonBean</span> <span class="n">personBean</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="nf">NoneOwnerInvocationHandler</span><span class="o">(</span><span class="n">PersonBean</span> <span class="n">personBean</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">personBean</span> <span class="o">=</span> <span class="n">personBean</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@Override</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="n">Object</span> <span class="nf">invoke</span><span class="o">(</span><span class="n">Object</span> <span class="n">proxy</span><span class="o">,</span> <span class="n">Method</span> <span class="n">method</span><span class="o">,</span> <span class="n">Object</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Throwable</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">method</span><span class="o">.</span><span class="na">getName</span><span class="o">().</span><span class="na">equalsIgnoreCase</span><span class="o">(</span><span class="s">&quot;setHotOrNotRating&quot;</span><span class="o">))</span> <span class="o">{</span>
-</span><span class='line'>            <span class="k">return</span> <span class="n">method</span><span class="o">.</span><span class="na">invoke</span><span class="o">(</span><span class="n">personBean</span><span class="o">,</span> <span class="n">args</span><span class="o">);</span>
-</span><span class='line'>        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
-</span><span class='line'>            <span class="k">throw</span> <span class="k">new</span> <span class="nf">IllegalAccessException</span><span class="o">(</span><span class="s">&quot;can do nothing but set hot or not to others&quot;</span><span class="o">);</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>InvocationHandler里面保留了对实际服务类的引用，当一个请求到达后，会先判断这个请求符合标准不，如果符合，就通过反射来调用实际服务类的方法，如果不符合，就抛出异常。</p>
-
-<p>应用代理</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MatchMakingTestDrive</span> <span class="o">{</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">MatchMakingTestDrive</span> <span class="n">drive</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MatchMakingTestDrive</span><span class="o">();</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">PersonBean</span> <span class="n">joe</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PersonBeanImpl</span><span class="o">();</span>
-</span><span class='line'>        <span class="n">joe</span><span class="o">.</span><span class="na">setName</span><span class="o">(</span><span class="s">&quot;Andy Carroll&quot;</span><span class="o">);</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">PersonBean</span> <span class="n">joeProxy</span> <span class="o">=</span> <span class="n">getOwnerProxy</span><span class="o">(</span><span class="n">joe</span><span class="o">);</span>
-</span><span class='line'>        <span class="k">try</span> <span class="o">{</span>
-</span><span class='line'>            <span class="n">joeProxy</span><span class="o">.</span><span class="na">setHotOrNotRating</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>               <span class="c1">// 会抛出异常</span>
-</span><span class='line'>        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">joeProxy</span><span class="o">.</span><span class="na">getName</span><span class="o">());</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">PersonBean</span> <span class="n">david</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PersonBeanImpl</span><span class="o">();</span>
-</span><span class='line'>        <span class="n">david</span><span class="o">.</span><span class="na">setName</span><span class="o">(</span><span class="s">&quot;Joe Cole&quot;</span><span class="o">);</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">PersonBean</span> <span class="n">davidProxy</span> <span class="o">=</span> <span class="n">getNonOwnerProxy</span><span class="o">(</span><span class="n">david</span><span class="o">);</span>
-</span><span class='line'>        <span class="n">davidProxy</span><span class="o">.</span><span class="na">setHotOrNotRating</span><span class="o">(</span><span class="mi">5</span><span class="o">);</span>
-</span><span class='line'>        <span class="k">try</span> <span class="o">{</span>
-</span><span class='line'>            <span class="n">davidProxy</span><span class="o">.</span><span class="na">setInterests</span><span class="o">(</span><span class="s">&quot;football&quot;</span><span class="o">);</span>         <span class="c1">// 会抛出异常</span>
-</span><span class='line'>        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">private</span> <span class="kd">static</span> <span class="n">PersonBean</span> <span class="nf">getNonOwnerProxy</span><span class="o">(</span><span class="n">PersonBean</span> <span class="n">person</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="o">(</span><span class="n">PersonBean</span><span class="o">)</span> <span class="n">Proxy</span><span class="o">.</span><span class="na">newProxyInstance</span><span class="o">(</span>
-</span><span class='line'>                <span class="n">person</span><span class="o">.</span><span class="na">getClass</span><span class="o">().</span><span class="na">getClassLoader</span><span class="o">(),</span>
-</span><span class='line'>                <span class="n">person</span><span class="o">.</span><span class="na">getClass</span><span class="o">().</span><span class="na">getInterfaces</span><span class="o">(),</span>
-</span><span class='line'>                <span class="k">new</span> <span class="nf">NoneOwnerInvocationHandler</span><span class="o">(</span><span class="n">person</span><span class="o">));</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">private</span> <span class="kd">static</span> <span class="n">PersonBean</span> <span class="nf">getOwnerProxy</span><span class="o">(</span><span class="n">PersonBean</span> <span class="n">person</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="o">(</span><span class="n">PersonBean</span><span class="o">)</span> <span class="n">Proxy</span><span class="o">.</span><span class="na">newProxyInstance</span><span class="o">(</span>
-</span><span class='line'>                <span class="n">person</span><span class="o">.</span><span class="na">getClass</span><span class="o">().</span><span class="na">getClassLoader</span><span class="o">(),</span>
-</span><span class='line'>                <span class="n">person</span><span class="o">.</span><span class="na">getClass</span><span class="o">().</span><span class="na">getInterfaces</span><span class="o">(),</span>
-</span><span class='line'>                <span class="k">new</span> <span class="nf">OwnerInvocationHandler</span><span class="o">(</span><span class="n">person</span><span class="o">));</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>这里通过getNoneOwnerProxy和getOwnerProxy来得到两个代理。这其实是使用代理的一般方法，即通过工厂方法返回和实际服务类来自同一个接口的代理，客户神不知鬼不觉地就被骗过了，他并不知道你在下面做了什么手脚。其次，我们使用了Proxy.newProxyInstance来生成真正的代理类，即上图的Proxy类。他是在运行时才创建的，这就是“动态代理”的真谛。</p>
 ]]></content>
   </entry>
   
