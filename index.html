@@ -9,8 +9,7 @@
   <meta name="author" content="Qiushi Li">
 
   
-  <meta name="description" content="Initialize a repository Git的操作都需要在一个由Git管理的文件下进行,有两种方式使文件被git管理: 在文件夹下面执行 git init
-git clone一个现成的git文件夹然后在里面操作 如果要在server上面获取现有的项目,可以执行git clone. &hellip;">
+  <meta name="description" content="UITableView在iOS中是一个很重要的概念,它会把数据像列表一样显示在屏幕上.首先需要介绍几个概念: UITableView: 它是一个view,用于在屏幕上显示数据.它会向其对应的dataSource询问应该显示什么数据,然后再显示. &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -66,6 +65,56 @@ git clone一个现成的git文件夹然后在里面操作 如果要在server上�
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/05/09/ios-programming-8-uitableview-and-uitableviewcontroller/">iOS Programming 8 (UITableView &amp; UITableViewController)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-05-09T12:20:00-05:00" pubdate data-updated="true">May 9<span>th</span>, 2014</time>
+        
+         | <a href="/blog/2014/05/09/ios-programming-8-uitableview-and-uitableviewcontroller/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><code>UITableView</code>在iOS中是一个很重要的概念,它会把数据像列表一样显示在屏幕上.首先需要介绍几个概念:</p>
+
+<ul>
+<li><code>UITableView</code>: 它是一个view,用于在屏幕上显示数据.它会向其对应的<code>dataSource</code>询问应该显示什么数据,然后再显示.对应的<code>dataShource</code>需要遵循<code>UITableViewDataSource</code>Protocol.</li>
+<li><code>UITableView</code>同时需要一个delegate,用来处理在<code>UITableView</code>上传出来的事件.这个delegate需要遵循<code>UITableViewDelegate</code> Protocol.</li>
+<li><code>UITableView</code>需要一个view controller来与之协作.</li>
+</ul>
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/05/09/ios-programming-8-uitableview-and-uitableviewcontroller/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -486,51 +535,6 @@ git clone一个现成的git文件夹然后在里面操作 如果要在server上�
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/03/08/ios-3/">iOS Programming 3(Managing Memory Wih ARC)</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-03-08T18:54:00-06:00" pubdate data-updated="true">Mar 8<span>th</span>, 2014</time>
-        
-         | <a href="/blog/2014/03/08/ios-3/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h3>栈和堆</h3>
-
-<p>当一个方法被执行的时候，系统会从栈中分配出一定的内存让代码在其中运行，这一块专门分配出来的内存叫做frame，每一个方法都有一个frame。当方法从main方法中开始执行的时候，main方法的frame被放到了栈上，然后如果在main方法中有其他方法的调用，就会有不断的frame被加到栈上，下图就是在一个栈上不断调用和结束调用方法的对应的frame结构：</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/03/08/ios-3/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -546,6 +550,10 @@ git clone一个现成的git文件夹然后在里面操作 如果要在server上�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/05/09/ios-programming-8-uitableview-and-uitableviewcontroller/">iOS Programming 8 (UITableView &amp; UITableViewController)</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/05/07/git-2/">Git 2 (Basics)</a>
       </li>
     
@@ -559,10 +567,6 @@ git clone一个现成的git文件夹然后在里面操作 如果要在server上�
     
       <li class="post">
         <a href="/blog/2014/05/06/ios-programming-6-2-uitabviewcontrollers/">iOS Programming 6-2(UITabBarController)</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/04/12/google-analytics/">google analytics</a>
       </li>
     
   </ul>
