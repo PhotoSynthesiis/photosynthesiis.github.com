@@ -9,7 +9,8 @@
   <meta name="author" content="Qiushi Li">
 
   
-  <meta name="description" content="最近在学习iOS开发，虽然课上也有讲，但是还是不如自己看书学得更实在，今天就从最基础的iOS开发说起。值得注意的是，我在这类博客里所讲到的内容，完全是按照iOS Programming: The Big Nerd Ranch Guide第四版里面来的。 ">
+  <meta name="description" content="Objective-c中的方法调用其实是一种消息传送的机制，例如下面这段代码： 1
+[partyInstance addAttendee:somePerson] 他表达的意思是发送addAttendee:消息给partyInstance对象，然后这个对象再去调用他的类中的addAttendee方法 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +66,56 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/03/07/ios-programming-2/">iOS Programming 2(objective-c)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-03-07T18:36:00-06:00" pubdate data-updated="true">Mar 7<span>th</span>, 2014</time>
+        
+         | <a href="/blog/2014/03/07/ios-programming-2/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Objective-c中的方法调用其实是一种消息传送的机制，例如下面这段代码：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="p">[</span><span class="n">partyInstance</span> <span class="nl">addAttendee:</span><span class="n">somePerson</span><span class="p">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>他表达的意思是发送addAttendee:消息给partyInstance对象，然后这个对象再去调用他的类中的addAttendee方法，somePerson在这里是参数。在运行时，消息被发送到对象，然后对象会向创建自己的那个类寻求帮助，并告诉这个类去运行消息中指定的方法(e.g. addAttendee)(这里需要注意的是，一切都是发生在运行时，而不是一些其他语言在编译时进行检查)。那么一个对象又是怎么知道自己属于哪个类呢？其实每个对象都有一个叫做&#8217;isa&#8217;的instance variable，当这个对象被创建的时候，这个isa就自动被初始化为指向创建他的那个类。这个instance variable叫做&#8217;isa&#8217;是有道理的，因为他是创建他的类的一个实例。他们的关系如下：</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/03/07/ios-programming-2/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -526,53 +577,6 @@ Annotation是类，方法或字段的一种注解或元数据，当程序被JVM�
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/07/27/wiser/">使用Wiser测试邮件发送</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-07-27T20:14:00-05:00" pubdate data-updated="true">Jul 27<span>th</span>, 2013</time>
-        
-         | <a href="/blog/2013/07/27/wiser/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>最近在做一个小项目，里面有发送邮件这一功能，本文主要是讲如何通过Spring发送邮件，已经一个邮件测试框架 &mdash;&ndash; wiser的介绍。</p>
-
-<p>如何使用Spring发送邮件
-首先主要用到的一个类是JavaMailSenderImpl，它位于Spring的org.springframework.mail.
-javamail包中，主要是用来发送邮件的。为了发送邮件，需要提供给它一系列的参数。这些参数我都配置在了resources包下的一个xml文件中</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/07/27/wiser/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/3/">&larr; Older</a>
@@ -590,6 +594,10 @@ javamail包中，主要是用来发送邮件的。为了发送邮件，需要提
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/05/07/git-2/">Git 2 (Basics)</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/05/07/git-1/">Git 1 (Basic Concept)</a>
       </li>
     
@@ -603,10 +611,6 @@ javamail包中，主要是用来发送邮件的。为了发送邮件，需要提
     
       <li class="post">
         <a href="/blog/2014/04/12/google-analytics/">google analytics</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/04/06/ios-6/">iOS Programming 6-1(View Controllers)</a>
       </li>
     
   </ul>
