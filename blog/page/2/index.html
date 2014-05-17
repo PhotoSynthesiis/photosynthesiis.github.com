@@ -9,7 +9,7 @@
   <meta name="author" content="Qiushi Li">
 
   
-  <meta name="description" content="View Basics 在iOS中，每一个应用都有一个UIWindow的对象，他是应用中所有view的容器(container)，其实UIWindow自己也只是一个view，只不过他的职责不是显示view，而是作为容器存放view。当应用启动的时候，这个对象就被创建， &hellip;">
+  <meta name="description" content="谈到这个方法的初衷本来是想在iOS项目中使用,因为当时叫设计一种方法来摆放battleship,如果在当前位置不能摆放可以回溯到上一个地点再试,最后还是放弃了,因为用不了这么复杂的方法. 不过既然学习了,并且花了这么多时间来编码,就应该记录下来,以后可能还会用上,就不必又从开头来学了. &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +65,53 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/04/03/backtrack/">使用递归计算的回溯法</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-04-03T21:59:00-05:00" pubdate data-updated="true">Apr 3<span>rd</span>, 2014</time>
+        
+         | <a href="/blog/2014/04/03/backtrack/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>谈到这个方法的初衷本来是想在iOS项目中使用,因为当时叫设计一种方法来摆放battleship,如果在当前位置不能摆放可以回溯到上一个地点再试,最后还是放弃了,因为用不了这么复杂的方法. 不过既然学习了,并且花了这么多时间来编码,就应该记录下来,以后可能还会用上,就不必又从开头来学了.</p>
+
+<h3>什么是回溯法</h3>
+
+<p>回溯法就是先在一条路上走到黑,发现还没达到目的,然后就退回到上一步,然后把另一个发展方向试一遍,直到找到一条通路为止.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/04/03/backtrack/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -505,76 +552,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/08/08/java-immutable/">如何在Java中创建Immutable的类</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-08-08T21:30:00-05:00" pubdate data-updated="true">Aug 8<span>th</span>, 2013</time>
-        
-         | <a href="/blog/2013/08/08/java-immutable/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>首先，我们需要明白什么是Immutable的类。顾名思义，就是在对象创建后，它的状态不能改变。你首先也许会想到final这个关键字，因为它会使被修饰者要么不能被继承(修饰类)，要么不能被重新赋值(修饰字段)。下面我们来看一个简单的例子：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">final</span> <span class="kd">class</span> <span class="nc">ImmutableClass_1</span> <span class="o">{</span>
-</span><span class='line'>    <span class="kd">private</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
-</span><span class='line'>    <span class="kd">private</span> <span class="kd">final</span> <span class="kt">double</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kt">int</span> <span class="nf">getI</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">i</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kt">double</span> <span class="nf">getJ</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">j</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/08/08/java-immutable/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/3/">&larr; Older</a>
@@ -592,6 +569,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/05/16/regex2/">正则表达式必知必会 2</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/05/15/regex/">正则表达式必知必会 1</a>
       </li>
     
@@ -605,10 +586,6 @@
     
       <li class="post">
         <a href="/blog/2014/05/07/git-1/">Git 1 (Basic Concept)</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/05/06/ios-programming-7-delegation-and-text-input/">iOS programming 7 (Delegation and Text Input)</a>
       </li>
     
   </ul>

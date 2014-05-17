@@ -9,7 +9,7 @@
   <meta name="author" content="Qiushi Li">
 
   
-  <meta name="description" content="匹配单个字符 匹配纯文本 # 文本: My name is Ben 正则表达式: Ben 结果: Ben 这里使用的正则表达式是纯文本,匹配原始文本里面的Ben. ">
+  <meta name="description" content="重复匹配 匹配一个或多个字符 +: 匹配一个或多个字符(不匹配零个字符的情况). # 文本: Send personal email to &#98;&#101;&#110;&#64;&#102;&#x6f;&#114;&#x74;&#x61;&#x2e;&#99;&#x6f;&#x6d;&# &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +65,61 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/05/16/regex2/">正则表达式必知必会 2</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-05-16T21:28:00-05:00" pubdate data-updated="true">May 16<span>th</span>, 2014</time>
+        
+         | <a href="/blog/2014/05/16/regex2/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>重复匹配</h2>
+
+<h3>匹配一个或多个字符</h3>
+
+<p><code>+</code>: 匹配一个或多个字符(不匹配零个字符的情况).</p>
+
+<p>#</p>
+
+<p><code>文本</code>: Send personal email to <a href="&#109;&#97;&#105;&#x6c;&#x74;&#111;&#58;&#98;&#101;&#x6e;&#64;&#x66;&#111;&#114;&#116;&#97;&#x2e;&#x63;&#111;&#x6d;&#x2e;">&#98;&#101;&#110;&#64;&#102;&#x6f;&#114;&#x74;&#x61;&#x2e;&#99;&#x6f;&#x6d;&#x2e;</a> For questions about the book use <a href="&#x6d;&#x61;&#x69;&#x6c;&#116;&#x6f;&#x3a;&#x73;&#x75;&#x70;&#x70;&#x6f;&#x72;&#x74;&#64;&#102;&#111;&#114;&#116;&#97;&#x2e;&#99;&#x6f;&#x6d;&#46;">&#x73;&#117;&#112;&#112;&#x6f;&#x72;&#x74;&#64;&#x66;&#x6f;&#114;&#116;&#97;&#x2e;&#x63;&#111;&#x6d;&#x2e;</a> Feel free to send unsolicited email to <a href="&#x6d;&#97;&#x69;&#x6c;&#116;&#x6f;&#x3a;&#115;&#112;&#x61;&#109;&#x40;&#x66;&#x6f;&#x72;&#x74;&#x61;&#46;&#x63;&#x6f;&#x6d;&#46;">&#115;&#x70;&#97;&#109;&#x40;&#x66;&#111;&#114;&#116;&#x61;&#46;&#x63;&#111;&#109;&#x2e;</a></p>
+
+<p><code>正则表达式</code>: \w+@\w+.\w+</p>
+
+<p><code>结果</code>: <a href="&#x6d;&#97;&#x69;&#x6c;&#116;&#x6f;&#58;&#x62;&#101;&#110;&#x40;&#x66;&#x6f;&#114;&#116;&#x61;&#46;&#x63;&#x6f;&#109;">&#98;&#101;&#x6e;&#64;&#x66;&#111;&#114;&#116;&#x61;&#46;&#x63;&#111;&#x6d;</a>  <a href="&#x6d;&#x61;&#x69;&#108;&#116;&#x6f;&#58;&#115;&#117;&#x70;&#x70;&#111;&#x72;&#116;&#64;&#x66;&#x6f;&#114;&#x74;&#x61;&#x2e;&#99;&#111;&#109;">&#115;&#x75;&#x70;&#x70;&#111;&#x72;&#116;&#x40;&#x66;&#x6f;&#x72;&#x74;&#97;&#46;&#x63;&#111;&#x6d;</a>  <a href="&#109;&#97;&#x69;&#108;&#116;&#111;&#x3a;&#x73;&#x70;&#97;&#109;&#x40;&#x66;&#111;&#114;&#116;&#x61;&#x2e;&#99;&#x6f;&#x6d;">&#115;&#112;&#97;&#x6d;&#x40;&#x66;&#x6f;&#114;&#x74;&#x61;&#46;&#99;&#111;&#109;</a></p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/05/16/regex2/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -498,53 +553,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/04/03/backtrack/">使用递归计算的回溯法</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-04-03T21:59:00-05:00" pubdate data-updated="true">Apr 3<span>rd</span>, 2014</time>
-        
-         | <a href="/blog/2014/04/03/backtrack/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>谈到这个方法的初衷本来是想在iOS项目中使用,因为当时叫设计一种方法来摆放battleship,如果在当前位置不能摆放可以回溯到上一个地点再试,最后还是放弃了,因为用不了这么复杂的方法. 不过既然学习了,并且花了这么多时间来编码,就应该记录下来,以后可能还会用上,就不必又从开头来学了.</p>
-
-<h3>什么是回溯法</h3>
-
-<p>回溯法就是先在一条路上走到黑,发现还没达到目的,然后就退回到上一步,然后把另一个发展方向试一遍,直到找到一条通路为止.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/04/03/backtrack/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -560,6 +568,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/05/16/regex2/">正则表达式必知必会 2</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/05/15/regex/">正则表达式必知必会 1</a>
       </li>
     
@@ -573,10 +585,6 @@
     
       <li class="post">
         <a href="/blog/2014/05/07/git-1/">Git 1 (Basic Concept)</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/05/06/ios-programming-7-delegation-and-text-input/">iOS programming 7 (Delegation and Text Input)</a>
       </li>
     
   </ul>
