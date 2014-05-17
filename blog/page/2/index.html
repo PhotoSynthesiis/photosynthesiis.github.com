@@ -9,7 +9,7 @@
   <meta name="author" content="Qiushi Li">
 
   
-  <meta name="description" content="栈和堆 当一个方法被执行的时候，系统会从栈中分配出一定的内存让代码在其中运行，这一块专门分配出来的内存叫做frame，每一个方法都有一个frame。当方法从main方法中开始执行的时候，main方法的frame被放到了栈上，然后如果在main方法中有其他方法的调用，就会有不断的frame被加到栈上 &hellip;">
+  <meta name="description" content="View Basics 在iOS中，每一个应用都有一个UIWindow的对象，他是应用中所有view的容器(container)，其实UIWindow自己也只是一个view，只不过他的职责不是显示view，而是作为容器存放view。当应用启动的时候，这个对象就被创建， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +65,51 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/03/09/ios-4/">iOS Programming 4(Views and the View Hierarchy)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-03-09T19:08:00-05:00" pubdate data-updated="true">Mar 9<span>th</span>, 2014</time>
+        
+         | <a href="/blog/2014/03/09/ios-4/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>View Basics</h3>
+
+<p>在iOS中，每一个应用都有一个UIWindow的对象，他是应用中所有view的容器(container)，其实UIWindow自己也只是一个view，只不过他的职责不是显示view，而是作为容器存放view。当应用启动的时候，这个对象就被创建，我们可以往这个容器里面添加其他的view。那么什么是view呢？他是在屏幕上被显示的元素，例如button。每一个view都是UIView或UIView的子类的一个实例，每一个view都有一个对应的layer，view在其对应的那样儿上显示自己，我们可以想象成每个view都自带了一块画板，在画板上作画然后贴到最大的canvas(UIWindow)上去。view还能handle屏幕上的一些事件，例如button能handle touch事件。view之间存在层级关系(hierarchy),一个view可以包含另一个view，我们可以把其中的关系想象成一棵树，根结点就是UIWindow。</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/03/09/ios-4/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -530,54 +575,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/07/27/java-annotation/">Java Annotation学习笔记</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-07-27T20:23:00-05:00" pubdate data-updated="true">Jul 27<span>th</span>, 2013</time>
-        
-         | <a href="/blog/2013/07/27/java-annotation/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><ol>
-<li>Annotation是什么
-Annotation是类，方法或字段的一种注解或元数据，当程序被JVM编译的时候，annotation会和类编译在一起，作为一种元数据去描述被修饰的数据</li>
-<li>Annotation的定义</li>
-</ol>
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/07/27/java-annotation/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/3/">&larr; Older</a>
@@ -595,6 +592,10 @@ Annotation是类，方法或字段的一种注解或元数据，当程序被JVM�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/05/15/regex/">正则表达式必知必会 1</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/05/09/ios-programming-8-uitableview-and-uitableviewcontroller/">iOS Programming 8 (UITableView &amp; UITableViewController)</a>
       </li>
     
@@ -608,10 +609,6 @@ Annotation是类，方法或字段的一种注解或元数据，当程序被JVM�
     
       <li class="post">
         <a href="/blog/2014/05/06/ios-programming-7-delegation-and-text-input/">iOS programming 7 (Delegation and Text Input)</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/05/06/ios-programming-6-2-uitabviewcontrollers/">iOS Programming 6-2(UITabBarController)</a>
       </li>
     
   </ul>

@@ -9,7 +9,7 @@
   <meta name="author" content="Qiushi Li">
 
   
-  <meta name="description" content="UITableView在iOS中是一个很重要的概念,它会把数据像列表一样显示在屏幕上.首先需要介绍几个概念: UITableView: 它是一个view,用于在屏幕上显示数据.它会向其对应的dataSource询问应该显示什么数据,然后再显示. &hellip;">
+  <meta name="description" content="匹配单个字符 匹配纯文本 # 文本: My name is Ben 正则表达式: Ben 结果: Ben 这里使用的正则表达式是纯文本,匹配原始文本里面的Ben. ">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +65,61 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/05/15/regex/">正则表达式必知必会 1</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-05-15T22:27:00-05:00" pubdate data-updated="true">May 15<span>th</span>, 2014</time>
+        
+         | <a href="/blog/2014/05/15/regex/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>匹配单个字符</h2>
+
+<h3>匹配纯文本</h3>
+
+<p>#</p>
+
+<p><code>文本</code>: My name is Ben</p>
+
+<p><code>正则表达式</code>:  Ben</p>
+
+<p><code>结果</code>: <code>Ben</code></p>
+
+<p>这里使用的正则表达式是纯文本,匹配原始文本里面的<code>Ben</code>.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/05/15/regex/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -490,51 +545,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/03/09/ios-4/">iOS Programming 4(Views and the View Hierarchy)</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-03-09T19:08:00-05:00" pubdate data-updated="true">Mar 9<span>th</span>, 2014</time>
-        
-         | <a href="/blog/2014/03/09/ios-4/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h3>View Basics</h3>
-
-<p>在iOS中，每一个应用都有一个UIWindow的对象，他是应用中所有view的容器(container)，其实UIWindow自己也只是一个view，只不过他的职责不是显示view，而是作为容器存放view。当应用启动的时候，这个对象就被创建，我们可以往这个容器里面添加其他的view。那么什么是view呢？他是在屏幕上被显示的元素，例如button。每一个view都是UIView或UIView的子类的一个实例，每一个view都有一个对应的layer，view在其对应的那样儿上显示自己，我们可以想象成每个view都自带了一块画板，在画板上作画然后贴到最大的canvas(UIWindow)上去。view还能handle屏幕上的一些事件，例如button能handle touch事件。view之间存在层级关系(hierarchy),一个view可以包含另一个view，我们可以把其中的关系想象成一棵树，根结点就是UIWindow。</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/03/09/ios-4/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -550,6 +560,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/05/15/regex/">正则表达式必知必会 1</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/05/09/ios-programming-8-uitableview-and-uitableviewcontroller/">iOS Programming 8 (UITableView &amp; UITableViewController)</a>
       </li>
     
@@ -563,10 +577,6 @@
     
       <li class="post">
         <a href="/blog/2014/05/06/ios-programming-7-delegation-and-text-input/">iOS programming 7 (Delegation and Text Input)</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/05/06/ios-programming-6-2-uitabviewcontrollers/">iOS Programming 6-2(UITabBarController)</a>
       </li>
     
   </ul>
