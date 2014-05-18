@@ -4,7 +4,7 @@
   <title><![CDATA[public static void man]]></title>
   <link href="http://PhotoSynthesiis.github.io/atom.xml" rel="self"/>
   <link href="http://PhotoSynthesiis.github.io/"/>
-  <updated>2014-05-17T22:54:36-05:00</updated>
+  <updated>2014-05-18T00:46:10-05:00</updated>
   <id>http://PhotoSynthesiis.github.io/</id>
   <author>
     <name><![CDATA[Qiushi Li]]></name>
@@ -12,6 +12,156 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[正则表达式必知必会 4]]></title>
+    <link href="http://PhotoSynthesiis.github.io/blog/2014/05/17/regex4/"/>
+    <updated>2014-05-17T23:25:00-05:00</updated>
+    <id>http://PhotoSynthesiis.github.io/blog/2014/05/17/regex4</id>
+    <content type="html"><![CDATA[<h2>前后查找</h2>
+
+<p>#</p>
+
+<p><code>文本</code>:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;head&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;title&gt;</span>Ben Forta&#39;s Homepage<span class="nt">&lt;/title&gt;</span>
+</span><span class='line'><span class="nt">&lt;/head&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>正则表达式</code>: &lt;[Tt][Ii][Tt][Ll][Ee]>.*?&lt;/[Tt][Ii][Tt][Ll][Ee]></p>
+
+<p><code>结果</code>: &lt;title>Ben Forta&rsquo;s Homepage&lt;/title></p>
+
+<!-- more -->
+
+
+<p>本意是想要匹配出标题里面的文字,但是结果确实连标题的tag也一起匹配出来了,尽管我们可以使用上一章讲到的子表达式来把正则表达式分成3块然后取第2块出来,但是这样不免有些麻烦,这个时候就可以使用前后查找来解决这个问题.</p>
+
+<p><code>向前查找</code>(<code>?=</code>): 指定一个必须匹配但无需在结果中返回的模式.从语法上看,向前查找就是一个以<code>?=</code>开头的子表达式,需要匹配的文本跟在=后面.</p>
+
+<p>#</p>
+
+<p><code>文本</code>:</p>
+
+<p><a href="http://www.forta.com">http://www.forta.com</a></p>
+
+<p><a href="https://mail.forta.com">https://mail.forta.com</a></p>
+
+<p><a href="ftp://ftp.forta.com">ftp://ftp.forta.com</a></p>
+
+<p><code>正则表达式</code>: .+(?=:)</p>
+
+<p><code>结果</code>: http    https     ftp</p>
+
+<p>上面列出的URL地址里,协议和主机名以冒号<code>:</code>相隔.模式<code>.+</code>匹配任意文本,子表达式<code>(?=:)</code>匹配冒号<code>:</code>.值得注意的是被匹配到的<code>:</code>并没有出现在结果中,我们用<code>?=</code>向正则表达式引擎说明只要找到<code>:</code>就行了,不要把它包含在最终的结果里.</p>
+
+<p>#</p>
+
+<p><code>文本</code>:</p>
+
+<p><a href="http://www.forta.com">http://www.forta.com</a></p>
+
+<p><a href="https://mail.forta.com">https://mail.forta.com</a></p>
+
+<p><a href="ftp://ftp.forta.com">ftp://ftp.forta.com</a></p>
+
+<p><code>正则表达式</code>: .+(:)</p>
+
+<p><code>结果</code>: <a href="http:">http:</a>    <a href="https:">https:</a>     <a href="ftp:">ftp:</a></p>
+
+<p>这里的正则表达式没有使用向前查找,在最终的结果里面则包含了冒号.</p>
+
+<h2>向后查找</h2>
+
+<p><code>向后查找</code>(<code>?&lt;=</code>): 与向前查找大同小异.只是这次匹配但不返回的字符在首部了,它必须用在一个子表达式里.</p>
+
+<p>#</p>
+
+<p><code>文本</code>:</p>
+
+<p>ABC01: $23.12</p>
+
+<p>HGG42: $122.81</p>
+
+<p>AIOS98: $981.02</p>
+
+<p>HSW92: $72.33</p>
+
+<p><code>正则表达式</code>: \$[\d.]+</p>
+
+<p><code>结果</code>: $23.12    $122.81    $981.02    $72.33</p>
+
+<p>本想要匹配具体的金额,但是连同<code>$</code>也被返回了,这里就是向后匹配大显身手的时候.</p>
+
+<p>#</p>
+
+<p><code>文本</code>:</p>
+
+<p>ABC01: $23.12</p>
+
+<p>HGG42: $122.81</p>
+
+<p>AIOS98: $981.02</p>
+
+<p>HSW92: $72.33</p>
+
+<p><code>正则表达式</code>: (?&lt;=\$)[\d.]+</p>
+
+<p><code>结果</code>: 23.12    122.81    981.02    72.33</p>
+
+<h2>把向前和向后查找结合起来</h2>
+
+<p>#</p>
+
+<p><code>文本</code>:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;head&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;title&gt;</span>Ben Forta&#39;s Homepage<span class="nt">&lt;/title&gt;</span>
+</span><span class='line'><span class="nt">&lt;/head&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>正则表达式</code>: (?&lt;=&lt;[Tt][Ii][Tt][Ll][Ee]>).*?(?=&lt;/[Tt][Ii][Tt][Ll][Ee]>)</p>
+
+<p><code>结果</code>: Ben Forta&rsquo;s Homepage</p>
+
+<p>这里我们在两个tag之前分别使用了向后和向前查找,表明匹配两个tag,但不返回它们,所以最后的结果就只包含字符.</p>
+
+<h2>对前后查找取非</h2>
+
+<p>我们前面遇到的向前查找和向后查找都是使用某个特殊字符来定位然后向前或者向后匹配,这种查找称为正向前查找(positive lookahead)和正向后查找(positive lookbehind).下面讲到的内容与之正好想法,称为负向前查找(negative lookahead)和负向后查找(negative lookbehind),顾名思义我们可以猜到它们其实就是匹配不以某个字符开头或者结尾的模式.</p>
+
+<p> <img src="http://PhotoSynthesiis.github.io/images/regex-4_1.png"></p>
+
+<p>#</p>
+
+<p><code>文本</code>: I paid $30 for 100 apples, 50 oranges and 30 pears. I saved $5 on this order.</p>
+
+<p><code>正则表达式</code>: (?&lt;=\$)\d+</p>
+
+<p><code>结果</code>: 30    5</p>
+
+<p>结果返回了以$开头的数字,既钱数. 接下来,如果我们只想查找水果个数.</p>
+
+<p>#</p>
+
+<p><code>文本</code>: I paid $30 for 100 apples, 50 oranges and 30 pears. I saved $5 on this order.</p>
+
+<p><code>正则表达式</code>: \b(?&lt;!\$)\d+\b</p>
+
+<p><code>结果</code>: 100    50    30</p>
+
+<p>最后的结果只包含那些不以$开头的数字.值得注意的是我在这个正则表达式里面使用了分隔符<code>\b</code>,如果不使用这个,$30中的0也会被匹配.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[正则表达式必知必会 3]]></title>
@@ -183,11 +333,11 @@
 
 <p>#</p>
 
-<p><code>文本</code>: Hello, my name is Ben Forta, my email address is <a href="&#x6d;&#97;&#x69;&#108;&#x74;&#x6f;&#58;&#x62;&#x65;&#110;&#x40;&#102;&#111;&#114;&#116;&#x61;&#46;&#x63;&#111;&#x6d;">&#x62;&#x65;&#110;&#x40;&#x66;&#111;&#114;&#x74;&#97;&#x2e;&#99;&#x6f;&#x6d;</a></p>
+<p><code>文本</code>: Hello, my name is Ben Forta, my email address is <a href="&#109;&#97;&#105;&#x6c;&#116;&#x6f;&#58;&#x62;&#x65;&#x6e;&#x40;&#102;&#111;&#x72;&#116;&#x61;&#x2e;&#x63;&#111;&#x6d;">&#98;&#x65;&#x6e;&#x40;&#102;&#111;&#x72;&#116;&#x61;&#x2e;&#x63;&#111;&#x6d;</a></p>
 
 <p><code>正则表达式</code>: \w[\w.]*@[\w.]+.\w+</p>
 
-<p><code>结果</code>: <a href="&#x6d;&#x61;&#105;&#108;&#x74;&#111;&#x3a;&#98;&#x65;&#110;&#64;&#x66;&#111;&#x72;&#x74;&#x61;&#46;&#99;&#x6f;&#x6d;">&#98;&#101;&#110;&#64;&#102;&#x6f;&#114;&#x74;&#x61;&#x2e;&#x63;&#111;&#109;</a></p>
+<p><code>结果</code>: <a href="&#x6d;&#x61;&#x69;&#x6c;&#x74;&#111;&#58;&#98;&#101;&#110;&#x40;&#x66;&#x6f;&#114;&#116;&#97;&#46;&#99;&#111;&#x6d;">&#x62;&#101;&#110;&#x40;&#x66;&#111;&#x72;&#116;&#97;&#x2e;&#x63;&#x6f;&#109;</a></p>
 
 <p>这里的正则表达式匹配了一个邮件地址.</p>
 
@@ -197,11 +347,11 @@
 
 <p>#</p>
 
-<p><code>文本</code>: Hello, my name is Ben Forta, my email address is <a href="&#x6d;&#97;&#105;&#x6c;&#116;&#111;&#58;&#98;&#101;&#x6e;&#64;&#102;&#111;&#x72;&#116;&#97;&#46;&#x63;&#x6f;&#x6d;">&#x62;&#x65;&#x6e;&#64;&#102;&#x6f;&#114;&#x74;&#97;&#46;&#99;&#x6f;&#x6d;</a></p>
+<p><code>文本</code>: Hello, my name is Ben Forta, my email address is <a href="&#109;&#97;&#x69;&#x6c;&#116;&#111;&#x3a;&#x62;&#x65;&#110;&#64;&#x66;&#111;&#114;&#x74;&#97;&#46;&#x63;&#111;&#109;">&#x62;&#x65;&#x6e;&#x40;&#102;&#x6f;&#x72;&#x74;&#97;&#x2e;&#x63;&#x6f;&#x6d;</a></p>
 
 <p><code>正则表达式</code>:  (\w[\w.]*@[\w.]+.\w+)</p>
 
-<p><code>替换</code>: &lt;A href=&ldquo;<a href="&#109;&#x61;&#x69;&#108;&#x74;&#x6f;&#58;&#x24;&#x31;">&#36;&#x31;</a>&rdquo;>$1&lt;/A></p>
+<p><code>替换</code>: &lt;A href=&ldquo;<a href="&#x6d;&#97;&#105;&#x6c;&#x74;&#x6f;&#58;&#x24;&#x31;">&#x24;&#x31;</a>&rdquo;>$1&lt;/A></p>
 
 <p><code>结果</code>: ben@forta.com成为了可点击的链接</p>
 
@@ -283,11 +433,11 @@
 
 <p>#</p>
 
-<p><code>文本</code>: Send personal email to <a href="&#x6d;&#97;&#x69;&#x6c;&#x74;&#x6f;&#x3a;&#98;&#101;&#x6e;&#x40;&#102;&#111;&#x72;&#116;&#x61;&#46;&#99;&#111;&#x6d;&#x2e;">&#x62;&#101;&#x6e;&#64;&#x66;&#111;&#x72;&#x74;&#x61;&#46;&#99;&#111;&#x6d;&#x2e;</a> For questions about the book use <a href="&#x6d;&#97;&#x69;&#x6c;&#116;&#111;&#58;&#115;&#x75;&#112;&#112;&#111;&#114;&#x74;&#x40;&#x66;&#111;&#114;&#x74;&#97;&#46;&#99;&#111;&#109;&#x2e;">&#x73;&#117;&#x70;&#x70;&#111;&#x72;&#116;&#64;&#102;&#111;&#x72;&#116;&#97;&#x2e;&#x63;&#111;&#109;&#46;</a> Feel free to send unsolicited email to <a href="&#109;&#x61;&#x69;&#108;&#x74;&#x6f;&#x3a;&#x73;&#x70;&#97;&#x6d;&#x40;&#x66;&#x6f;&#114;&#x74;&#97;&#46;&#99;&#x6f;&#109;&#46;">&#x73;&#x70;&#97;&#x6d;&#x40;&#102;&#111;&#x72;&#116;&#97;&#46;&#x63;&#111;&#x6d;&#46;</a></p>
+<p><code>文本</code>: Send personal email to <a href="&#109;&#97;&#105;&#x6c;&#x74;&#111;&#x3a;&#98;&#x65;&#110;&#x40;&#x66;&#111;&#114;&#x74;&#97;&#x2e;&#x63;&#111;&#109;&#x2e;">&#x62;&#x65;&#x6e;&#64;&#x66;&#111;&#x72;&#116;&#97;&#46;&#99;&#111;&#109;&#x2e;</a> For questions about the book use <a href="&#x6d;&#x61;&#105;&#x6c;&#116;&#x6f;&#x3a;&#x73;&#x75;&#x70;&#112;&#x6f;&#114;&#x74;&#x40;&#x66;&#111;&#114;&#116;&#x61;&#x2e;&#99;&#x6f;&#109;&#46;">&#115;&#117;&#112;&#112;&#x6f;&#x72;&#116;&#64;&#102;&#x6f;&#114;&#x74;&#97;&#x2e;&#99;&#111;&#x6d;&#46;</a> Feel free to send unsolicited email to <a href="&#109;&#97;&#x69;&#x6c;&#116;&#111;&#58;&#115;&#x70;&#97;&#x6d;&#x40;&#102;&#x6f;&#x72;&#116;&#97;&#46;&#x63;&#111;&#109;&#x2e;">&#x73;&#112;&#97;&#109;&#x40;&#x66;&#111;&#114;&#x74;&#97;&#46;&#99;&#111;&#x6d;&#46;</a></p>
 
 <p><code>正则表达式</code>: \w+@\w+.\w+</p>
 
-<p><code>结果</code>: <a href="&#109;&#x61;&#x69;&#108;&#116;&#x6f;&#x3a;&#x62;&#x65;&#110;&#64;&#x66;&#111;&#x72;&#x74;&#97;&#46;&#x63;&#x6f;&#x6d;">&#98;&#x65;&#x6e;&#x40;&#x66;&#111;&#x72;&#116;&#97;&#46;&#99;&#111;&#x6d;</a>  <a href="&#x6d;&#97;&#105;&#108;&#116;&#x6f;&#x3a;&#115;&#x75;&#112;&#x70;&#111;&#114;&#x74;&#64;&#x66;&#111;&#114;&#x74;&#x61;&#x2e;&#99;&#111;&#x6d;">&#x73;&#117;&#112;&#x70;&#111;&#114;&#x74;&#64;&#x66;&#x6f;&#114;&#x74;&#97;&#46;&#x63;&#111;&#109;</a>  <a href="&#109;&#97;&#105;&#108;&#x74;&#x6f;&#58;&#x73;&#112;&#97;&#109;&#64;&#102;&#111;&#x72;&#x74;&#97;&#x2e;&#x63;&#111;&#109;">&#x73;&#x70;&#x61;&#109;&#64;&#x66;&#111;&#114;&#x74;&#97;&#46;&#99;&#x6f;&#109;</a></p>
+<p><code>结果</code>: <a href="&#109;&#x61;&#x69;&#108;&#116;&#111;&#58;&#98;&#101;&#110;&#64;&#102;&#x6f;&#114;&#x74;&#x61;&#x2e;&#x63;&#x6f;&#x6d;">&#x62;&#101;&#x6e;&#x40;&#x66;&#111;&#114;&#116;&#97;&#x2e;&#99;&#111;&#109;</a>  <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#115;&#117;&#x70;&#x70;&#111;&#114;&#116;&#64;&#x66;&#111;&#x72;&#116;&#97;&#x2e;&#99;&#111;&#x6d;">&#115;&#117;&#x70;&#x70;&#111;&#x72;&#x74;&#64;&#x66;&#x6f;&#x72;&#x74;&#97;&#x2e;&#x63;&#111;&#109;</a>  <a href="&#109;&#x61;&#105;&#x6c;&#x74;&#111;&#x3a;&#115;&#112;&#x61;&#x6d;&#64;&#x66;&#111;&#114;&#x74;&#x61;&#x2e;&#99;&#111;&#109;">&#115;&#x70;&#97;&#x6d;&#64;&#102;&#x6f;&#x72;&#116;&#x61;&#46;&#x63;&#111;&#x6d;</a></p>
 
 <!-- more -->
 
@@ -3754,163 +3904,6 @@ X X Q X X X X X<br/></p>
 <p><img src="http://PhotoSynthesiis.github.io/images/shell_sort-2.png"></p>
 
 <p>希尔排序比选择和插入排序都快，且随着输入的增大体现尤为明显。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[理解Java中的重排序]]></title>
-    <link href="http://PhotoSynthesiis.github.io/blog/2013/08/10/java-reorder/"/>
-    <updated>2013-08-10T13:08:00-05:00</updated>
-    <id>http://PhotoSynthesiis.github.io/blog/2013/08/10/java-reorder</id>
-    <content type="html"><![CDATA[<p>重排序通常是编译器或运行时环境为了优化程序性能而采取的对指令进行重新排序执行的一种手段。重排序分为两类：编译期重排序和运行期重排序，分别对应编译时和运行时环境。</p>
-
-<p>在并发程序中，程序员会特别关注不同进程或线程之间的数据同步，特别是多个线程同时修改同一变量时，必须采取可靠的同步或其它措施保障数据被正确地修改，这里的一条重要原则是：不要假设指令执行的顺序，你无法预知不同线程之间的指令会以何种顺序执行。</p>
-
-<p>但是在单线程程序中，通常我们容易假设指令是顺序执行的，否则可以想象程序会发生什么可怕的变化。理想的模型是：各种指令执行的顺序是唯一且有序的，这个顺序就是它们被编写在代码中的顺序，与处理器或其它因素无关，这种模型被称作顺序一致性模型，也是基于冯·诺依曼体系的模型。当然，这种假设本身是合理的，在实践中也鲜有异常发生，但事实上，没有哪个现代多处理器架构会采用这种模型，因为它是在是太低效了。而在编译优化和CPU流水线中，几乎都涉及到指令重排序。</p>
-
-<!-- more -->
-
-
-<p>一、编译期重排序</p>
-
-<p>编译期重排序的典型就是通过调整指令顺序，在不改变程序语义的前提下，尽可能减少寄存器的读取、存储次数，充分复用寄存器的存储值。</p>
-
-<p>假设第一条指令计算一个值赋给变量A并存放在寄存器中，第二条指令与A无关但需要占用寄存器（假设它将占用A所在的那个寄存器），第三条指令使用A的值且与第二条指令无关。那么如果按照顺序一致性模型，A在第一条指令执行过后被放入寄存器，在第二条指令执行时A不再存在，第三条指令执行时A重新被读入寄存器，而这个过程中，A的值没有发生变化。通常编译器都会交换第二和第三条指令的位置，这样第一条指令结束时A存在于寄存器中，接下来可以直接从寄存器中读取A的值，降低了重复读取的开销。</p>
-
-<p>1、数据依赖性</p>
-
-<p>如果两个操作访问同一个变量，且这两个操作中有一个为写操作，此时这两个操作之间就存在数据依赖性。数据依赖分下列三种类型：</p>
-
-<p>名称  代码示例    说明
-写后读   a = 1;b = a;    写一个变量之后，再读这个位置。
-写后写   a = 1;a = 2;    写一个变量之后，再写这个变量。
-读后写   a = b;b = 1;    读一个变量之后，再写这个变量。
-上面三种情况，只要重排序两个操作的执行顺序，程序的执行结果将会被改变。</p>
-
-<p>前面提到过，编译器和处理器可能会对操作做重排序。编译器和处理器在重排序时，会遵守数据依赖性，编译器和处理器不会改变存在数据依赖关系的两个操作的执行顺序。</p>
-
-<p>注意，这里所说的数据依赖性仅针对单个处理器中执行的指令序列和单个线程中执行的操作，不同处理器之间和不同线程之间的数据依赖性不被编译器和处理器考虑。</p>
-
-<p>2、as-if-serial语义</p>
-
-<p>as-if-serial语义的意思指：不管怎么重排序（编译器和处理器为了提高并行度），（单线程）程序的执行结果不能被改变。编译器，runtime 和处理器都必须遵守as-if-serial语义。</p>
-
-<p>为了遵守as-if-serial语义，编译器和处理器不会对存在数据依赖关系的操作做重排序，因为这种重排序会改变执行结果。但是，如果操作之间不存在数据依赖关系，这些操作可能被编译器和处理器重排序。为了具体说明，请看下面计算圆面积的代码示例：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kt">double</span> <span class="n">pi</span>  <span class="o">=</span> <span class="mf">3.14</span><span class="o">;</span>    <span class="c1">//A</span>
-</span><span class='line'><span class="kt">double</span> <span class="n">r</span>   <span class="o">=</span> <span class="mf">1.0</span><span class="o">;</span>     <span class="c1">//B</span>
-</span><span class='line'><span class="kt">double</span> <span class="n">area</span> <span class="o">=</span> <span class="n">pi</span> <span class="o">*</span> <span class="n">r</span> <span class="o">*</span> <span class="n">r</span><span class="o">;</span> <span class="c1">//C</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>上面三个操作的数据依赖关系如下图所示：</p>
-
-<p><img src="http://PhotoSynthesiis.github.io/images/reorder-1.png"></p>
-
-<p>如上图所示，A和C之间存在数据依赖关系，同时B和C之间也存在数据依赖关系。因此在最终执行的指令序列中，C不能被重排序到A和B的前面（C排到A和B的前面，程序的结果将会被改变）。但A和B之间没有数据依赖关系，编译器和处理器可以重排序A和B之间的执行顺序。下图是该程序的两种执行顺序：</p>
-
-<p><img src="http://PhotoSynthesiis.github.io/images/reorder-2.png"></p>
-
-<p>as-if-serial语义把单线程程序保护了起来，遵守as-if-serial语义的编译器，runtime 和处理器共同为编写单线程程序的程序员创建了一个幻觉：单线程程序是按程序的顺序来执行的。as-if-serial语义使单线程程序员无需担心重排序会干扰他们，也无需担心内存可见性问题。</p>
-
-<p>程序顺序规则</p>
-
-<p>根据happens- before的程序顺序规则，上面计算圆的面积的示例代码存在三个happens- before关系：</p>
-
-<p>A happens- before B；
-B happens- before C；
-A happens- before C；
-这里的第3个happens- before关系，是根据happens- before的传递性推导出来的。</p>
-
-<p>这里A happens- before B，但实际执行时B却可以排在A之前执行（看上面的重排序后的执行顺序）。在第一章提到过，如果A happens- before B，JMM并不要求A一定要在B之前执行。JMM仅仅要求前一个操作（执行的结果）对后一个操作可见，且前一个操作按顺序排在第二个操作之前。这里操作A的执行结果不需要对操作B可见；而且重排序操作A和操作B后的执行结果，与操作A和操作B按happens- before顺序执行的结果一致。在这种情况下，JMM会认为这种重排序并不非法（not illegal），JMM允许这种重排序。</p>
-
-<p>在计算机中，软件技术和硬件技术有一个共同的目标：在不改变程序执行结果的前提下，尽可能的开发并行度。编译器和处理器遵从这一目标，从happens- before的定义我们可以看出，JMM同样遵从这一目标。</p>
-
-<p>重排序对多线程的影响</p>
-
-<p>现在让我们来看看，重排序是否会改变多线程程序的执行结果。请看下面的示例代码：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">class</span> <span class="nc">ReorderExample</span> <span class="o">{</span>
-</span><span class='line'>  <span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
-</span><span class='line'>  <span class="kt">boolean</span> <span class="n">flag</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">writer</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>      <span class="n">a</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>                   <span class="c1">//1</span>
-</span><span class='line'>      <span class="n">flag</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>             <span class="c1">//2</span>
-</span><span class='line'>  <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="n">Public</span> <span class="kt">void</span> <span class="nf">reader</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>      <span class="k">if</span> <span class="o">(</span><span class="n">flag</span><span class="o">)</span> <span class="o">{</span>                <span class="c1">//3</span>
-</span><span class='line'>          <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span>  <span class="n">a</span> <span class="o">*</span> <span class="n">a</span><span class="o">;</span>        <span class="c1">//4</span>
-</span><span class='line'>          <span class="err">……</span>
-</span><span class='line'>      <span class="o">}</span>
-</span><span class='line'>  <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>flag变量是个标记，用来标识变量a是否已被写入。这里假设有两个线程A和B，A首先执行writer()方法，随后B线程接着执行reader()方法。线程B在执行操作4时，能否看到线程A在操作1对共享变量a的写入？</p>
-
-<p>答案是：不一定能看到。</p>
-
-<p>由于操作1和操作2没有数据依赖关系，编译器和处理器可以对这两个操作重排序；同样，操作3和操作4没有数据依赖关系，编译器和处理器也可以对这两个操作重排序。让我们先来看看，当操作1和操作2重排序时，可能会产生什么效果？请看下面的程序执行时序图：</p>
-
-<p><img src="http://PhotoSynthesiis.github.io/images/reorder-3.png"></p>
-
-<p>如上图所示，操作1和操作2做了重排序。程序执行时，线程A首先写标记变量flag，随后线程B读这个变量。由于条件判断为真，线程B将读取变量a。此时，变量a还根本没有被线程A写入，在这里多线程程序的语义被重排序破坏了！</p>
-
-<p>※注：本文统一用红色的虚箭线表示错误的读操作，用绿色的虚箭线表示正确的读操作。</p>
-
-<p>下面再让我们看看，当操作3和操作4重排序时会产生什么效果（借助这个重排序，可以顺便说明控制依赖性）。下面是操作3和操作4重排序后，程序的执行时序图：</p>
-
-<p><img src="http://PhotoSynthesiis.github.io/images/reorder-4.png"></p>
-
-<p>在程序中，操作3和操作4存在控制依赖关系。当代码中存在控制依赖性时，会影响指令序列执行的并行度。为此，编译器和处理器会采用猜测（Speculation）执行来克服控制相关性对并行度的影响。以处理器的猜测执行为例，执行线程B的处理器可以提前读取并计算a*a，然后把计算结果临时保存到一个名为重排序缓冲（reorder buffer ROB）的硬件缓存中。当接下来操作3的条件判断为真时，就把该计算结果写入变量i中。</p>
-
-<p>从图中我们可以看出，猜测执行实质上对操作3和4做了重排序。重排序在这里破坏了多线程程序的语义！</p>
-
-<p>在单线程程序中，对存在控制依赖的操作重排序，不会改变执行结果（这也是as-if-serial语义允许对存在控制依赖的操作做重排序的原因）；但在多线程程序中，对存在控制依赖的操作重排序，可能会改变程序的执行结果。</p>
-
-<p>二、确保顺序性</p>
-
-<p>尽管指令在执行时并不一定按照我们所编写的顺序执行，但毋庸置疑的是，在单线程环境下，指令执行的最终效果应当与其在顺序执行下的效果一致，否则这种优化便会失去意义。</p>
-
-<p>通常无论是在编译期还是运行期进行的指令重排序，都会满足上面的原则。</p>
-
-<p>三、Java存储模型中的重排序</p>
-
-<p>在Java存储模型（Java Memory Model, JMM）中，重排序是十分重要的一节，特别是在并发编程中。JMM通过happens-before法则保证顺序执行语义，如果想要让执行操作B的线程观察到执行操作A的线程的结果，那么A和B就必须满足happens-before原则，否则，JVM可以对它们进行任意排序以提高程序性能。</p>
-
-<p>volatile关键字可以保证变量的可见性，因为对volatile的操作都在Main Memory中，而Main Memory是被所有线程所共享的，这里的代价就是牺牲了性能，无法利用寄存器或Cache，因为它们都不是全局的，无法保证可见性，可能产生脏读。</p>
-
-<p>volatile还有一个作用就是局部阻止重排序的发生，对volatile变量的操作指令都不会被重排序，因为如果重排序，又可能产生可见性问题。</p>
-
-<p>在保证可见性方面，锁（包括显式锁、对象锁）以及对原子变量的读写都可以确保变量的可见性。但是实现方式略有不同，例如同步锁保证得到锁时从内存里重新读入数据刷新缓存，释放锁时将数据写回内存以保数据可见，而volatile变量干脆都是读写内存。</p>
-
-<p>原帖地址 ：</p>
-
-<p>1.<a href="http://www.infoq.com/cn/articles/java-memory-model-2">http://www.infoq.com/cn/articles/java-memory-model-2</a></p>
-
-<p>2.<a href="http://blog.hesey.net/2011/07/reordering.html">http://blog.hesey.net/2011/07/reordering.html</a></p>
 ]]></content>
   </entry>
   

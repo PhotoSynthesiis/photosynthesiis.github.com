@@ -9,7 +9,7 @@
   <meta name="author" content="Qiushi Li">
 
   
-  <meta name="description" content="首先我们必须得知道什么是hash code。总的来说，Java中的集合（Collection）有两类，一类是List，再有一类是Set。你知道它们的区别吗？前者集合内的元素是有序的，元素可以重复；后者元素无序，但元素不可重复。那么这里就有一个比较严重的问题了：要想保证元素不重复， &hellip;">
+  <meta name="description" content="重排序通常是编译器或运行时环境为了优化程序性能而采取的对指令进行重新排序执行的一种手段。重排序分为两类：编译期重排序和运行期重排序，分别对应编译时和运行时环境。 在并发程序中，程序员会特别关注不同进程或线程之间的数据同步，特别是多个线程同时修改同一变量时， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +65,53 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/08/10/java-reorder/">理解Java中的重排序</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-08-10T13:08:00-05:00" pubdate data-updated="true">Aug 10<span>th</span>, 2013</time>
+        
+         | <a href="/blog/2013/08/10/java-reorder/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>重排序通常是编译器或运行时环境为了优化程序性能而采取的对指令进行重新排序执行的一种手段。重排序分为两类：编译期重排序和运行期重排序，分别对应编译时和运行时环境。</p>
+
+<p>在并发程序中，程序员会特别关注不同进程或线程之间的数据同步，特别是多个线程同时修改同一变量时，必须采取可靠的同步或其它措施保障数据被正确地修改，这里的一条重要原则是：不要假设指令执行的顺序，你无法预知不同线程之间的指令会以何种顺序执行。</p>
+
+<p>但是在单线程程序中，通常我们容易假设指令是顺序执行的，否则可以想象程序会发生什么可怕的变化。理想的模型是：各种指令执行的顺序是唯一且有序的，这个顺序就是它们被编写在代码中的顺序，与处理器或其它因素无关，这种模型被称作顺序一致性模型，也是基于冯·诺依曼体系的模型。当然，这种假设本身是合理的，在实践中也鲜有异常发生，但事实上，没有哪个现代多处理器架构会采用这种模型，因为它是在是太低效了。而在编译优化和CPU流水线中，几乎都涉及到指令重排序。</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/08/10/java-reorder/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -497,50 +544,6 @@ javamail包中，主要是用来发送邮件的。为了发送邮件，需要提
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/07/14/adaptor-pattern/">深入浅出设计模式之适配器模式(Adaptor Pattern)与外观模式(Facade Pattern)</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-07-14T10:31:00-05:00" pubdate data-updated="true">Jul 14<span>th</span>, 2013</time>
-        
-         | <a href="/blog/2013/07/14/adaptor-pattern/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>一、适配器模式
-我们每个人在生活中都经历过这样的事，手中的电子产品和插座要求的接口类型不相符，比如插座要求的是三孔，而自己的插头是两孔，这个时候就需要一个电源适配器插在原先的插座上，然后再适配器的另一端暴露一个两孔的插孔供我们使用。对于客户来说，不管原来插座式几孔的，他只在乎自己能用的是两孔的就行了，其它的都交给了适配器去做。</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/07/14/adaptor-pattern/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/4/">&larr; Older</a>
@@ -558,6 +561,10 @@ javamail包中，主要是用来发送邮件的。为了发送邮件，需要提
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/05/17/regex4/">正则表达式必知必会 4</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/05/17/regex3/">正则表达式必知必会 3</a>
       </li>
     
@@ -571,10 +578,6 @@ javamail包中，主要是用来发送邮件的。为了发送邮件，需要提
     
       <li class="post">
         <a href="/blog/2014/05/09/ios-programming-8-uitableview-and-uitableviewcontroller/">iOS Programming 8 (UITableView &amp; UITableViewController)</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/05/07/git-2/">Git 2 (Basics)</a>
       </li>
     
   </ul>

@@ -9,7 +9,11 @@
   <meta name="author" content="Qiushi Li">
 
   
-  <meta name="description" content="使用子表达式 有些短语虽然中间有空格,但是通常希望被作为一个整体显示在一行以便浏览,比如 Windows 2000.这样通常在Windows和2000之间插入非换行型空格&amp;nbsp,它是non-breaking space的缩写. # 文本: Hello, my name is Ben& &hellip;">
+  <meta name="description" content="前后查找 # 文本: 1
+2
+3
+&lt;head&gt; &lt;title&gt;Ben Forta&#39;s Homepage&lt;/title&gt;
+&lt;/head&gt; 正则表达式: &lt;[Tt][Ii][Tt][Ll][Ee]>.*?&lt;/[Tt][Ii][Tt][ &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +69,66 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/05/17/regex4/">正则表达式必知必会 4</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-05-17T23:25:00-05:00" pubdate data-updated="true">May 17<span>th</span>, 2014</time>
+        
+         | <a href="/blog/2014/05/17/regex4/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>前后查找</h2>
+
+<p>#</p>
+
+<p><code>文本</code>:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;head&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;title&gt;</span>Ben Forta&#39;s Homepage<span class="nt">&lt;/title&gt;</span>
+</span><span class='line'><span class="nt">&lt;/head&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>正则表达式</code>: &lt;[Tt][Ii][Tt][Ll][Ee]>.*?&lt;/[Tt][Ii][Tt][Ll][Ee]></p>
+
+<p><code>结果</code>: &lt;title>Ben Forta&rsquo;s Homepage&lt;/title></p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/05/17/regex4/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -157,11 +221,11 @@
 
 <p>#</p>
 
-<p><code>文本</code>: Send personal email to <a href="&#x6d;&#97;&#x69;&#x6c;&#x74;&#x6f;&#x3a;&#98;&#101;&#x6e;&#x40;&#102;&#111;&#x72;&#116;&#x61;&#46;&#99;&#111;&#x6d;&#x2e;">&#x62;&#101;&#x6e;&#64;&#x66;&#111;&#x72;&#x74;&#x61;&#46;&#99;&#111;&#x6d;&#x2e;</a> For questions about the book use <a href="&#x6d;&#97;&#x69;&#x6c;&#116;&#111;&#58;&#115;&#x75;&#112;&#112;&#111;&#114;&#x74;&#x40;&#x66;&#111;&#114;&#x74;&#97;&#46;&#99;&#111;&#109;&#x2e;">&#x73;&#117;&#x70;&#x70;&#111;&#x72;&#116;&#64;&#102;&#111;&#x72;&#116;&#97;&#x2e;&#x63;&#111;&#109;&#46;</a> Feel free to send unsolicited email to <a href="&#109;&#x61;&#x69;&#108;&#x74;&#x6f;&#x3a;&#x73;&#x70;&#97;&#x6d;&#x40;&#x66;&#x6f;&#114;&#x74;&#97;&#46;&#99;&#x6f;&#109;&#46;">&#x73;&#x70;&#97;&#x6d;&#x40;&#102;&#111;&#x72;&#116;&#97;&#46;&#x63;&#111;&#x6d;&#46;</a></p>
+<p><code>文本</code>: Send personal email to <a href="&#109;&#97;&#105;&#x6c;&#x74;&#111;&#x3a;&#98;&#x65;&#110;&#x40;&#x66;&#111;&#114;&#x74;&#97;&#x2e;&#x63;&#111;&#109;&#x2e;">&#x62;&#x65;&#x6e;&#64;&#x66;&#111;&#x72;&#116;&#97;&#46;&#99;&#111;&#109;&#x2e;</a> For questions about the book use <a href="&#x6d;&#x61;&#105;&#x6c;&#116;&#x6f;&#x3a;&#x73;&#x75;&#x70;&#112;&#x6f;&#114;&#x74;&#x40;&#x66;&#111;&#114;&#116;&#x61;&#x2e;&#99;&#x6f;&#109;&#46;">&#115;&#117;&#112;&#112;&#x6f;&#x72;&#116;&#64;&#102;&#x6f;&#114;&#x74;&#97;&#x2e;&#99;&#111;&#x6d;&#46;</a> Feel free to send unsolicited email to <a href="&#109;&#97;&#x69;&#x6c;&#116;&#111;&#58;&#115;&#x70;&#97;&#x6d;&#x40;&#102;&#x6f;&#x72;&#116;&#97;&#46;&#x63;&#111;&#109;&#x2e;">&#x73;&#112;&#97;&#109;&#x40;&#x66;&#111;&#114;&#x74;&#97;&#46;&#99;&#111;&#x6d;&#46;</a></p>
 
 <p><code>正则表达式</code>: \w+@\w+.\w+</p>
 
-<p><code>结果</code>: <a href="&#109;&#x61;&#x69;&#108;&#116;&#x6f;&#x3a;&#x62;&#x65;&#110;&#64;&#x66;&#111;&#x72;&#x74;&#97;&#46;&#x63;&#x6f;&#x6d;">&#98;&#x65;&#x6e;&#x40;&#x66;&#111;&#x72;&#116;&#97;&#46;&#99;&#111;&#x6d;</a>  <a href="&#x6d;&#97;&#105;&#108;&#116;&#x6f;&#x3a;&#115;&#x75;&#112;&#x70;&#111;&#114;&#x74;&#64;&#x66;&#111;&#114;&#x74;&#x61;&#x2e;&#99;&#111;&#x6d;">&#x73;&#117;&#112;&#x70;&#111;&#114;&#x74;&#64;&#x66;&#x6f;&#114;&#x74;&#97;&#46;&#x63;&#111;&#109;</a>  <a href="&#109;&#97;&#105;&#108;&#x74;&#x6f;&#58;&#x73;&#112;&#97;&#109;&#64;&#102;&#111;&#x72;&#x74;&#97;&#x2e;&#x63;&#111;&#109;">&#x73;&#x70;&#x61;&#109;&#64;&#x66;&#111;&#114;&#x74;&#97;&#46;&#99;&#x6f;&#109;</a></p>
+<p><code>结果</code>: <a href="&#109;&#x61;&#x69;&#108;&#116;&#111;&#58;&#98;&#101;&#110;&#64;&#102;&#x6f;&#114;&#x74;&#x61;&#x2e;&#x63;&#x6f;&#x6d;">&#x62;&#101;&#x6e;&#x40;&#x66;&#111;&#114;&#116;&#97;&#x2e;&#99;&#111;&#109;</a>  <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#115;&#117;&#x70;&#x70;&#111;&#114;&#116;&#64;&#x66;&#111;&#x72;&#116;&#97;&#x2e;&#99;&#111;&#x6d;">&#115;&#117;&#x70;&#x70;&#111;&#x72;&#x74;&#64;&#x66;&#x6f;&#x72;&#x74;&#97;&#x2e;&#x63;&#111;&#109;</a>  <a href="&#109;&#x61;&#105;&#x6c;&#x74;&#111;&#x3a;&#115;&#112;&#x61;&#x6d;&#64;&#x66;&#111;&#114;&#x74;&#x61;&#x2e;&#99;&#111;&#109;">&#115;&#x70;&#97;&#x6d;&#64;&#102;&#x6f;&#x72;&#116;&#x61;&#46;&#x63;&#111;&#x6d;</a></p>
 
 </div>
   
@@ -514,51 +578,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/04/06/ios-6/">iOS Programming 6-1(View Controllers)</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-04-06T19:55:00-05:00" pubdate data-updated="true">Apr 6<span>th</span>, 2014</time>
-        
-         | <a href="/blog/2014/04/06/ios-6/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>前面讲过了view和View hierachy,为了让view在window上显示,我们都是直接把一个view加到应用的window里面去,今天要讲的东西比view更高级一层,他叫view controller.他的职责是创建view,响应view的事件,管理view的层级关系,把view加到window里.</p>
-
-<p>我会结合一个实际的应用来阐述view controller,这个应用最后出来的效果会想下面这样:</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/04/06/ios-6/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -574,6 +593,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/05/17/regex4/">正则表达式必知必会 4</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/05/17/regex3/">正则表达式必知必会 3</a>
       </li>
     
@@ -587,10 +610,6 @@
     
       <li class="post">
         <a href="/blog/2014/05/09/ios-programming-8-uitableview-and-uitableviewcontroller/">iOS Programming 8 (UITableView &amp; UITableViewController)</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/05/07/git-2/">Git 2 (Basics)</a>
       </li>
     
   </ul>
