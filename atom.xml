@@ -4,7 +4,7 @@
   <title><![CDATA[public static void man]]></title>
   <link href="http://PhotoSynthesiis.github.io/atom.xml" rel="self"/>
   <link href="http://PhotoSynthesiis.github.io/"/>
-  <updated>2014-05-16T23:59:19-05:00</updated>
+  <updated>2014-05-17T22:54:36-05:00</updated>
   <id>http://PhotoSynthesiis.github.io/</id>
   <author>
     <name><![CDATA[Qiushi Li]]></name>
@@ -12,6 +12,263 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[正则表达式必知必会 3]]></title>
+    <link href="http://PhotoSynthesiis.github.io/blog/2014/05/17/regex3/"/>
+    <updated>2014-05-17T10:43:00-05:00</updated>
+    <id>http://PhotoSynthesiis.github.io/blog/2014/05/17/regex3</id>
+    <content type="html"><![CDATA[<h2>使用子表达式</h2>
+
+<p>有些短语虽然中间有空格,但是通常希望被作为一个整体显示在一行以便浏览,比如 Windows 2000.这样通常在Windows和2000之间插入非换行型空格<code>&amp;nbsp</code>,它是non-breaking space的缩写.</p>
+
+<p>#</p>
+
+<p><code>文本</code>: Hello, my name is Ben<code>&amp;nbsp;</code>Forta, and I am the author on SQL, Coldfusion, WAP, windosw<code>&amp;nbsp;&amp;nbsp;</code>2000, and other subjects.</p>
+
+<p><code>正则表达式</code>: <code>&amp;nbsp;</code>{2,}</p>
+
+<p><code>结果</code>: 空</p>
+
+<!-- more -->
+
+
+<p>我们本想通过这个正则表达式来匹配至少出现两个<code>&amp;nbsp;</code>,但是却什么都没有匹配出来,这是因为{2,}只作用于紧跟在它前面的一个字符 &mdash; 那是一个分号,所以这个正则表达式能匹配<code>&amp;nbsp;;;;</code>这种字符.</p>
+
+<p><code>子表达式</code>: 把一系列表达式划分为子表达式的目的是把那些子表达式当作一个个独立的单元来使用.子表达式需要用()括起来.</p>
+
+<p>#</p>
+
+<p><code>文本</code>: Hello, my name is Ben<code>&amp;nbsp;</code>Forta, and I am the author on SQL, Coldfusion, WAP, windosw<code>&amp;nbsp;&amp;nbsp;</code>2000, and other subjects.</p>
+
+<p><code>正则表达式</code>: (<code>&amp;nbsp;</code>){2,}</p>
+
+<p><code>结果</code>: <code>&amp;nbsp;&amp;nbsp;</code></p>
+
+<p>#</p>
+
+<p><code>文本</code>:</p>
+
+<p>ID: 042</p>
+
+<p>SEX: M</p>
+
+<p>DOB: 1987-08-17</p>
+
+<p>Status: Active</p>
+
+<p><code>正则表达式</code>: 19|20\d{2}</p>
+
+<p><code>结果</code>: 19</p>
+
+<p>这里的正则表达式是期望匹配出一个年份,但是结果却不是希望的那样.这是因为这个正则表达式被解释成了匹配19或者20紧接着2个数字.如果想要达到正确的效果,需要把19|20作为一个子表达式.</p>
+
+<p>#</p>
+
+<p><code>文本</code>:</p>
+
+<p>ID: 042</p>
+
+<p>SEX: M</p>
+
+<p>DOB: 1987-08-17</p>
+
+<p>Status: Active</p>
+
+<p><code>正则表达式</code>: (19|20)\d{2}</p>
+
+<p><code>结果</code>: 1987</p>
+
+<h3>子表达式的嵌套</h3>
+
+<p>#</p>
+
+<p><code>文本</code>: Pinging hog.forta.com [192.168.46.200] with 32 bytes data.</p>
+
+<p><code>正则表达式</code>: ((\d{1,2}) | (1\d{1,2}) | (2[0-4]\d) | (25[0-5]).){3}((\d{1,2}) | (1\d{1,2}) | (2[0-4]\d) | (25[0-5]))</p>
+
+<p><code>结果</code>: 192.168.46.200</p>
+
+<p>这里使用了子表达式的嵌套来匹配IP&#8217;地址.子表达式表示的意思分别是:</p>
+
+<ul>
+<li>任何一位或两位的数字</li>
+<li>任何以1开头的两位或者三位的数字</li>
+<li>任何以2开头的第二位为0-4的三位数字</li>
+<li>任何以25开头的第三位为0-5的三位数字</li>
+</ul>
+
+
+<p>这样的一个子表达式排除了其他不可能的情况,例如999.2222.222.0.</p>
+
+<h2>回溯引用:前后一致匹配</h2>
+
+<p>#</p>
+
+<p><code>文本</code>:</p>
+
+<p>&lt;H1>Welcome to my homepage &lt;/H1></p>
+
+<p>Content is divided into two sections</p>
+
+<p>&lt;H2>ColdFusion&lt;/H2></p>
+
+<p>Information about macro media coldfusion</p>
+
+<p>&lt;H2>Wireless&lt;/H2></p>
+
+<p>Information about 802.11 and more</p>
+
+<p>&lt;H2>This is not a valid HTML&lt;/H3></p>
+
+<p><code>正则表达式</code>: &lt;[Hh][1-6]>.*?&lt;/[Hh][1-6]></p>
+
+<p><code>结果</code>:</p>
+
+<p>&lt;H1>Welcome to my homepage &lt;/H1></p>
+
+<p>&lt;H2>ColdFusion&lt;/H2></p>
+
+<p>&lt;H2>Wireless&lt;/H2></p>
+
+<p>&lt;H2>This is not a valid HTML&lt;/H3></p>
+
+<p>这个正则表达式看起来很有用,但是在匹配最后一个title的时候得到了我们不想要的结果,把H3和H2匹配成了一对.这是因为正则表达式在匹配后一个tag的时候对前一个tag毫无所知,这时候就是回溯引用能用到的地方.</p>
+
+<p><code>回溯引用</code>: 允许正则表达式模式引用前面匹配的结果.</p>
+
+<p>在解决这个问题之前,先看一看一个回溯引用的简单应用.</p>
+
+<p>#</p>
+
+<p><code>文本</code>: this is a block of of text, several words here are are repeated, and and they should not be</p>
+
+<p><code>正则表达式</code>: \s+(\w+)\s+\1</p>
+
+<p><code>结果</code>: of of      are are        and and</p>
+
+<p>这里的正则表达式首先匹配一个或多个空格,然后使用一个子表达式匹配一个或多个字符,但是这里的子表达式不是用来做重复引用.接下来又匹配一个或多个空格,最后跟了一个\1,它的意思是引用第一个子表达式匹配到的字符,所以如果第一个表达式匹配到了A这个正则表达式就能匹配到 A A,\1就是一个回溯引用.\1表示引用第一个子表达式,如果前面有多个子表达式,可以通过\1,\2等来具体引用第几个子表达式.其实我们可以把子表达式想象成一个个变量,后面只是在使用前面定义的变量.</p>
+
+<p>现在我们可以来试图解决前面的问题了.
+#</p>
+
+<p><code>文本</code>:</p>
+
+<p>&lt;H1>Welcome to my homepage &lt;/H1></p>
+
+<p>Content is divided into two sections</p>
+
+<p>&lt;H2>ColdFusion&lt;/H2></p>
+
+<p>Information about macro media coldfusion</p>
+
+<p>&lt;H2>Wireless&lt;/H2></p>
+
+<p>Information about 802.11 and more</p>
+
+<p>&lt;H2>This is not a valid HTML&lt;/H3></p>
+
+<p><code>正则表达式</code>: &lt;[Hh]([1-6])>.*?&lt;/[Hh]\1></p>
+
+<p><code>结果</code>:
+&lt;H1>Welcome to my homepage &lt;/H1></p>
+
+<p>&lt;H2>ColdFusion&lt;/H2></p>
+
+<p>&lt;H2>Wireless&lt;/H2>这里在第二个tag引用了第一个tag后面跟着的数字,所以两个tag的数字就一样了.</p>
+
+<p><code>note</code>: 回溯引用只能引用模式里的子表达式(用()括起来的正则表达式片段).</p>
+
+<h3>回溯引用在替换中的应用</h3>
+
+<p>#</p>
+
+<p><code>文本</code>: Hello, my name is Ben Forta, my email address is <a href="&#x6d;&#97;&#x69;&#108;&#x74;&#x6f;&#58;&#x62;&#x65;&#110;&#x40;&#102;&#111;&#114;&#116;&#x61;&#46;&#x63;&#111;&#x6d;">&#x62;&#x65;&#110;&#x40;&#x66;&#111;&#114;&#x74;&#97;&#x2e;&#99;&#x6f;&#x6d;</a></p>
+
+<p><code>正则表达式</code>: \w[\w.]*@[\w.]+.\w+</p>
+
+<p><code>结果</code>: <a href="&#x6d;&#x61;&#105;&#108;&#x74;&#111;&#x3a;&#98;&#x65;&#110;&#64;&#x66;&#111;&#x72;&#x74;&#x61;&#46;&#99;&#x6f;&#x6d;">&#98;&#101;&#110;&#64;&#102;&#x6f;&#114;&#x74;&#x61;&#x2e;&#x63;&#111;&#109;</a></p>
+
+<p>这里的正则表达式匹配了一个邮件地址.</p>
+
+<p>如果我想要把邮件地址替换为可点击,需要使用下面这样的语法<code>\&lt;A href="mailto:ben@forta.com"&gt;ben@forta.com\&lt;/A&gt;</code>.</p>
+
+<p>我们可以使用回溯引用来完成这个操作,首先找到需要匹配的文本,然后再你用这个文本填充上面的语法:</p>
+
+<p>#</p>
+
+<p><code>文本</code>: Hello, my name is Ben Forta, my email address is <a href="&#x6d;&#97;&#105;&#x6c;&#116;&#111;&#58;&#98;&#101;&#x6e;&#64;&#102;&#111;&#x72;&#116;&#97;&#46;&#x63;&#x6f;&#x6d;">&#x62;&#x65;&#x6e;&#64;&#102;&#x6f;&#114;&#x74;&#97;&#46;&#99;&#x6f;&#x6d;</a></p>
+
+<p><code>正则表达式</code>:  (\w[\w.]*@[\w.]+.\w+)</p>
+
+<p><code>替换</code>: &lt;A href=&ldquo;<a href="&#109;&#x61;&#x69;&#108;&#x74;&#x6f;&#58;&#x24;&#x31;">&#36;&#x31;</a>&rdquo;>$1&lt;/A></p>
+
+<p><code>结果</code>: ben@forta.com成为了可点击的链接</p>
+
+<p>这里的正则表达式分为两步,首先匹配到需要的文本,接着再使用回溯引用得到第一步匹配到的文本,然后用这个文本填充.回溯引用可以跨模式使用,第一个模式你们匹配到的文本可以在第二个文本里使用.</p>
+
+<p><code>note</code>: 上面的例子中使用了$1而不是\1,这个是在JavaScript中的语法,比如在ColdFusion中就是\1,根据不同的语言有不同的语法,但效果都一样.</p>
+
+<p>#</p>
+
+<p><code>文本</code>:</p>
+
+<p>314-683-7956</p>
+
+<p>313-082-0121</p>
+
+<p>010-203-4121</p>
+
+<p>313-123-9921</p>
+
+<p><code>正则表达式</code>: (\d{3})(&ndash;)(\d{3})(&ndash;)(\d{4})</p>
+
+<p><code>替换</code>: ($1) $3-$5</p>
+
+<p><code>结果</code>:</p>
+
+<p>(314) 683-7956</p>
+
+<p>(313) 082-0121</p>
+
+<p>(010) 203-4121</p>
+
+<p>(313) 123-9921</p>
+
+<p>上面这个例子体现了如何回溯引用多个子表达式.达到的效果是替换电话号码的显示效果.</p>
+
+<h3>大小写转换</h3>
+
+<p>有些语言里的正则表达式允许使用一些特殊的元字符对匹配到的文本进行大小写转换</p>
+
+<p> <img src="http://PhotoSynthesiis.github.io/images/regex-3_1.png">
+#</p>
+
+<p><code>文本</code>:</p>
+
+<p>&lt;H1>Welcome to my homepage &lt;/H1></p>
+
+<p>Content is divided into two sections</p>
+
+<p>&lt;H2>ColdFusion&lt;/H2></p>
+
+<p>Information about macro media coldfusion</p>
+
+<p>&lt;H2>Wireless&lt;/H2></p>
+
+<p>Information about 802.11 and more</p>
+
+<p>&lt;H2>This is not a valid HTML&lt;/H3></p>
+
+<p><code>正则表达式</code>: (&lt;[Hh]1>)(.*?)(&lt;/[Hh]1>)</p>
+
+<p><code>替换</code>: $1\U$2\E$3</p>
+
+<p><code>结果</code>:</p>
+
+<p>&lt;H1>WELCOME TO MY HOMEPAGE &lt;/H1></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[正则表达式必知必会 2]]></title>
@@ -26,11 +283,11 @@
 
 <p>#</p>
 
-<p><code>文本</code>: Send personal email to <a href="&#109;&#97;&#105;&#x6c;&#x74;&#111;&#58;&#98;&#101;&#x6e;&#64;&#x66;&#111;&#114;&#116;&#97;&#x2e;&#x63;&#111;&#x6d;&#x2e;">&#98;&#101;&#110;&#64;&#102;&#x6f;&#114;&#x74;&#x61;&#x2e;&#99;&#x6f;&#x6d;&#x2e;</a> For questions about the book use <a href="&#x6d;&#x61;&#x69;&#x6c;&#116;&#x6f;&#x3a;&#x73;&#x75;&#x70;&#x70;&#x6f;&#x72;&#x74;&#64;&#102;&#111;&#114;&#116;&#97;&#x2e;&#99;&#x6f;&#x6d;&#46;">&#x73;&#117;&#112;&#112;&#x6f;&#x72;&#x74;&#64;&#x66;&#x6f;&#114;&#116;&#97;&#x2e;&#x63;&#111;&#x6d;&#x2e;</a> Feel free to send unsolicited email to <a href="&#x6d;&#97;&#x69;&#x6c;&#116;&#x6f;&#x3a;&#115;&#112;&#x61;&#109;&#x40;&#x66;&#x6f;&#x72;&#x74;&#x61;&#46;&#x63;&#x6f;&#x6d;&#46;">&#115;&#x70;&#97;&#109;&#x40;&#x66;&#111;&#114;&#116;&#x61;&#46;&#x63;&#111;&#109;&#x2e;</a></p>
+<p><code>文本</code>: Send personal email to <a href="&#x6d;&#97;&#x69;&#x6c;&#x74;&#x6f;&#x3a;&#98;&#101;&#x6e;&#x40;&#102;&#111;&#x72;&#116;&#x61;&#46;&#99;&#111;&#x6d;&#x2e;">&#x62;&#101;&#x6e;&#64;&#x66;&#111;&#x72;&#x74;&#x61;&#46;&#99;&#111;&#x6d;&#x2e;</a> For questions about the book use <a href="&#x6d;&#97;&#x69;&#x6c;&#116;&#111;&#58;&#115;&#x75;&#112;&#112;&#111;&#114;&#x74;&#x40;&#x66;&#111;&#114;&#x74;&#97;&#46;&#99;&#111;&#109;&#x2e;">&#x73;&#117;&#x70;&#x70;&#111;&#x72;&#116;&#64;&#102;&#111;&#x72;&#116;&#97;&#x2e;&#x63;&#111;&#109;&#46;</a> Feel free to send unsolicited email to <a href="&#109;&#x61;&#x69;&#108;&#x74;&#x6f;&#x3a;&#x73;&#x70;&#97;&#x6d;&#x40;&#x66;&#x6f;&#114;&#x74;&#97;&#46;&#99;&#x6f;&#109;&#46;">&#x73;&#x70;&#97;&#x6d;&#x40;&#102;&#111;&#x72;&#116;&#97;&#46;&#x63;&#111;&#x6d;&#46;</a></p>
 
 <p><code>正则表达式</code>: \w+@\w+.\w+</p>
 
-<p><code>结果</code>: <a href="&#x6d;&#97;&#x69;&#x6c;&#116;&#x6f;&#58;&#x62;&#101;&#110;&#x40;&#x66;&#x6f;&#114;&#116;&#x61;&#46;&#x63;&#x6f;&#109;">&#98;&#101;&#x6e;&#64;&#x66;&#111;&#114;&#116;&#x61;&#46;&#x63;&#111;&#x6d;</a>  <a href="&#x6d;&#x61;&#x69;&#108;&#116;&#x6f;&#58;&#115;&#117;&#x70;&#x70;&#111;&#x72;&#116;&#64;&#x66;&#x6f;&#114;&#x74;&#x61;&#x2e;&#99;&#111;&#109;">&#115;&#x75;&#x70;&#x70;&#111;&#x72;&#116;&#x40;&#x66;&#x6f;&#x72;&#x74;&#97;&#46;&#x63;&#111;&#x6d;</a>  <a href="&#109;&#97;&#x69;&#108;&#116;&#111;&#x3a;&#x73;&#x70;&#97;&#109;&#x40;&#x66;&#111;&#114;&#116;&#x61;&#x2e;&#99;&#x6f;&#x6d;">&#115;&#112;&#97;&#x6d;&#x40;&#x66;&#x6f;&#114;&#x74;&#x61;&#46;&#99;&#111;&#109;</a></p>
+<p><code>结果</code>: <a href="&#109;&#x61;&#x69;&#108;&#116;&#x6f;&#x3a;&#x62;&#x65;&#110;&#64;&#x66;&#111;&#x72;&#x74;&#97;&#46;&#x63;&#x6f;&#x6d;">&#98;&#x65;&#x6e;&#x40;&#x66;&#111;&#x72;&#116;&#97;&#46;&#99;&#111;&#x6d;</a>  <a href="&#x6d;&#97;&#105;&#108;&#116;&#x6f;&#x3a;&#115;&#x75;&#112;&#x70;&#111;&#114;&#x74;&#64;&#x66;&#111;&#114;&#x74;&#x61;&#x2e;&#99;&#111;&#x6d;">&#x73;&#117;&#112;&#x70;&#111;&#114;&#x74;&#64;&#x66;&#x6f;&#114;&#x74;&#97;&#46;&#x63;&#111;&#109;</a>  <a href="&#109;&#97;&#105;&#108;&#x74;&#x6f;&#58;&#x73;&#112;&#97;&#109;&#64;&#102;&#111;&#x72;&#x74;&#97;&#x2e;&#x63;&#111;&#109;">&#x73;&#x70;&#x61;&#109;&#64;&#x66;&#111;&#114;&#x74;&#97;&#46;&#99;&#x6f;&#109;</a></p>
 
 <!-- more -->
 
@@ -3654,229 +3911,6 @@ A happens- before C；
 <p>1.<a href="http://www.infoq.com/cn/articles/java-memory-model-2">http://www.infoq.com/cn/articles/java-memory-model-2</a></p>
 
 <p>2.<a href="http://blog.hesey.net/2011/07/reordering.html">http://blog.hesey.net/2011/07/reordering.html</a></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[在java中复写equals和hashCode]]></title>
-    <link href="http://PhotoSynthesiis.github.io/blog/2013/08/09/java-equals-hashcode/"/>
-    <updated>2013-08-09T22:50:00-05:00</updated>
-    <id>http://PhotoSynthesiis.github.io/blog/2013/08/09/java-equals-hashcode</id>
-    <content type="html"><![CDATA[<p>首先我们必须得知道什么是hash code。总的来说，Java中的集合（Collection）有两类，一类是List，再有一类是Set。你知道它们的区别吗？前者集合内的元素是有序的，元素可以重复；后者元素无序，但元素不可重复。那么这里就有一个比较严重的问题了：要想保证元素不重复，可两个元素是否重复应该依据什么来判断呢？这就是Object.equals方法了。但是，如果每增加一个元素就检查一次，那么当元素很多时，后添加到集合中的元素比较的次数就非常多了。也就是说，如果集合中现在已经有1000个元素，那么第1001个元素加入集合时，它就要调用1000次equals方法。这显然会大大降低效率。于是，Java采用了哈希表的原理。哈希（Hash）实际上是个人名，由于他提出一哈希算法的概念，所以就以他的名字命名了。哈希算法也称为散列算法，是将数据依特定算法直接指定到一个地址上。如果详细讲解哈希算法，那需要更多的文章篇幅，我在这里就不介绍了。初学者可以这样理解，hashCode方法实际上返回的就是对象存储的物理地址（实际可能并不是）。这样一来，当集合要添加新的元素时，先调用这个元素的hashCode方法，就一下子能定位到它应该放置的物理位置上。如果这个位置上没有元素，它就可以直接存储在这个位置上，不用再进行任何比较了；如果这个位置上已经有元素了，就调用它的equals方法与新元素进行比较，相同的话就不存了，不相同就散列其它的地址。所以这里存在一个冲突解决的问题。这样一来实际调用equals方法的次数就大大降低了，几乎只需要一两次。所以，Java对于eqauls方法和hashCode方法是这样规定的：1、如果两个对象相同，那么它们的hashCode值一定要相同；2、如果两个对象的hashCode相同，它们并不一定相同。</p>
-
-<!-- more -->
-
-
-<p>重上面的描述能看出，hash code一般是在例如set map等这样的集合中用到，因为它们通常需要通过hash code去判断两个对象是否相等。而如果不是在集合中用，其实复写不复写hash code意义都不大，不过作为一种良好的编程习惯，最好还是两个同时复写。下面我们来聚几个例子：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">class</span> <span class="nc">Person</span> <span class="o">{</span>
-</span><span class='line'>    <span class="n">String</span> <span class="n">name</span><span class="o">;</span>
-</span><span class='line'>    <span class="kt">int</span> <span class="n">age</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="n">Person</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">,</span> <span class="kt">int</span> <span class="n">age</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">;</span>
-</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">age</span> <span class="o">=</span> <span class="n">age</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@Override</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">equals</span><span class="o">(</span><span class="n">Object</span> <span class="n">o</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="k">this</span> <span class="o">==</span> <span class="n">o</span><span class="o">)</span> <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
-</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">o</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">||</span> <span class="n">getClass</span><span class="o">()</span> <span class="o">!=</span> <span class="n">o</span><span class="o">.</span><span class="na">getClass</span><span class="o">())</span> <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">Person</span> <span class="n">person</span> <span class="o">=</span> <span class="o">(</span><span class="n">Person</span><span class="o">)</span> <span class="n">o</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">age</span> <span class="o">!=</span> <span class="n">person</span><span class="o">.</span><span class="na">age</span><span class="o">)</span> <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
-</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">name</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">?</span> <span class="o">!</span><span class="n">name</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">person</span><span class="o">.</span><span class="na">name</span><span class="o">)</span> <span class="o">:</span> <span class="n">person</span><span class="o">.</span><span class="na">name</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@Override</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">toString</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="s">&quot;name : &quot;</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s">&quot;; age : &quot;</span> <span class="o">+</span> <span class="n">age</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Person类中没有复写hashCode</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">test</span> <span class="o">{</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">Person</span> <span class="n">a</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Person</span><span class="o">(</span><span class="s">&quot;Adam&quot;</span><span class="o">,</span> <span class="mi">27</span><span class="o">);</span>
-</span><span class='line'>        <span class="n">Person</span> <span class="n">b</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Person</span><span class="o">(</span><span class="s">&quot;Adam&quot;</span><span class="o">,</span> <span class="mi">27</span><span class="o">);</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">a</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">b</span><span class="o">));</span>  <span class="c1">// true</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">Set</span><span class="o">&lt;</span><span class="n">Person</span><span class="o">&gt;</span> <span class="n">persons</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashSet</span><span class="o">&lt;</span><span class="n">Person</span><span class="o">&gt;();</span>
-</span><span class='line'>        <span class="n">persons</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">a</span><span class="o">);</span>
-</span><span class='line'>        <span class="n">persons</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">b</span><span class="o">);</span>
-</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">persons</span><span class="o">.</span><span class="na">contains</span><span class="o">(</span><span class="n">a</span><span class="o">));</span>  <span class="c1">// true</span>
-</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">persons</span><span class="o">.</span><span class="na">contains</span><span class="o">(</span><span class="n">b</span><span class="o">));</span>  <span class="c1">// true</span>
-</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;size : &quot;</span> <span class="o">+</span> <span class="n">persons</span><span class="o">.</span><span class="na">size</span><span class="o">());</span>  <span class="c1">// 2</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>所以它们虽然对象里面的值相等，但是并不被认为是同一个对象，所以可以加到set中去。如果我们加上了hashCode：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">class</span> <span class="nc">Person</span> <span class="o">{</span>
-</span><span class='line'>    <span class="n">String</span> <span class="n">name</span><span class="o">;</span>
-</span><span class='line'>    <span class="kt">int</span> <span class="n">age</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="n">Person</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">,</span> <span class="kt">int</span> <span class="n">age</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">;</span>
-</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">age</span> <span class="o">=</span> <span class="n">age</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@Override</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">hashCode</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="kt">int</span> <span class="n">result</span> <span class="o">=</span> <span class="n">name</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">?</span> <span class="n">name</span><span class="o">.</span><span class="na">hashCode</span><span class="o">()</span> <span class="o">:</span> <span class="mi">0</span><span class="o">;</span>
-</span><span class='line'>        <span class="n">result</span> <span class="o">=</span> <span class="mi">31</span> <span class="o">*</span> <span class="n">result</span> <span class="o">+</span> <span class="n">age</span><span class="o">;</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">result</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@Override</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">equals</span><span class="o">(</span><span class="n">Object</span> <span class="n">o</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="k">this</span> <span class="o">==</span> <span class="n">o</span><span class="o">)</span> <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
-</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">o</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">||</span> <span class="n">getClass</span><span class="o">()</span> <span class="o">!=</span> <span class="n">o</span><span class="o">.</span><span class="na">getClass</span><span class="o">())</span> <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">Person</span> <span class="n">person</span> <span class="o">=</span> <span class="o">(</span><span class="n">Person</span><span class="o">)</span> <span class="n">o</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">age</span> <span class="o">!=</span> <span class="n">person</span><span class="o">.</span><span class="na">age</span><span class="o">)</span> <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
-</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">name</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">?</span> <span class="o">!</span><span class="n">name</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">person</span><span class="o">.</span><span class="na">name</span><span class="o">)</span> <span class="o">:</span> <span class="n">person</span><span class="o">.</span><span class="na">name</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@Override</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">toString</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="s">&quot;name : &quot;</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s">&quot;; age : &quot;</span> <span class="o">+</span> <span class="n">age</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>那么下面这段代码的执行结果就应该是：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">test</span> <span class="o">{</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">Person</span> <span class="n">a</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Person</span><span class="o">(</span><span class="s">&quot;Adam&quot;</span><span class="o">,</span> <span class="mi">27</span><span class="o">);</span>
-</span><span class='line'>        <span class="n">Person</span> <span class="n">b</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Person</span><span class="o">(</span><span class="s">&quot;Adam&quot;</span><span class="o">,</span> <span class="mi">27</span><span class="o">);</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">a</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">b</span><span class="o">));</span>  <span class="c1">// true</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">Set</span><span class="o">&lt;</span><span class="n">Person</span><span class="o">&gt;</span> <span class="n">persons</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashSet</span><span class="o">&lt;</span><span class="n">Person</span><span class="o">&gt;();</span>
-</span><span class='line'>        <span class="n">persons</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">a</span><span class="o">);</span>
-</span><span class='line'>        <span class="n">persons</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">b</span><span class="o">);</span>
-</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">persons</span><span class="o">.</span><span class="na">contains</span><span class="o">(</span><span class="n">a</span><span class="o">));</span>  <span class="c1">// true</span>
-</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">persons</span><span class="o">.</span><span class="na">contains</span><span class="o">(</span><span class="n">b</span><span class="o">));</span>  <span class="c1">// true</span>
-</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;size : &quot;</span> <span class="o">+</span> <span class="n">persons</span><span class="o">.</span><span class="na">size</span><span class="o">());</span>  <span class="c1">// 1</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>1、equals()相等的两个对象，hashcode()一定相等；</p>
-
-<p>2、equals()不相等的两个对象，却并不能证明他们的hashcode()不相等。换句话说，equals()方法不相等的两个对象，hashcode()有可能相等。（我的理解是由于哈希码在生成的时候产生冲突造成的）。</p>
-
-<p>3、hashcode()不等，一定能推出equals()也不等；</p>
-
-<p>4、hashcode()相等，equals()可能相等，也可能不等。
-其实上面代码中的equals和hashCode函数都是Intellij自动生成的，以后编写都可以按照这种方法来。</p>
 ]]></content>
   </entry>
   
