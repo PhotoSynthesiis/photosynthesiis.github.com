@@ -9,11 +9,8 @@
   <meta name="author" content="Qiushi Li">
 
   
-  <meta name="description" content="前后查找 # 文本: 1
-2
-3
-&lt;head&gt; &lt;title&gt;Ben Forta&#39;s Homepage&lt;/title&gt;
-&lt;/head&gt; 正则表达式: &lt;[Tt][Ii][Tt][Ll][Ee]>.*?&lt;/[Tt][Ii][Tt][ &hellip;">
+  <meta name="description" content="在正则表达式里嵌入条件 顾名思义,我们可以在正则表达式里插入某些条件,这些条件可以作为另外一些正则表达式被执行的条件. ?:嵌入条件的语法使用?来定义,嵌入条件不外乎两种情况: 根据一个回溯引用来进行条件处理
+根据一个前后查找来进行条件处理 ">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -69,6 +66,59 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/05/18/regex5/">正则表达式必知必会 5</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-05-18T00:52:00-05:00" pubdate data-updated="true">May 18<span>th</span>, 2014</time>
+        
+         | <a href="/blog/2014/05/18/regex5/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>在正则表达式里嵌入条件</h2>
+
+<p>顾名思义,我们可以在正则表达式里插入某些条件,这些条件可以作为另外一些正则表达式被执行的条件.</p>
+
+<p><code>?</code>:嵌入条件的语法使用<code>?</code>来定义,嵌入条件不外乎两种情况:</p>
+
+<ul>
+<li>根据一个回溯引用来进行条件处理</li>
+<li>根据一个前后查找来进行条件处理</li>
+</ul>
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/05/18/regex5/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -221,11 +271,11 @@
 
 <p>#</p>
 
-<p><code>文本</code>: Send personal email to <a href="&#109;&#97;&#105;&#x6c;&#x74;&#111;&#x3a;&#98;&#x65;&#110;&#x40;&#x66;&#111;&#114;&#x74;&#97;&#x2e;&#x63;&#111;&#109;&#x2e;">&#x62;&#x65;&#x6e;&#64;&#x66;&#111;&#x72;&#116;&#97;&#46;&#99;&#111;&#109;&#x2e;</a> For questions about the book use <a href="&#x6d;&#x61;&#105;&#x6c;&#116;&#x6f;&#x3a;&#x73;&#x75;&#x70;&#112;&#x6f;&#114;&#x74;&#x40;&#x66;&#111;&#114;&#116;&#x61;&#x2e;&#99;&#x6f;&#109;&#46;">&#115;&#117;&#112;&#112;&#x6f;&#x72;&#116;&#64;&#102;&#x6f;&#114;&#x74;&#97;&#x2e;&#99;&#111;&#x6d;&#46;</a> Feel free to send unsolicited email to <a href="&#109;&#97;&#x69;&#x6c;&#116;&#111;&#58;&#115;&#x70;&#97;&#x6d;&#x40;&#102;&#x6f;&#x72;&#116;&#97;&#46;&#x63;&#111;&#109;&#x2e;">&#x73;&#112;&#97;&#109;&#x40;&#x66;&#111;&#114;&#x74;&#97;&#46;&#99;&#111;&#x6d;&#46;</a></p>
+<p><code>文本</code>: Send personal email to <a href="&#109;&#97;&#x69;&#x6c;&#x74;&#111;&#58;&#x62;&#101;&#x6e;&#64;&#x66;&#x6f;&#x72;&#116;&#97;&#x2e;&#99;&#111;&#109;&#x2e;">&#x62;&#101;&#110;&#x40;&#x66;&#111;&#x72;&#x74;&#97;&#x2e;&#x63;&#x6f;&#109;&#46;</a> For questions about the book use <a href="&#109;&#97;&#105;&#x6c;&#116;&#111;&#x3a;&#x73;&#x75;&#x70;&#x70;&#x6f;&#114;&#x74;&#x40;&#102;&#111;&#114;&#x74;&#x61;&#x2e;&#99;&#x6f;&#x6d;&#x2e;">&#x73;&#117;&#112;&#112;&#x6f;&#x72;&#x74;&#x40;&#x66;&#111;&#114;&#x74;&#97;&#x2e;&#99;&#x6f;&#x6d;&#x2e;</a> Feel free to send unsolicited email to <a href="&#x6d;&#97;&#x69;&#x6c;&#x74;&#x6f;&#58;&#115;&#x70;&#x61;&#x6d;&#64;&#102;&#111;&#114;&#x74;&#x61;&#x2e;&#99;&#111;&#x6d;&#x2e;">&#115;&#x70;&#x61;&#109;&#64;&#x66;&#x6f;&#x72;&#x74;&#97;&#46;&#99;&#111;&#x6d;&#x2e;</a></p>
 
 <p><code>正则表达式</code>: \w+@\w+.\w+</p>
 
-<p><code>结果</code>: <a href="&#109;&#x61;&#x69;&#108;&#116;&#111;&#58;&#98;&#101;&#110;&#64;&#102;&#x6f;&#114;&#x74;&#x61;&#x2e;&#x63;&#x6f;&#x6d;">&#x62;&#101;&#x6e;&#x40;&#x66;&#111;&#114;&#116;&#97;&#x2e;&#99;&#111;&#109;</a>  <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#115;&#117;&#x70;&#x70;&#111;&#114;&#116;&#64;&#x66;&#111;&#x72;&#116;&#97;&#x2e;&#99;&#111;&#x6d;">&#115;&#117;&#x70;&#x70;&#111;&#x72;&#x74;&#64;&#x66;&#x6f;&#x72;&#x74;&#97;&#x2e;&#x63;&#111;&#109;</a>  <a href="&#109;&#x61;&#105;&#x6c;&#x74;&#111;&#x3a;&#115;&#112;&#x61;&#x6d;&#64;&#x66;&#111;&#114;&#x74;&#x61;&#x2e;&#99;&#111;&#109;">&#115;&#x70;&#97;&#x6d;&#64;&#102;&#x6f;&#x72;&#116;&#x61;&#46;&#x63;&#111;&#x6d;</a></p>
+<p><code>结果</code>: <a href="&#109;&#x61;&#105;&#x6c;&#116;&#111;&#58;&#98;&#x65;&#x6e;&#x40;&#102;&#x6f;&#x72;&#x74;&#97;&#46;&#99;&#x6f;&#109;">&#x62;&#x65;&#110;&#64;&#102;&#111;&#114;&#116;&#97;&#x2e;&#x63;&#x6f;&#109;</a>  <a href="&#109;&#97;&#105;&#108;&#116;&#x6f;&#x3a;&#x73;&#117;&#112;&#112;&#111;&#x72;&#x74;&#64;&#102;&#111;&#114;&#x74;&#x61;&#46;&#x63;&#x6f;&#x6d;">&#115;&#x75;&#x70;&#x70;&#x6f;&#114;&#116;&#x40;&#x66;&#111;&#x72;&#x74;&#x61;&#x2e;&#x63;&#111;&#x6d;</a>  <a href="&#x6d;&#97;&#105;&#108;&#116;&#111;&#x3a;&#115;&#x70;&#97;&#x6d;&#x40;&#102;&#111;&#x72;&#x74;&#x61;&#46;&#99;&#111;&#109;">&#x73;&#x70;&#x61;&#x6d;&#64;&#102;&#111;&#x72;&#116;&#x61;&#x2e;&#99;&#x6f;&#x6d;</a></p>
 
 </div>
   
@@ -533,51 +583,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/04/12/google-analytics/">Google Analytics</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-04-12T20:52:00-05:00" pubdate data-updated="true">Apr 12<span>th</span>, 2014</time>
-        
-         | <a href="/blog/2014/04/12/google-analytics/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>最近在iOS的final project中用到了google analytics来分析用户行为,自己也做了一些research,今天就把它记录在这里.</p>
-
-<p>在介绍之前先说说这个iOS app的概况,他是一个时间记录仪,有显示当前时间(ClockViewController)和stopwatch的功能(StopWatchViewController),可以在app下面的tab切换.我今天要做的是首先为显示时间的view加一个track,然后再到stopwatch里面加两个track用户点击按钮的功能.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/04/12/google-analytics/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -593,6 +598,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/05/18/regex5/">正则表达式必知必会 5</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/05/17/regex4/">正则表达式必知必会 4</a>
       </li>
     
@@ -606,10 +615,6 @@
     
       <li class="post">
         <a href="/blog/2014/05/15/regex/">正则表达式必知必会 1</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/05/09/ios-programming-8-uitableview-and-uitableviewcontroller/">iOS Programming 8 (UITableView &amp; UITableViewController)</a>
       </li>
     
   </ul>

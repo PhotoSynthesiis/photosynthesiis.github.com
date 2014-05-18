@@ -9,8 +9,7 @@
   <meta name="author" content="Qiushi Li">
 
   
-  <meta name="description" content="一、适配器模式
-我们每个人在生活中都经历过这样的事，手中的电子产品和插座要求的接口类型不相符，比如插座要求的是三孔，而自己的插头是两孔，这个时候就需要一个电源适配器插在原先的插座上，然后再适配器的另一端暴露一个两孔的插孔供我们使用。对于客户来说，不管原来插座式几孔的， &hellip;">
+  <meta name="description" content="模板方法模式，顾名思义，必定有一个类提供了一个模板，完成一件工作。其他类使用这个模板完成自己的工作，但是由于各个类之间所要完成的工作之间并不完全一致，所有在模板方法类中会可以留下一些抽象方法供其他类自己来实现，这样通过模板方法达到的效果就产生了区别。例如，如果我要泡一杯咖啡，需要的步骤是 ">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -66,6 +65,49 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/07/14/template-method/">深入浅出设计模式之模板方法模式(Template Method)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-14T14:41:00-05:00" pubdate data-updated="true">Jul 14<span>th</span>, 2013</time>
+        
+         | <a href="/blog/2013/07/14/template-method/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>模板方法模式，顾名思义，必定有一个类提供了一个模板，完成一件工作。其他类使用这个模板完成自己的工作，但是由于各个类之间所要完成的工作之间并不完全一致，所有在模板方法类中会可以留下一些抽象方法供其他类自己来实现，这样通过模板方法达到的效果就产生了区别。例如，如果我要泡一杯咖啡，需要的步骤是</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/07/14/template-method/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -473,49 +515,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/07/09/java-string-reside/">Java中的字符串驻留</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-07-09T19:11:00-05:00" pubdate data-updated="true">Jul 9<span>th</span>, 2013</time>
-        
-         | <a href="/blog/2013/07/09/java-string-reside/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>最近在工作的时候，一句再正常不过的代码String a = “hello” + “world”;被改成了new StringBuilder().append(“hello”).append(“world”)；当时就比较疑惑这样做的好处，后来到网上查找了一番之后才清楚这与Java中的字符串驻留机制有关，那么什么是驻留呢？</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/07/09/java-string-reside/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/5/">&larr; Older</a>
@@ -533,6 +532,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/05/18/regex5/">正则表达式必知必会 5</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/05/17/regex4/">正则表达式必知必会 4</a>
       </li>
     
@@ -546,10 +549,6 @@
     
       <li class="post">
         <a href="/blog/2014/05/15/regex/">正则表达式必知必会 1</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/05/09/ios-programming-8-uitableview-and-uitableviewcontroller/">iOS Programming 8 (UITableView &amp; UITableViewController)</a>
       </li>
     
   </ul>
