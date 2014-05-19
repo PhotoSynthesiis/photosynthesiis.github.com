@@ -5,15 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>深入浅出设计模式之单件模式(Singleton Pattern) - public static void man</title>
+  <title>Linux 1 - public static void man</title>
   <meta name="author" content="Qiushi Li">
 
   
-  <meta name="description" content="单件模式是最简单的一种设计模式，因为从头到尾都只涉及到一个类。单件模式想要达到的目的是在程序运行的过程中只创建一个类的对象，在很多场合这都很有用，比如注册表程序，你不会想要很多对象来，因为那样会造成混乱且很占内存，一个对象足矣。那么应该怎么应用单件模式呢？例子很简单，代码如下： 1
-2
-3
-4
-5 &hellip;">
+  <meta name="description" content="INTRODUCTION What is the Shell Shell是一个应用程序,它接受用户的键盘输入,然后把这些输入传入到操作系统并返回结果. What is the Bash 几乎所有的Linux Distribution都提供一个叫做bash的shell应用程序, &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -22,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://PhotoSynthesiis.github.io/blog/2013/07/13/singleton-pattern">
+  <link rel="canonical" href="http://PhotoSynthesiis.github.io/blog/2014/05/18/linux1">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="public static void man" type="application/atom+xml">
@@ -72,7 +68,7 @@
   
   <header>
     
-      <h1 class="entry-title">深入浅出设计模式之单件模式(Singleton Pattern)</h1>
+      <h1 class="entry-title">Linux 1</h1>
     
     
       <p class="meta">
@@ -88,7 +84,7 @@
   
 
 
-<time datetime="2013-07-13T15:21:00-05:00" pubdate data-updated="true">Jul 13<span>th</span>, 2013</time>
+<time datetime="2014-05-18T11:36:00-05:00" pubdate data-updated="true">May 18<span>th</span>, 2014</time>
         
          | <a href="#disqus_thread">Comments</a>
         
@@ -97,42 +93,100 @@
   </header>
 
 
-<div class="entry-content"><p>单件模式是最简单的一种设计模式，因为从头到尾都只涉及到一个类。单件模式想要达到的目的是在程序运行的过程中只创建一个类的对象，在很多场合这都很有用，比如注册表程序，你不会想要很多对象来，因为那样会造成混乱且很占内存，一个对象足矣。那么应该怎么应用单件模式呢？例子很简单，代码如下：</p>
+<div class="entry-content"><h1>INTRODUCTION</h1>
+
+<h2>What is the Shell</h2>
+
+<p>Shell是一个应用程序,它接受用户的键盘输入,然后把这些输入传入到操作系统并返回结果.</p>
+
+<h2>What is the Bash</h2>
+
+<p>几乎所有的Linux Distribution都提供一个叫做<code>bash</code>的shell应用程序,bash是GNU项目的产物.<code>bash</code>的全称是<code>Bourne Again Shell</code>,从名称上就能看出它是一般Shell(<code>sh</code>)的加强版本.最早期的Shell是由Steve Bourne编写.</p>
 
 <!-- more -->
 
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Singleton</span> <span class="o">{</span>
-</span><span class='line'>  <span class="kd">private</span> <span class="kd">static</span> <span class="n">Singleton</span> <span class="n">uniqueInstance</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="kd">private</span> <span class="nf">Singleton</span><span class="o">();</span> <span class="c1">//这里把构造函数的修饰符设为private是为了在禁止外部类创建Singleton类的对象，而只允许在Singleton类里面创建</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="kd">public</span> <span class="kd">static</span> <span class="n">Singleton</span> <span class="nf">getInstance</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>      <span class="k">if</span> <span class="o">(</span><span class="n">uniqueInstance</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>          <span class="n">uniqueInstance</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Singleton</span><span class="o">();</span> <span class="c1">// 延迟初始化</span>
-</span><span class='line'>      <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>      <span class="k">return</span> <span class="n">uniqueInstance</span><span class="o">;</span>
-</span><span class='line'>  <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
+<h2>Terminal Emulators</h2>
+
+<p>当使用图形用户界面的时候,我们需要另一个程序来与Shell交互,这就是Terminal Emulator.比如在Mac下的iTerm就是一个Terminal.</p>
+
+<h2>Some simple commands</h2>
+
+<p><code>date</code>: 显示当前时间.</p>
+
+<p> <img src="/images/linux-1_1.png"></p>
+
+<p><code>cal</code>: 显示这个月的日历.</p>
+
+<p> <img src="/images/linux-1_2.png"></p>
+
+<p><code>exit</code>: 退出当前session,相当于点击关闭.</p>
+
+<h1>NAVIGATION</h1>
+
+<p><code>pwd</code>: 显示当前工作目录.</p>
+
+<p> <img src="/images/linux-1_3.png"></p>
+
+<p><code>cd</code>: 改变目录.</p>
+
+<ul>
+<li>通过绝对路径直接进入另一个目录</li>
+</ul>
 
 
-<p>
-如果外部类想要用到Singleton类的实例，不能自己创建，而必须向Singleton类请求这个实例。值得注意的是，Singleton类中单间的实现用到了static，意味着不要去继承Singleton类，因为这样所有潜在的子类都能使用这个uniqueInstance，会造成很多混乱。</p>
+<p> <img src="/images/linux-1_5.png"></p>
+
+<ul>
+<li>通过相对目录进入另一个目录</li>
+</ul>
+
+
+<p> <img src="/images/linux-1_6.png"></p>
+
+<p> <img src="/images/linux-1_7.png"></p>
+
+<p><code>ls</code>: 列出当前目录下的所有内容.</p>
+
+<p> <img src="/images/linux-1_4.png"></p>
+
+<p>显示另一个目录下的所有文件;</p>
+
+<p> <img src="/images/linux-1_8.png"></p>
+
+<p>同时显示两个目录下的所有文件(在下面是当前目录和根目录):</p>
+
+<p> <img src="/images/linux-1_9.png"></p>
+
+<p>以某种格式(这里是long format)显示当前目录下的所有文件:</p>
+
+<p> <img src="/images/linux-1_10.png"></p>
+
+<p>下面是可以用到的所有指令:</p>
+
+<p> <img src="/images/linux-1_11.png"></p>
+
+<p>当我们在用<code>-l</code>显示目录下的所以内容时,发现显示了许多具体的内容,下面这个列表表明了每个区域显示的内容的含义:</p>
+
+<p> <img src="/images/linux-1_12.png"></p>
+
+<p><code>tips</code>: 在创建新目录的时候,如果文件名之间有空格,最好用下划线代替.</p>
+
+<h1>EXPLORING THE SYSTEM</h1>
+
+<p><code>file</code>: 显示当前文件的所属类型.</p>
+
+<p> <img src="/images/linux-1_13.png"></p>
+
+<p><code>less</code>: 显示文件的具体内容.</p>
+
+<p> <img src="/images/linux-1_14.png"></p>
+
+<p>点击<code>q</code>退出浏览模式.</p>
+
+<p>下面是在使用<code>less</code>浏览的时候可以使用的快捷键:</p>
+
+<p> <img src="/images/linux-1_15.png"></p>
 </div>
 
 
@@ -155,7 +209,7 @@
   
 
 
-<time datetime="2013-07-13T15:21:00-05:00" pubdate data-updated="true">Jul 13<span>th</span>, 2013</time>
+<time datetime="2014-05-18T11:36:00-05:00" pubdate data-updated="true">May 18<span>th</span>, 2014</time>
       
 
 
@@ -163,7 +217,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://PhotoSynthesiis.github.io/blog/2013/07/13/singleton-pattern/" data-via="photosynthesiis@gmail.com" data-counturl="http://PhotoSynthesiis.github.io/blog/2013/07/13/singleton-pattern/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://PhotoSynthesiis.github.io/blog/2014/05/18/linux1/" data-via="photosynthesiis@gmail.com" data-counturl="http://PhotoSynthesiis.github.io/blog/2014/05/18/linux1/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -176,10 +230,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2013/07/13/factory-pattern/" title="Previous Post: 深入浅出设计模式之工厂模式(Factory Method Pattern)">&laquo; 深入浅出设计模式之工厂模式(Factory Method Pattern)</a>
+        <a class="basic-alignment left" href="/blog/2014/05/18/regex5/" title="Previous Post: 正则表达式必知必会 5">&laquo; 正则表达式必知必会 5</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2013/07/13/command-pattern/" title="Next Post: 深入浅出设计模式之命令模式(Command Pattern)">深入浅出设计模式之命令模式(Command Pattern) &raquo;</a>
       
     </p>
   </footer>
@@ -284,8 +336,8 @@
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://PhotoSynthesiis.github.io/blog/2013/07/13/singleton-pattern/';
-        var disqus_url = 'http://PhotoSynthesiis.github.io/blog/2013/07/13/singleton-pattern/';
+        var disqus_identifier = 'http://PhotoSynthesiis.github.io/blog/2014/05/18/linux1/';
+        var disqus_url = 'http://PhotoSynthesiis.github.io/blog/2014/05/18/linux1/';
         var disqus_script = 'embed.js';
       
     (function () {

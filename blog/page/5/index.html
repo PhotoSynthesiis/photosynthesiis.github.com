@@ -9,7 +9,7 @@
   <meta name="author" content="Qiushi Li">
 
   
-  <meta name="description" content="最近在工作的时候，一句再正常不过的代码String a = “hello” + “world”;被改成了new StringBuilder().append(“hello”).append(“world”)；当时就比较疑惑这样做的好处， &hellip;">
+  <meta name="description" content="Java中的拷贝方式分为深拷贝和浅拷贝。简单来说，深拷贝就是把一个对象中的所有值，如果被拷贝对象中有对其他对象的引用，那么这个引用指向的对象本身会被重新创建。浅拷贝和深拷贝类似，但是如果被拷贝对象中有对其他对象的引用，只是这个引用会被拷贝，而不是这个被引用的对象。 说起来有点绕口， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +65,61 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/07/09/deep-copy-and-shallow-copy/">Java中对象的浅拷贝与深拷贝</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-09T19:17:00-05:00" pubdate data-updated="true">Jul 9<span>th</span>, 2013</time>
+        
+         | <a href="/blog/2013/07/09/deep-copy-and-shallow-copy/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Java中的拷贝方式分为深拷贝和浅拷贝。简单来说，深拷贝就是把一个对象中的所有值，如果被拷贝对象中有对其他对象的引用，那么这个引用指向的对象本身会被重新创建。浅拷贝和深拷贝类似，但是如果被拷贝对象中有对其他对象的引用，只是这个引用会被拷贝，而不是这个被引用的对象。</p>
+
+<p>说起来有点绕口，那么我们就看看下面的图解吧：</p>
+
+<p><img src="/images/deep_shallow_copy-1.png"></p>
+
+<p>shallow copy:</p>
+
+<p><img src="/images/deep_shallow_copy-2.png"></p>
+
+<p>deep copy:</p>
+
+<p><img src="/images/deep_shallow_copy-3.png"></p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/07/09/deep-copy-and-shallow-copy/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -300,6 +355,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/05/18/linux1/">Linux 1</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/05/18/regex5/">正则表达式必知必会 5</a>
       </li>
     
@@ -313,10 +372,6 @@
     
       <li class="post">
         <a href="/blog/2014/05/16/regex2/">正则表达式必知必会 2</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/05/15/regex/">正则表达式必知必会 1</a>
       </li>
     
   </ul>
