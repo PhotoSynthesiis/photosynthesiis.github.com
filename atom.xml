@@ -4,7 +4,7 @@
   <title><![CDATA[public static void man]]></title>
   <link href="http://PhotoSynthesiis.github.io/atom.xml" rel="self"/>
   <link href="http://PhotoSynthesiis.github.io/"/>
-  <updated>2014-05-18T12:25:05-05:00</updated>
+  <updated>2014-05-19T20:47:55-04:00</updated>
   <id>http://PhotoSynthesiis.github.io/</id>
   <author>
     <name><![CDATA[Qiushi Li]]></name>
@@ -14,9 +14,88 @@
 
   
   <entry>
+    <title type="html"><![CDATA[Linux 2]]></title>
+    <link href="http://PhotoSynthesiis.github.io/blog/2014/05/18/linux2/"/>
+    <updated>2014-05-18T12:32:00-04:00</updated>
+    <id>http://PhotoSynthesiis.github.io/blog/2014/05/18/linux2</id>
+    <content type="html"><![CDATA[<h2>Manipulating files and directories</h2>
+
+<p>在操作文件的时候,通常都需要首先根据一定的条件来选择想要的文件(比如说以数字结尾的文件或者扩展名为xls的文件).这时我们需要使用通配符,它使用一定的规则帮助快速找到想要的文件.</p>
+
+<!-- more -->
+
+
+<p> <img src="http://PhotoSynthesiis.github.io/images/linux-2_1.png"></p>
+
+<p>下面是一些通配符的例子:</p>
+
+<p> <img src="http://PhotoSynthesiis.github.io/images/linux-2_2.png"></p>
+
+<p><code>mkdir</code>: 创建新的目录.</p>
+
+<p>#</p>
+
+<p>mkdir dir_name</p>
+
+<p>同时创建多个目录: mkdir dir1 dir2 dir3.</p>
+
+<p><code>cp</code>: 从一个目录拷贝文件到另一个目录.</p>
+
+<p> <img src="http://PhotoSynthesiis.github.io/images/linux-2_3.png"></p>
+
+<p> <img src="http://PhotoSynthesiis.github.io/images/linux-2_4.png"></p>
+
+<p><code>mv</code>: 移动文件或者修改文件名.不论是在那种情况下使用,原始的文件都不存在了,这是和<code>cp</code>最大的不同,可以想象成剪切.</p>
+
+<p><img src="http://PhotoSynthesiis.github.io/images/linux-2_5.png"></p>
+
+<p><code>rm</code>: 删除文件或者目录.删除后的文件或目录不能undelete.</p>
+
+<p><img src="http://PhotoSynthesiis.github.io/images/linux-2_6.png"></p>
+
+<p><img src="http://PhotoSynthesiis.github.io/images/linux-2_7.png"></p>
+
+<h3>Hard Links vs. Soft(Symbolic) Links</h3>
+
+<p><code>文件储存</code>: linux系统中文件存储在硬盘上,硬盘的最小存储单位叫做扇区(sector),每个扇区存储512个字节(0.5kb).操作系统读取硬盘的时候，不会一个个扇区地读取，这样效率太低，而是一次性连续读取多个扇区，即一次性读取一个&#8221;块&#8221;（block）。这种由多个扇区组成的&#8221;块&#8221;，是文件存取的最小单位。&#8221;块&#8221;的大小，最常见的是4KB，即连续八个 sector组成一个 block.</p>
+
+<p><code>inode</code>: 文件数据都储存在&#8221;块&#8221;中，那么很显然，我们还必须找到一个地方储存文件的元信息，比如文件的创建者、文件的创建日期、文件的大小等等。这种储存文件元信息的区域就叫做inode，中文译名为&#8221;索引节点&#8221;(index node)。存储linux系统中文件的元信息.每个文件都有一个inode.linux系统中的文件没有文件名,不同的文件是通过inode号来区分.虽然在使用linux的时候会看到文件名,但它只是一个inode的别称.比如用户在通过文件名点击文件的时候,系统首先通过文件名找到对应的inode号,然后再找到inode.最后通过inode找到文件储存的相应block,然后提取文件.</p>
+
+<p><code>Hard Link</code>: 一般情况下，文件名和inode号码是&#8221;一一对应&#8221;关系，每个inode号码对应一个文件名。但是，Unix/Linux系统允许，多个文件名指向同一个inode号码。
+这意味着，可以用不同的文件名访问同样的内容；对文件内容进行修改，会影响到所有文件名；但是，删除一个文件名，不影响另一个文件名的访问。这种情况就被称为&#8221;硬链接&#8221;.(hard link)</p>
+
+<p><code>ln file link</code>: 用来创建Hard link. file是源文件,link是目标文件.</p>
+
+<p><img src="http://PhotoSynthesiis.github.io/images/linux-2_8.png"></p>
+
+<p>运行上面这条命令以后，源文件与目标文件的inode号码相同，都指向同一个inode。inode信息中有一项叫做&#8221;链接数&#8221;，记录指向该inode的文件名总数，这时就会增加1。
+反过来，删除一个文件名，就会使得inode节点中的&#8221;链接数&#8221;减1。当这个值减到0，表明没有文件名指向这个inode，系统就会回收这个inode号码，以及其所对应block区域。
+这里顺便说一下目录文件的&#8221;链接数&#8221;。创建目录时，默认会生成两个目录项：&#8221;.&ldquo;和&rdquo;..&ldquo;。前者的inode号码就是当前目录的inode号码，等同于当前目录的&#8221;硬链接&#8221;；后者的inode号码就是当前目录的父目录的inode号码，等同于父目录的&#8221;硬链接&#8221;。所以，任何一个目录的&#8221;硬链接&#8221;总数，总是等于2加上它的子目录总数（含隐藏目录）。</p>
+
+<p><code>Soft(Symbolic) Link</code>: 除了硬链接以外，还有一种特殊情况。文件A和文件B的inode号码虽然不一样，但是文件A的内容是文件B的路径。读取文件A时，系统会自动将访问者导向文件B。因此，无论打开哪一个文件，最终读取的都是文件B。这时，文件A就称为文件B的&#8221;软链接&#8221;（soft link）或者&#8221;符号链接（symbolic link）。这意味着，文件A依赖于文件B而存在，如果删除了文件B，打开文件A就会报错：&#8221;No such file or directory&#8221;。这是软链接与硬链接最大的不同：文件A指向文件B的文件名，而不是文件B的inode号码，文件B的inode&#8221;链接数&#8221;不会因此发生变化。ln -s命令可以创建软链接。</p>
+
+<p><code>ln -s item link</code>: 用来创建soft link.</p>
+
+<p><img src="http://PhotoSynthesiis.github.io/images/linux-2_9.png"></p>
+
+<p><code>inode的特殊作用</code>:
+由于inode号码与文件名分离，这种机制导致了一些Unix/Linux系统特有的现象。</p>
+
+<ul>
+<li>有时，文件名包含特殊字符，无法正常删除。这时，直接删除inode节点，就能起到删除文件的作用。</li>
+<li>移动文件或重命名文件，只是改变文件名，不影响inode号码。</li>
+<li>打开一个文件以后，系统就以inode号码来识别这个文件，不再考虑文件名。因此，通常来说，系统无法从inode号码得知文件名。</li>
+</ul>
+
+
+<p>第3点使得软件更新变得简单，可以在不关闭软件的情况下进行更新，不需要重启。因为系统通过inode号码，识别运行中的文件，不通过文件名。更新的时候，新版文件以同样的文件名，生成一个新的inode，不会影响到运行中的文件。等到下一次运行这个软件的时候，文件名就自动指向新版文件，旧版文件的inode则被回收。</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Linux 1]]></title>
     <link href="http://PhotoSynthesiis.github.io/blog/2014/05/18/linux1/"/>
-    <updated>2014-05-18T11:36:00-05:00</updated>
+    <updated>2014-05-18T11:36:00-04:00</updated>
     <id>http://PhotoSynthesiis.github.io/blog/2014/05/18/linux1</id>
     <content type="html"><![CDATA[<h1>INTRODUCTION</h1>
 
@@ -118,7 +197,7 @@
   <entry>
     <title type="html"><![CDATA[正则表达式必知必会 5]]></title>
     <link href="http://PhotoSynthesiis.github.io/blog/2014/05/18/regex5/"/>
-    <updated>2014-05-18T00:52:00-05:00</updated>
+    <updated>2014-05-18T00:52:00-04:00</updated>
     <id>http://PhotoSynthesiis.github.io/blog/2014/05/18/regex5</id>
     <content type="html"><![CDATA[<h2>在正则表达式里嵌入条件</h2>
 
@@ -256,7 +335,7 @@
   <entry>
     <title type="html"><![CDATA[正则表达式必知必会 4]]></title>
     <link href="http://PhotoSynthesiis.github.io/blog/2014/05/17/regex4/"/>
-    <updated>2014-05-17T23:25:00-05:00</updated>
+    <updated>2014-05-17T23:25:00-04:00</updated>
     <id>http://PhotoSynthesiis.github.io/blog/2014/05/17/regex4</id>
     <content type="html"><![CDATA[<h2>前后查找</h2>
 
@@ -406,7 +485,7 @@
   <entry>
     <title type="html"><![CDATA[正则表达式必知必会 3]]></title>
     <link href="http://PhotoSynthesiis.github.io/blog/2014/05/17/regex3/"/>
-    <updated>2014-05-17T10:43:00-05:00</updated>
+    <updated>2014-05-17T10:43:00-04:00</updated>
     <id>http://PhotoSynthesiis.github.io/blog/2014/05/17/regex3</id>
     <content type="html"><![CDATA[<h2>使用子表达式</h2>
 
@@ -573,11 +652,11 @@
 
 <p>#</p>
 
-<p><code>文本</code>: Hello, my name is Ben Forta, my email address is <a href="&#109;&#x61;&#105;&#x6c;&#116;&#111;&#58;&#x62;&#101;&#x6e;&#64;&#102;&#x6f;&#114;&#x74;&#x61;&#46;&#99;&#x6f;&#109;">&#x62;&#101;&#x6e;&#x40;&#x66;&#111;&#114;&#116;&#x61;&#x2e;&#99;&#x6f;&#x6d;</a></p>
+<p><code>文本</code>: Hello, my name is Ben Forta, my email address is <a href="&#109;&#x61;&#105;&#x6c;&#x74;&#111;&#58;&#98;&#101;&#110;&#64;&#x66;&#111;&#114;&#x74;&#97;&#x2e;&#x63;&#x6f;&#x6d;">&#98;&#101;&#x6e;&#64;&#102;&#111;&#x72;&#x74;&#x61;&#46;&#99;&#x6f;&#x6d;</a></p>
 
 <p><code>正则表达式</code>: \w[\w.]*@[\w.]+.\w+</p>
 
-<p><code>结果</code>: <a href="&#109;&#97;&#x69;&#x6c;&#116;&#111;&#x3a;&#x62;&#x65;&#x6e;&#x40;&#x66;&#111;&#114;&#x74;&#97;&#x2e;&#99;&#x6f;&#109;">&#x62;&#x65;&#x6e;&#64;&#x66;&#x6f;&#x72;&#116;&#x61;&#46;&#x63;&#111;&#x6d;</a></p>
+<p><code>结果</code>: <a href="&#x6d;&#97;&#x69;&#x6c;&#x74;&#x6f;&#x3a;&#x62;&#x65;&#110;&#x40;&#102;&#x6f;&#114;&#x74;&#x61;&#x2e;&#99;&#x6f;&#x6d;">&#x62;&#x65;&#x6e;&#x40;&#x66;&#x6f;&#114;&#x74;&#x61;&#x2e;&#99;&#111;&#109;</a></p>
 
 <p>这里的正则表达式匹配了一个邮件地址.</p>
 
@@ -587,11 +666,11 @@
 
 <p>#</p>
 
-<p><code>文本</code>: Hello, my name is Ben Forta, my email address is <a href="&#109;&#x61;&#x69;&#x6c;&#116;&#x6f;&#58;&#x62;&#101;&#x6e;&#x40;&#102;&#111;&#114;&#116;&#97;&#x2e;&#99;&#111;&#109;">&#x62;&#101;&#x6e;&#x40;&#x66;&#111;&#114;&#x74;&#x61;&#46;&#99;&#111;&#x6d;</a></p>
+<p><code>文本</code>: Hello, my name is Ben Forta, my email address is <a href="&#x6d;&#x61;&#x69;&#108;&#x74;&#111;&#58;&#x62;&#x65;&#110;&#x40;&#x66;&#x6f;&#114;&#116;&#97;&#x2e;&#x63;&#x6f;&#x6d;">&#x62;&#x65;&#110;&#64;&#x66;&#x6f;&#x72;&#x74;&#x61;&#46;&#x63;&#x6f;&#x6d;</a></p>
 
 <p><code>正则表达式</code>:  (\w[\w.]*@[\w.]+.\w+)</p>
 
-<p><code>替换</code>: &lt;A href=&ldquo;<a href="&#109;&#x61;&#x69;&#x6c;&#x74;&#111;&#x3a;&#36;&#49;">&#x24;&#49;</a>&rdquo;>$1&lt;/A></p>
+<p><code>替换</code>: &lt;A href=&ldquo;<a href="&#109;&#x61;&#105;&#108;&#x74;&#111;&#x3a;&#x24;&#x31;">&#x24;&#x31;</a>&rdquo;>$1&lt;/A></p>
 
 <p><code>结果</code>: ben@forta.com成为了可点击的链接</p>
 
@@ -663,7 +742,7 @@
   <entry>
     <title type="html"><![CDATA[正则表达式必知必会 2]]></title>
     <link href="http://PhotoSynthesiis.github.io/blog/2014/05/16/regex2/"/>
-    <updated>2014-05-16T21:28:00-05:00</updated>
+    <updated>2014-05-16T21:28:00-04:00</updated>
     <id>http://PhotoSynthesiis.github.io/blog/2014/05/16/regex2</id>
     <content type="html"><![CDATA[<h2>重复匹配</h2>
 
@@ -673,11 +752,11 @@
 
 <p>#</p>
 
-<p><code>文本</code>: Send personal email to <a href="&#x6d;&#97;&#x69;&#108;&#116;&#111;&#58;&#98;&#x65;&#110;&#64;&#102;&#x6f;&#x72;&#116;&#97;&#46;&#99;&#111;&#109;&#46;">&#98;&#x65;&#x6e;&#64;&#x66;&#x6f;&#x72;&#116;&#x61;&#x2e;&#x63;&#x6f;&#109;&#x2e;</a> For questions about the book use <a href="&#x6d;&#97;&#x69;&#x6c;&#x74;&#x6f;&#x3a;&#x73;&#x75;&#112;&#x70;&#x6f;&#114;&#x74;&#x40;&#x66;&#x6f;&#x72;&#116;&#97;&#x2e;&#x63;&#x6f;&#x6d;&#x2e;">&#115;&#117;&#112;&#x70;&#111;&#x72;&#116;&#x40;&#102;&#x6f;&#114;&#x74;&#97;&#46;&#99;&#x6f;&#x6d;&#46;</a> Feel free to send unsolicited email to <a href="&#x6d;&#x61;&#x69;&#108;&#116;&#x6f;&#58;&#x73;&#112;&#x61;&#109;&#x40;&#102;&#x6f;&#x72;&#116;&#97;&#46;&#x63;&#x6f;&#x6d;&#x2e;">&#115;&#x70;&#x61;&#x6d;&#x40;&#x66;&#111;&#x72;&#x74;&#x61;&#46;&#x63;&#111;&#109;&#46;</a></p>
+<p><code>文本</code>: Send personal email to <a href="&#x6d;&#97;&#105;&#108;&#x74;&#x6f;&#x3a;&#x62;&#x65;&#x6e;&#x40;&#102;&#111;&#x72;&#x74;&#x61;&#46;&#x63;&#111;&#109;&#x2e;">&#x62;&#101;&#x6e;&#x40;&#x66;&#111;&#114;&#116;&#97;&#x2e;&#x63;&#x6f;&#x6d;&#x2e;</a> For questions about the book use <a href="&#109;&#97;&#105;&#x6c;&#x74;&#x6f;&#58;&#x73;&#117;&#112;&#112;&#x6f;&#114;&#x74;&#x40;&#x66;&#111;&#x72;&#x74;&#97;&#46;&#99;&#111;&#109;&#46;">&#115;&#x75;&#x70;&#x70;&#111;&#x72;&#116;&#64;&#x66;&#x6f;&#x72;&#x74;&#97;&#46;&#x63;&#111;&#109;&#46;</a> Feel free to send unsolicited email to <a href="&#109;&#x61;&#x69;&#x6c;&#116;&#111;&#58;&#115;&#x70;&#97;&#109;&#x40;&#102;&#111;&#x72;&#116;&#97;&#x2e;&#x63;&#111;&#109;&#46;">&#x73;&#x70;&#x61;&#x6d;&#64;&#102;&#x6f;&#114;&#116;&#97;&#46;&#99;&#x6f;&#109;&#46;</a></p>
 
 <p><code>正则表达式</code>: \w+@\w+.\w+</p>
 
-<p><code>结果</code>: <a href="&#109;&#x61;&#105;&#108;&#116;&#111;&#58;&#x62;&#x65;&#x6e;&#x40;&#x66;&#111;&#114;&#116;&#97;&#x2e;&#99;&#x6f;&#109;">&#x62;&#101;&#110;&#64;&#102;&#x6f;&#114;&#x74;&#x61;&#x2e;&#x63;&#111;&#109;</a>  <a href="&#x6d;&#97;&#105;&#x6c;&#116;&#x6f;&#x3a;&#x73;&#x75;&#112;&#112;&#x6f;&#x72;&#116;&#64;&#x66;&#x6f;&#114;&#116;&#x61;&#46;&#x63;&#x6f;&#109;">&#x73;&#117;&#x70;&#112;&#x6f;&#x72;&#x74;&#x40;&#x66;&#x6f;&#114;&#116;&#x61;&#x2e;&#x63;&#111;&#109;</a>  <a href="&#x6d;&#x61;&#x69;&#x6c;&#116;&#111;&#58;&#115;&#112;&#97;&#x6d;&#x40;&#x66;&#x6f;&#x72;&#116;&#97;&#x2e;&#x63;&#111;&#109;">&#115;&#x70;&#97;&#x6d;&#x40;&#x66;&#111;&#x72;&#x74;&#97;&#46;&#99;&#x6f;&#109;</a></p>
+<p><code>结果</code>: <a href="&#109;&#97;&#x69;&#108;&#116;&#x6f;&#x3a;&#98;&#101;&#x6e;&#64;&#x66;&#111;&#114;&#x74;&#97;&#46;&#x63;&#111;&#x6d;">&#x62;&#101;&#x6e;&#x40;&#x66;&#x6f;&#x72;&#x74;&#97;&#x2e;&#x63;&#111;&#x6d;</a>  <a href="&#x6d;&#x61;&#x69;&#108;&#116;&#111;&#58;&#x73;&#117;&#x70;&#x70;&#x6f;&#x72;&#x74;&#x40;&#102;&#x6f;&#114;&#x74;&#97;&#x2e;&#99;&#x6f;&#109;">&#115;&#117;&#x70;&#x70;&#x6f;&#x72;&#x74;&#64;&#102;&#111;&#114;&#116;&#97;&#46;&#x63;&#x6f;&#109;</a>  <a href="&#109;&#97;&#x69;&#108;&#x74;&#x6f;&#x3a;&#x73;&#112;&#x61;&#x6d;&#64;&#102;&#x6f;&#114;&#116;&#97;&#46;&#99;&#111;&#x6d;">&#115;&#112;&#x61;&#x6d;&#x40;&#102;&#x6f;&#114;&#x74;&#x61;&#x2e;&#x63;&#111;&#x6d;</a></p>
 
 <!-- more -->
 
@@ -981,7 +1060,7 @@
   <entry>
     <title type="html"><![CDATA[正则表达式必知必会 1]]></title>
     <link href="http://PhotoSynthesiis.github.io/blog/2014/05/15/regex/"/>
-    <updated>2014-05-15T22:27:00-05:00</updated>
+    <updated>2014-05-15T22:27:00-04:00</updated>
     <id>http://PhotoSynthesiis.github.io/blog/2014/05/15/regex</id>
     <content type="html"><![CDATA[<h2>匹配单个字符</h2>
 
@@ -1192,7 +1271,7 @@
   <entry>
     <title type="html"><![CDATA[iOS Programming 8 (UITableView &amp; UITableViewController)]]></title>
     <link href="http://PhotoSynthesiis.github.io/blog/2014/05/09/ios-programming-8-uitableview-and-uitableviewcontroller/"/>
-    <updated>2014-05-09T12:20:00-05:00</updated>
+    <updated>2014-05-09T12:20:00-04:00</updated>
     <id>http://PhotoSynthesiis.github.io/blog/2014/05/09/ios-programming-8-uitableview-and-uitableviewcontroller</id>
     <content type="html"><![CDATA[<p><code>UITableView</code>在iOS中是一个很重要的概念,它会把数据像列表一样显示在屏幕上.首先需要介绍几个概念:</p>
 
@@ -1365,7 +1444,7 @@
   <entry>
     <title type="html"><![CDATA[Git 2 (Basics)]]></title>
     <link href="http://PhotoSynthesiis.github.io/blog/2014/05/07/git-2/"/>
-    <updated>2014-05-07T21:35:00-05:00</updated>
+    <updated>2014-05-07T21:35:00-04:00</updated>
     <id>http://PhotoSynthesiis.github.io/blog/2014/05/07/git-2</id>
     <content type="html"><![CDATA[<h2>Initialize a repository</h2>
 
@@ -1494,7 +1573,7 @@
   <entry>
     <title type="html"><![CDATA[Git 1 (Basic Concept)]]></title>
     <link href="http://PhotoSynthesiis.github.io/blog/2014/05/07/git-1/"/>
-    <updated>2014-05-07T00:27:00-05:00</updated>
+    <updated>2014-05-07T00:27:00-04:00</updated>
     <id>http://PhotoSynthesiis.github.io/blog/2014/05/07/git-1</id>
     <content type="html"><![CDATA[<p>原来学过Git,但学得不扎实,而且学过之后也没怎么用,导致每次要用的时候都得重新学一遍.现在再次学习,把学到的记录下来,以后忘了复习起来也方便.</p>
 
@@ -1547,7 +1626,7 @@
   <entry>
     <title type="html"><![CDATA[iOS programming 7 (Delegation and Text Input)]]></title>
     <link href="http://PhotoSynthesiis.github.io/blog/2014/05/06/ios-programming-7-delegation-and-text-input/"/>
-    <updated>2014-05-06T21:01:00-05:00</updated>
+    <updated>2014-05-06T21:01:00-04:00</updated>
     <id>http://PhotoSynthesiis.github.io/blog/2014/05/06/ios-programming-7-delegation-and-text-input</id>
     <content type="html"><![CDATA[<h2>UIResponder</h2>
 
@@ -1720,7 +1799,7 @@
   <entry>
     <title type="html"><![CDATA[iOS Programming 6-2(UITabBarController)]]></title>
     <link href="http://PhotoSynthesiis.github.io/blog/2014/05/06/ios-programming-6-2-uitabviewcontrollers/"/>
-    <updated>2014-05-06T15:57:00-05:00</updated>
+    <updated>2014-05-06T15:57:00-04:00</updated>
     <id>http://PhotoSynthesiis.github.io/blog/2014/05/06/ios-programming-6-2-uitabviewcontrollers</id>
     <content type="html"><![CDATA[<p>我们在上一章中讲到了如何使用viewcontroller,这里我讲讲解一种技术,它可以管理多个viewcontroller,并在这些viewcontroller之间切换,这项技术叫做UITabBarController.</p>
 
@@ -1770,7 +1849,7 @@
   <entry>
     <title type="html"><![CDATA[google analytics]]></title>
     <link href="http://PhotoSynthesiis.github.io/blog/2014/04/12/google-analytics/"/>
-    <updated>2014-04-12T20:52:00-05:00</updated>
+    <updated>2014-04-12T20:52:00-04:00</updated>
     <id>http://PhotoSynthesiis.github.io/blog/2014/04/12/google-analytics</id>
     <content type="html"><![CDATA[<p>最近在iOS的final project中用到了google analytics来分析用户行为,自己也做了一些research,今天就把它记录在这里.</p>
 
@@ -2049,7 +2128,7 @@
   <entry>
     <title type="html"><![CDATA[iOS Programming 6-1(View Controllers)]]></title>
     <link href="http://PhotoSynthesiis.github.io/blog/2014/04/06/ios-6/"/>
-    <updated>2014-04-06T19:55:00-05:00</updated>
+    <updated>2014-04-06T19:55:00-04:00</updated>
     <id>http://PhotoSynthesiis.github.io/blog/2014/04/06/ios-6</id>
     <content type="html"><![CDATA[<p>前面讲过了view和View hierachy,为了让view在window上显示,我们都是直接把一个view加到应用的window里面去,今天要讲的东西比view更高级一层,他叫view controller.他的职责是创建view,响应view的事件,管理view的层级关系,把view加到window里.</p>
 
@@ -2228,7 +2307,7 @@
   <entry>
     <title type="html"><![CDATA[iOS Programming 5(Redrawing and UIScrollView)]]></title>
     <link href="http://PhotoSynthesiis.github.io/blog/2014/04/04/ios-programming-5/"/>
-    <updated>2014-04-04T13:08:00-05:00</updated>
+    <updated>2014-04-04T13:08:00-04:00</updated>
     <id>http://PhotoSynthesiis.github.io/blog/2014/04/04/ios-programming-5</id>
     <content type="html"><![CDATA[<p>在上一篇博客中,我们创建了一个画同心圆的app,这篇博客将继续在那上面扩展,当用户在屏幕上点击的时候同心圆会改变颜色.此外,还将在app里面加上UIScrollView,让用户通过scroll的方式浏览比屏幕本身大的view.</p>
 
@@ -2430,7 +2509,7 @@
   <entry>
     <title type="html"><![CDATA[使用递归计算的回溯法]]></title>
     <link href="http://PhotoSynthesiis.github.io/blog/2014/04/03/backtrack/"/>
-    <updated>2014-04-03T21:59:00-05:00</updated>
+    <updated>2014-04-03T21:59:00-04:00</updated>
     <id>http://PhotoSynthesiis.github.io/blog/2014/04/03/backtrack</id>
     <content type="html"><![CDATA[<p>谈到这个方法的初衷本来是想在iOS项目中使用,因为当时叫设计一种方法来摆放battleship,如果在当前位置不能摆放可以回溯到上一个地点再试,最后还是放弃了,因为用不了这么复杂的方法. 不过既然学习了,并且花了这么多时间来编码,就应该记录下来,以后可能还会用上,就不必又从开头来学了.</p>
 
@@ -3063,7 +3142,7 @@ X X Q X X X X X<br/></p>
   <entry>
     <title type="html"><![CDATA[iOS Programming 4(Views and the View Hierarchy)]]></title>
     <link href="http://PhotoSynthesiis.github.io/blog/2014/03/09/ios-4/"/>
-    <updated>2014-03-09T19:08:00-05:00</updated>
+    <updated>2014-03-09T19:08:00-04:00</updated>
     <id>http://PhotoSynthesiis.github.io/blog/2014/03/09/ios-4</id>
     <content type="html"><![CDATA[<h3>View Basics</h3>
 
@@ -3372,7 +3451,7 @@ X X Q X X X X X<br/></p>
   <entry>
     <title type="html"><![CDATA[iOS Programming 3(Managing Memory wih ARC)]]></title>
     <link href="http://PhotoSynthesiis.github.io/blog/2014/03/08/ios-3/"/>
-    <updated>2014-03-08T18:54:00-06:00</updated>
+    <updated>2014-03-08T18:54:00-05:00</updated>
     <id>http://PhotoSynthesiis.github.io/blog/2014/03/08/ios-3</id>
     <content type="html"><![CDATA[<h3>栈和堆</h3>
 
@@ -3452,7 +3531,7 @@ X X Q X X X X X<br/></p>
   <entry>
     <title type="html"><![CDATA[iOS Programming 2(objective-c)]]></title>
     <link href="http://PhotoSynthesiis.github.io/blog/2014/03/07/ios-programming-2/"/>
-    <updated>2014-03-07T18:36:00-06:00</updated>
+    <updated>2014-03-07T18:36:00-05:00</updated>
     <id>http://PhotoSynthesiis.github.io/blog/2014/03/07/ios-programming-2</id>
     <content type="html"><![CDATA[<p>Objective-c中的方法调用其实是一种消息传送的机制，例如下面这段代码：</p>
 
@@ -3529,7 +3608,7 @@ X X Q X X X X X<br/></p>
   <entry>
     <title type="html"><![CDATA[iOS Programming 1(A simple iOS application)]]></title>
     <link href="http://PhotoSynthesiis.github.io/blog/2014/03/06/ios-programming-1/"/>
-    <updated>2014-03-06T14:07:00-06:00</updated>
+    <updated>2014-03-06T14:07:00-05:00</updated>
     <id>http://PhotoSynthesiis.github.io/blog/2014/03/06/ios-programming-1</id>
     <content type="html"><![CDATA[<p>最近在学习iOS开发，虽然课上也有讲，但是还是不如自己看书学得更实在，今天就从最基础的iOS开发说起。值得注意的是，我在这类博客里所讲到的内容，完全是按照iOS Programming: The Big Nerd Ranch Guide第四版里面来的。</p>
 
@@ -3735,170 +3814,6 @@ X X Q X X X X X<br/></p>
 <p>每个iOS应用都有一个AppDelegate，他是应用的入口，当应用启动和关闭的时候，可以在AppDelegate里面相应的方法中做初始化和收尾的工作。</p>
 
 <p>到这个时候，每次启动应用的时候，一个controller对象会被创建，然后initWithNibName方法会被调用，所有准备工作结束，可以启动项目了。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[快速排序(Quicksort)]]></title>
-    <link href="http://PhotoSynthesiis.github.io/blog/2013/08/23/quick-sort/"/>
-    <updated>2013-08-23T21:57:00-05:00</updated>
-    <id>http://PhotoSynthesiis.github.io/blog/2013/08/23/quick-sort</id>
-    <content type="html"><![CDATA[<p>Quick Sort即快速排序，它是对归并排序的一种补充，采用的也是分治策略。基本思想是在整个数组中选择第一个数作为一个基准，然后分别从第二个数向后和最后一个数向前开始扫描。如果在向后扫描的过程中如果遇到比基准大的数字(我们这里假设默认为升序排列)，同时在从后向前扫描的过程中遇到比基准小的数字，那么这两个数字就交换。这个过程一直持续下去直到从左扫描的下标大于从右开始扫描的下标作为结束。最后，把基准和右边下标指向的数交换，这样基准左边的数字都小于该基准，基准右边的数字都大于它。不断地递归这个过程就是快速排序。我们可以看看下面这个图帮助理解：</p>
-
-<!-- more -->
-
-
-<p><img src="http://PhotoSynthesiis.github.io/images/quick_sort-1.png">
-快速排序和归并排序的主要区别在于，归并排序是先递归再合并，而快速排序是先分解再递归。下面是分解的过程：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">private</span> <span class="kd">static</span> <span class="kt">int</span> <span class="nf">partition</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">a</span><span class="o">,</span> <span class="kt">int</span> <span class="n">low</span><span class="o">,</span> <span class="kt">int</span> <span class="n">high</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>    <span class="n">String</span> <span class="n">value</span> <span class="o">=</span> <span class="n">a</span><span class="o">[</span><span class="n">low</span><span class="o">];</span>
-</span><span class='line'>    <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">low</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
-</span><span class='line'>    <span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">high</span><span class="o">;</span>
-</span><span class='line'>    <span class="k">while</span> <span class="o">(</span><span class="kc">true</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">while</span> <span class="o">(</span><span class="n">a</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="na">compareTo</span><span class="o">(</span><span class="n">value</span><span class="o">)</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">high</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>            <span class="n">i</span><span class="o">++;</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>        <span class="k">while</span> <span class="o">(</span><span class="n">a</span><span class="o">[</span><span class="n">j</span><span class="o">].</span><span class="na">compareTo</span><span class="o">(</span><span class="n">value</span><span class="o">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">j</span> <span class="o">&gt;</span> <span class="n">low</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>            <span class="n">j</span><span class="o">--;</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">i</span> <span class="o">&gt;=</span> <span class="n">j</span><span class="o">)</span>
-</span><span class='line'>            <span class="k">break</span><span class="o">;</span>
-</span><span class='line'>        <span class="n">exchange</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">i</span><span class="o">,</span> <span class="n">j</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>    <span class="n">exchange</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">low</span><span class="o">,</span> <span class="n">j</span><span class="o">);</span>
-</span><span class='line'>    <span class="k">return</span> <span class="n">j</span><span class="o">;</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Partition一次之后，基准的左边都小于它，右边都大于它。</p>
-
-<p>下面是分解后递归的过程：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">private</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">sort</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">a</span><span class="o">,</span> <span class="kt">int</span> <span class="n">low</span><span class="o">,</span> <span class="kt">int</span> <span class="n">high</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>    <span class="k">if</span> <span class="o">(</span><span class="n">low</span> <span class="o">&gt;=</span> <span class="n">high</span><span class="o">)</span>
-</span><span class='line'>        <span class="k">return</span><span class="o">;</span>
-</span><span class='line'>    <span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">partition</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">low</span><span class="o">,</span> <span class="n">high</span><span class="o">);</span>
-</span><span class='line'>    <span class="n">sort</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">low</span><span class="o">,</span> <span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="o">);</span>
-</span><span class='line'>    <span class="n">sort</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="o">,</span> <span class="n">high</span><span class="o">);</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>我们可以看出，这其实是在对每一个小分组都执行第一张图里所示的过程。</p>
-
-<p>最后整个程序如下：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">QuickSort</span> <span class="o">{</span>
-</span><span class='line'>    <span class="kd">private</span> <span class="kd">static</span> <span class="n">String</span><span class="o">[]</span> <span class="n">a</span> <span class="o">=</span> <span class="o">{</span><span class="s">&quot;Q&quot;</span><span class="o">,</span> <span class="s">&quot;U&quot;</span><span class="o">,</span> <span class="s">&quot;I&quot;</span><span class="o">,</span> <span class="s">&quot;C&quot;</span><span class="o">,</span> <span class="s">&quot;K&quot;</span><span class="o">,</span> <span class="s">&quot;S&quot;</span><span class="o">,</span> <span class="s">&quot;O&quot;</span><span class="o">,</span> <span class="s">&quot;R&quot;</span><span class="o">,</span> <span class="s">&quot;T&quot;</span><span class="o">};</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">sort</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">a</span><span class="o">.</span><span class="na">length</span> <span class="o">-</span> <span class="mi">1</span><span class="o">);</span>
-</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">Arrays</span><span class="o">.</span><span class="na">toString</span><span class="o">(</span><span class="n">a</span><span class="o">));</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">private</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">sort</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">a</span><span class="o">,</span> <span class="kt">int</span> <span class="n">low</span><span class="o">,</span> <span class="kt">int</span> <span class="n">high</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">low</span> <span class="o">&gt;=</span> <span class="n">high</span><span class="o">)</span>
-</span><span class='line'>            <span class="k">return</span><span class="o">;</span>
-</span><span class='line'>        <span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">partition</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">low</span><span class="o">,</span> <span class="n">high</span><span class="o">);</span>
-</span><span class='line'>        <span class="n">sort</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">low</span><span class="o">,</span> <span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="o">);</span>
-</span><span class='line'>        <span class="n">sort</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="o">,</span> <span class="n">high</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">private</span> <span class="kd">static</span> <span class="kt">int</span> <span class="nf">partition</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">a</span><span class="o">,</span> <span class="kt">int</span> <span class="n">low</span><span class="o">,</span> <span class="kt">int</span> <span class="n">high</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">String</span> <span class="n">value</span> <span class="o">=</span> <span class="n">a</span><span class="o">[</span><span class="n">low</span><span class="o">];</span>
-</span><span class='line'>        <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">low</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
-</span><span class='line'>        <span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">high</span><span class="o">;</span>
-</span><span class='line'>        <span class="k">while</span> <span class="o">(</span><span class="kc">true</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>            <span class="k">while</span> <span class="o">(</span><span class="n">a</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="na">compareTo</span><span class="o">(</span><span class="n">value</span><span class="o">)</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">high</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>                <span class="n">i</span><span class="o">++;</span>
-</span><span class='line'>            <span class="o">}</span>
-</span><span class='line'>            <span class="k">while</span> <span class="o">(</span><span class="n">a</span><span class="o">[</span><span class="n">j</span><span class="o">].</span><span class="na">compareTo</span><span class="o">(</span><span class="n">value</span><span class="o">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">j</span> <span class="o">&gt;</span> <span class="n">low</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>                <span class="n">j</span><span class="o">--;</span>
-</span><span class='line'>            <span class="o">}</span>
-</span><span class='line'>            <span class="k">if</span> <span class="o">(</span><span class="n">i</span> <span class="o">&gt;=</span> <span class="n">j</span><span class="o">)</span>
-</span><span class='line'>                <span class="k">break</span><span class="o">;</span>
-</span><span class='line'>            <span class="n">exchange</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">i</span><span class="o">,</span> <span class="n">j</span><span class="o">);</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>        <span class="n">exchange</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">low</span><span class="o">,</span> <span class="n">j</span><span class="o">);</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">j</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">private</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">exchange</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">a</span><span class="o">,</span> <span class="kt">int</span> <span class="n">i</span><span class="o">,</span> <span class="kt">int</span> <span class="n">j</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">String</span> <span class="n">temp</span> <span class="o">=</span> <span class="n">a</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
-</span><span class='line'>        <span class="n">a</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">a</span><span class="o">[</span><span class="n">j</span><span class="o">];</span>
-</span><span class='line'>        <span class="n">a</span><span class="o">[</span><span class="n">j</span><span class="o">]</span> <span class="o">=</span> <span class="n">temp</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
 ]]></content>
   </entry>
   
