@@ -4,7 +4,7 @@
   <title><![CDATA[public static void man]]></title>
   <link href="http://PhotoSynthesiis.github.io/atom.xml" rel="self"/>
   <link href="http://PhotoSynthesiis.github.io/"/>
-  <updated>2014-05-20T23:35:28-04:00</updated>
+  <updated>2014-05-22T00:02:03-04:00</updated>
   <id>http://PhotoSynthesiis.github.io/</id>
   <author>
     <name><![CDATA[Qiushi Li]]></name>
@@ -12,6 +12,42 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[TG Day 2]]></title>
+    <link href="http://PhotoSynthesiis.github.io/blog/2014/05/21/tg-day-2/"/>
+    <updated>2014-05-21T23:46:00-04:00</updated>
+    <id>http://PhotoSynthesiis.github.io/blog/2014/05/21/tg-day-2</id>
+    <content type="html"><![CDATA[<p>首先检查昨天提出的改进是否做好了,</p>
+
+<ul>
+<li>多和同事交流: 这个做得还行,比第一天好多了,主动去找了Kate和Pablo pair,熟悉了项目的开发流程.</li>
+<li>专心做事:这个做得也还可以,在做事的时候没有太多的分心,只是Stemle在讲解business的时候由于前晚没睡好,导致分心了没有听进去.</li>
+<li>搞清楚terminologies,搞懂项目架构:前者感觉做到80%,后者没有太多的时间搞.项目架构是个大活,得一天一天搞.</li>
+</ul>
+
+
+<!-- more -->
+
+
+<p>今天的challenge遇到的不多.主要就是找了Kate和Pablo去pair,其实我也并不是真正想去学什么东西,而是去了解开发流程,开发难度.</p>
+
+<p>上面提到了在stemle讲解的时候有分心,导致没听懂,问题有2:</p>
+
+<ul>
+<li>睡眠分配不足,晚上不想睡,白天不想起.一个良好的睡眠能保证一天的效率,效率好了学东西就快,所以现在晚上一定要在1点之前睡觉.</li>
+<li>缺乏提问的勇气.这个是瑶瑶以前在TW反馈给我的,我一直记着.为什么呢?还是怕别人觉得你笨了,太在乎别人的看法.但是奇怪的是,有时自己很主动去问,但是还是没听懂,这是一种愚勇,提问题之前没有做出充分的准备,有些问题一出口就觉得自己应该能想出来,或者是为了提问而提问.找到这两者的折中点是解决问题的关键.</li>
+</ul>
+
+
+<p>明天改进的地方:</p>
+
+<ul>
+<li>多问问题,不懂就问,但是要在自己不懂的情况下,并且做好了前提工作.</li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[TG Day 1]]></title>
@@ -683,11 +719,11 @@
 
 <p>#</p>
 
-<p><code>文本</code>: Hello, my name is Ben Forta, my email address is <a href="&#109;&#97;&#105;&#108;&#x74;&#111;&#58;&#98;&#101;&#x6e;&#x40;&#x66;&#111;&#114;&#x74;&#x61;&#x2e;&#99;&#111;&#109;">&#98;&#x65;&#110;&#64;&#102;&#111;&#x72;&#x74;&#97;&#x2e;&#x63;&#x6f;&#x6d;</a></p>
+<p><code>文本</code>: Hello, my name is Ben Forta, my email address is <a href="&#109;&#97;&#105;&#108;&#x74;&#111;&#58;&#x62;&#x65;&#110;&#64;&#102;&#111;&#114;&#x74;&#x61;&#x2e;&#x63;&#111;&#109;">&#98;&#x65;&#x6e;&#x40;&#102;&#x6f;&#114;&#x74;&#97;&#46;&#99;&#111;&#109;</a></p>
 
 <p><code>正则表达式</code>: \w[\w.]*@[\w.]+.\w+</p>
 
-<p><code>结果</code>: <a href="&#x6d;&#x61;&#105;&#x6c;&#x74;&#111;&#x3a;&#98;&#x65;&#x6e;&#64;&#102;&#111;&#114;&#x74;&#97;&#46;&#99;&#111;&#109;">&#98;&#101;&#110;&#64;&#102;&#x6f;&#114;&#x74;&#97;&#x2e;&#99;&#x6f;&#109;</a></p>
+<p><code>结果</code>: <a href="&#109;&#x61;&#x69;&#x6c;&#x74;&#111;&#58;&#x62;&#x65;&#110;&#x40;&#x66;&#x6f;&#x72;&#x74;&#x61;&#x2e;&#x63;&#x6f;&#x6d;">&#98;&#101;&#x6e;&#x40;&#102;&#111;&#x72;&#116;&#x61;&#46;&#99;&#x6f;&#x6d;</a></p>
 
 <p>这里的正则表达式匹配了一个邮件地址.</p>
 
@@ -697,11 +733,11 @@
 
 <p>#</p>
 
-<p><code>文本</code>: Hello, my name is Ben Forta, my email address is <a href="&#109;&#97;&#105;&#108;&#x74;&#111;&#58;&#98;&#x65;&#110;&#x40;&#x66;&#x6f;&#x72;&#x74;&#x61;&#46;&#x63;&#x6f;&#109;">&#x62;&#x65;&#110;&#64;&#102;&#x6f;&#114;&#x74;&#x61;&#x2e;&#99;&#x6f;&#x6d;</a></p>
+<p><code>文本</code>: Hello, my name is Ben Forta, my email address is <a href="&#109;&#97;&#105;&#108;&#116;&#x6f;&#x3a;&#98;&#101;&#x6e;&#64;&#x66;&#111;&#x72;&#x74;&#x61;&#46;&#99;&#x6f;&#x6d;">&#x62;&#101;&#x6e;&#x40;&#x66;&#111;&#114;&#x74;&#97;&#46;&#99;&#111;&#109;</a></p>
 
 <p><code>正则表达式</code>:  (\w[\w.]*@[\w.]+.\w+)</p>
 
-<p><code>替换</code>: &lt;A href=&ldquo;<a href="&#109;&#97;&#x69;&#108;&#116;&#x6f;&#x3a;&#36;&#49;">&#36;&#x31;</a>&rdquo;>$1&lt;/A></p>
+<p><code>替换</code>: &lt;A href=&ldquo;<a href="&#109;&#x61;&#x69;&#x6c;&#116;&#x6f;&#58;&#x24;&#x31;">&#x24;&#x31;</a>&rdquo;>$1&lt;/A></p>
 
 <p><code>结果</code>: ben@forta.com成为了可点击的链接</p>
 
@@ -783,11 +819,11 @@
 
 <p>#</p>
 
-<p><code>文本</code>: Send personal email to <a href="&#109;&#x61;&#105;&#108;&#116;&#x6f;&#58;&#98;&#x65;&#x6e;&#64;&#x66;&#x6f;&#114;&#x74;&#x61;&#x2e;&#x63;&#x6f;&#x6d;&#46;">&#98;&#101;&#x6e;&#64;&#x66;&#111;&#114;&#x74;&#97;&#x2e;&#99;&#x6f;&#109;&#46;</a> For questions about the book use <a href="&#x6d;&#x61;&#105;&#108;&#116;&#x6f;&#58;&#115;&#117;&#112;&#x70;&#x6f;&#x72;&#116;&#x40;&#102;&#111;&#x72;&#116;&#97;&#x2e;&#x63;&#111;&#109;&#x2e;">&#115;&#x75;&#x70;&#x70;&#x6f;&#x72;&#x74;&#64;&#x66;&#x6f;&#x72;&#x74;&#x61;&#x2e;&#x63;&#x6f;&#109;&#x2e;</a> Feel free to send unsolicited email to <a href="&#109;&#97;&#105;&#108;&#x74;&#x6f;&#58;&#x73;&#112;&#x61;&#x6d;&#64;&#102;&#111;&#114;&#x74;&#x61;&#x2e;&#99;&#111;&#109;&#46;">&#x73;&#x70;&#x61;&#109;&#64;&#102;&#x6f;&#114;&#x74;&#x61;&#46;&#x63;&#x6f;&#x6d;&#46;</a></p>
+<p><code>文本</code>: Send personal email to <a href="&#x6d;&#97;&#x69;&#x6c;&#x74;&#x6f;&#x3a;&#x62;&#101;&#x6e;&#x40;&#x66;&#x6f;&#x72;&#116;&#97;&#x2e;&#99;&#x6f;&#109;&#46;">&#98;&#101;&#x6e;&#x40;&#102;&#111;&#x72;&#x74;&#97;&#x2e;&#99;&#111;&#109;&#x2e;</a> For questions about the book use <a href="&#x6d;&#x61;&#x69;&#108;&#x74;&#111;&#58;&#x73;&#117;&#x70;&#x70;&#111;&#x72;&#x74;&#64;&#x66;&#x6f;&#114;&#x74;&#97;&#x2e;&#99;&#111;&#109;&#x2e;">&#115;&#x75;&#112;&#112;&#x6f;&#x72;&#x74;&#64;&#102;&#111;&#114;&#x74;&#97;&#x2e;&#x63;&#x6f;&#109;&#x2e;</a> Feel free to send unsolicited email to <a href="&#109;&#x61;&#x69;&#108;&#x74;&#x6f;&#x3a;&#x73;&#112;&#x61;&#109;&#64;&#x66;&#111;&#x72;&#x74;&#x61;&#46;&#99;&#111;&#x6d;&#x2e;">&#115;&#x70;&#97;&#109;&#64;&#x66;&#111;&#114;&#116;&#97;&#x2e;&#99;&#111;&#109;&#x2e;</a></p>
 
 <p><code>正则表达式</code>: \w+@\w+.\w+</p>
 
-<p><code>结果</code>: <a href="&#x6d;&#97;&#x69;&#x6c;&#116;&#x6f;&#x3a;&#98;&#x65;&#x6e;&#x40;&#x66;&#x6f;&#114;&#x74;&#x61;&#x2e;&#99;&#111;&#109;">&#98;&#x65;&#x6e;&#64;&#102;&#x6f;&#114;&#116;&#97;&#46;&#99;&#111;&#109;</a>  <a href="&#x6d;&#x61;&#105;&#x6c;&#116;&#111;&#58;&#x73;&#117;&#x70;&#x70;&#111;&#114;&#116;&#x40;&#102;&#x6f;&#x72;&#116;&#97;&#x2e;&#99;&#111;&#109;">&#x73;&#117;&#112;&#x70;&#x6f;&#114;&#x74;&#64;&#x66;&#111;&#x72;&#116;&#97;&#46;&#x63;&#111;&#x6d;</a>  <a href="&#109;&#97;&#105;&#x6c;&#116;&#111;&#58;&#x73;&#x70;&#97;&#109;&#x40;&#102;&#111;&#114;&#x74;&#x61;&#x2e;&#99;&#x6f;&#x6d;">&#115;&#x70;&#x61;&#109;&#x40;&#x66;&#111;&#114;&#116;&#x61;&#x2e;&#99;&#x6f;&#109;</a></p>
+<p><code>结果</code>: <a href="&#109;&#97;&#105;&#x6c;&#116;&#111;&#58;&#98;&#101;&#x6e;&#x40;&#102;&#111;&#114;&#x74;&#x61;&#46;&#99;&#x6f;&#x6d;">&#98;&#101;&#x6e;&#64;&#102;&#x6f;&#114;&#116;&#97;&#46;&#99;&#111;&#109;</a>  <a href="&#109;&#x61;&#105;&#108;&#116;&#x6f;&#58;&#x73;&#117;&#x70;&#x70;&#111;&#114;&#116;&#x40;&#x66;&#x6f;&#114;&#x74;&#x61;&#x2e;&#99;&#111;&#109;">&#115;&#117;&#112;&#112;&#111;&#114;&#x74;&#64;&#102;&#x6f;&#x72;&#116;&#97;&#x2e;&#x63;&#x6f;&#109;</a>  <a href="&#x6d;&#x61;&#x69;&#x6c;&#116;&#111;&#x3a;&#115;&#x70;&#97;&#x6d;&#x40;&#102;&#111;&#x72;&#x74;&#97;&#46;&#x63;&#x6f;&#x6d;">&#115;&#x70;&#97;&#x6d;&#x40;&#x66;&#111;&#114;&#116;&#x61;&#x2e;&#x63;&#111;&#x6d;</a></p>
 
 <!-- more -->
 
@@ -3556,83 +3592,6 @@ X X Q X X X X X<br/></p>
 
 
 <p>copy返回一个原类型的不可变string类型，即使原类型是可变的，这里也不用担心。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[iOS Programming 2(objective-c)]]></title>
-    <link href="http://PhotoSynthesiis.github.io/blog/2014/03/07/ios-programming-2/"/>
-    <updated>2014-03-07T18:36:00-05:00</updated>
-    <id>http://PhotoSynthesiis.github.io/blog/2014/03/07/ios-programming-2</id>
-    <content type="html"><![CDATA[<p>Objective-c中的方法调用其实是一种消息传送的机制，例如下面这段代码：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="p">[</span><span class="n">partyInstance</span> <span class="nl">addAttendee:</span><span class="n">somePerson</span><span class="p">]</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>他表达的意思是发送addAttendee:消息给partyInstance对象，然后这个对象再去调用他的类中的addAttendee方法，somePerson在这里是参数。在运行时，消息被发送到对象，然后对象会向创建自己的那个类寻求帮助，并告诉这个类去运行消息中指定的方法(e.g. addAttendee)(这里需要注意的是，一切都是发生在运行时，而不是一些其他语言在编译时进行检查)。那么一个对象又是怎么知道自己属于哪个类呢？其实每个对象都有一个叫做&#8217;isa&#8217;的instance variable，当这个对象被创建的时候，这个isa就自动被初始化为指向创建他的那个类。这个instance variable叫做&#8217;isa&#8217;是有道理的，因为他是创建他的类的一个实例。他们的关系如下：</p>
-
-<!--more-->
-
-
-<p><img src="http://PhotoSynthesiis.github.io/images/objects.png" width="500" height="800"></p>
-
-<p>一个对象只响应在他的类中定义了的方法。因为这一切都是发生在运行时，所以xCode并不能在运行时(项目build的时候)发现到底这个对象能不能相应传进来的消息。有时xCode能判断出是否能响应，但是有时并不能，例如：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="n">NSArray</span> <span class="o">*</span><span class="n">items</span> <span class="o">=</span> <span class="err">@</span><span class="p">[</span><span class="s">@&quot;A&quot;</span><span class="p">,</span> <span class="s">@&quot;B&quot;</span><span class="p">,</span> <span class="s">@&quot;C&quot;</span><span class="p">];</span>
-</span><span class='line'><span class="kt">id</span> <span class="n">lastString</span> <span class="o">=</span> <span class="p">[</span><span class="n">items</span> <span class="n">lastObject</span><span class="p">];</span>
-</span><span class='line'><span class="p">[</span><span class="n">lastString</span> <span class="n">count</span><span class="p">];</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>上面首先创建一个array，里面装了3个string对象的引用，然后返回最后一个string引用给lastString，然后调用lastString的count方法，因为lastString其实是一个string，并没有count方法，所以xCode会抛出异常。在iOS开发中，异常被视为应该被程序员捕获并修改的错误，而不是被动地等待其在运行时抛出来，所以try&hellip;catch并不在iOS开发中流行。</p>
-
-<p>在objective-c中，array并不存放对象本身，而是对象的引用，同时和其他语言的array不同的是，一个array中可以存放不同类型的对象引用。array中不能存放像int这样的primative值，如果要存放他，需要使用对应的包装对象(NSInteger)。其次，objective-c只支持单继承，每个类只能有一个父类。每当创建一个类的时候，两个文件会被创建.h和.m。.h是头文件，他定义类名，类的继承关系，实例变量和方法等，.m文件主要实现.h文件中定义的方法，在.m文件里需要import.h文件。</p>
-
-<p>objective-c中有两种方式调用acccessor。当在.h文件中定义了instance variable和对应的getter方法之后，可以在.m文件中使用下面的方法调用：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="p">[</span><span class="n">self</span> <span class="n">ivarName</span><span class="p">];</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>或者直接使用&#8221;.&ldquo;调用：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="n">self</span><span class="p">.</span><span class="n">ivarName</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>以前我总以为这种调用是直接访问的实例变量，其实不然，这其实是在访问实例变量的getter方法，只不过方法的名字叫做ivarName罢了。</p>
-
-<p>objective-c中有两个特殊的类型值得一提，instanceType和id。前者只能作为方法的返回类型使用，他匹配调用这个方法的对象的类型，通常在类的init方法中使用，例如：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="n">instancetype</span><span class="p">)</span><span class="nf">init</span> <span class="p">{</span>
-</span><span class='line'>    <span class="k">return</span> <span class="p">[</span><span class="n">self</span> <span class="nl">initWithItemName:</span><span class="s">@&quot;item&quot;</span><span class="p">];</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>我们通常会使用下面这种方法来新建一个对象：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="n">NSMutableArray</span> <span class="o">*</span><span class="n">items</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSMutableArray</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>这样就不难发现，在最后调用init的时候，init方法返回了一个instanceType的类型，这个类型被自动匹配给了NSMutableArray。和instanceType不一样，id不仅可以作为方法的返回类型，而且还可以直接作为对象的声明类型，类似于Java中的Object，他指向任何对象：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="kt">id</span> <span class="n">name</span> <span class="o">=</span> <span class="s">@&quot;abc&quot;</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
 ]]></content>
   </entry>
   

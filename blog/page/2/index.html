@@ -9,7 +9,8 @@
   <meta name="author" content="Qiushi Li">
 
   
-  <meta name="description" content="原来学过Git,但学得不扎实,而且学过之后也没怎么用,导致每次要用的时候都得重新学一遍.现在再次学习,把学到的记录下来,以后忘了复习起来也方便. Centralized Version Control vs Distributed Version Control &hellip;">
+  <meta name="description" content="Initialize a repository Git的操作都需要在一个由Git管理的文件下进行,有两种方式使文件被git管理: 在文件夹下面执行 git init
+git clone一个现成的git文件夹然后在里面操作 如果要在server上面获取现有的项目,可以执行git clone. &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +66,59 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/05/07/git-2/">Git 2 (Basics)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-05-07T21:35:00-04:00" pubdate data-updated="true">May 7<span>th</span>, 2014</time>
+        
+         | <a href="/blog/2014/05/07/git-2/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>Initialize a repository</h2>
+
+<p>Git的操作都需要在一个由Git管理的文件下进行,有两种方式使文件被git管理:</p>
+
+<ul>
+<li>在文件夹下面执行 <code>git init</code></li>
+<li><code>git clone</code>一个现成的git文件夹然后在里面操作</li>
+</ul>
+
+
+<p>如果要在server上面获取现有的项目,可以执行<code>git clone</code>.和SVN不同的是这里的关键词是clone,而SVN里面是checkout,这是因为git是clone整个项目,相当于把server上所以东西都搬下来,而git只是checkout最新的版本.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/05/07/git-2/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -477,56 +531,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/03/07/ios-programming-2/">iOS Programming 2(objective-c)</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-03-07T18:36:00-05:00" pubdate data-updated="true">Mar 7<span>th</span>, 2014</time>
-        
-         | <a href="/blog/2014/03/07/ios-programming-2/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Objective-c中的方法调用其实是一种消息传送的机制，例如下面这段代码：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="p">[</span><span class="n">partyInstance</span> <span class="nl">addAttendee:</span><span class="n">somePerson</span><span class="p">]</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>他表达的意思是发送addAttendee:消息给partyInstance对象，然后这个对象再去调用他的类中的addAttendee方法，somePerson在这里是参数。在运行时，消息被发送到对象，然后对象会向创建自己的那个类寻求帮助，并告诉这个类去运行消息中指定的方法(e.g. addAttendee)(这里需要注意的是，一切都是发生在运行时，而不是一些其他语言在编译时进行检查)。那么一个对象又是怎么知道自己属于哪个类呢？其实每个对象都有一个叫做&#8217;isa&#8217;的instance variable，当这个对象被创建的时候，这个isa就自动被初始化为指向创建他的那个类。这个instance variable叫做&#8217;isa&#8217;是有道理的，因为他是创建他的类的一个实例。他们的关系如下：</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/03/07/ios-programming-2/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/3/">&larr; Older</a>
@@ -544,6 +548,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/05/21/tg-day-2/">TG Day 2</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/05/20/tg-day-1/">TG Day 1</a>
       </li>
     
@@ -557,10 +565,6 @@
     
       <li class="post">
         <a href="/blog/2014/05/18/regex5/">正则表达式必知必会 5</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/05/17/regex4/">正则表达式必知必会 4</a>
       </li>
     
   </ul>
