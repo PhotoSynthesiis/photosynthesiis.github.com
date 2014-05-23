@@ -9,8 +9,7 @@
   <meta name="author" content="Qiushi Li">
 
   
-  <meta name="description" content="Objective-c中的方法调用其实是一种消息传送的机制，例如下面这段代码： 1
-[partyInstance addAttendee:somePerson] 他表达的意思是发送addAttendee:消息给partyInstance对象，然后这个对象再去调用他的类中的addAttendee方法 &hellip;">
+  <meta name="description" content="栈和堆 当一个方法被执行的时候，系统会从栈中分配出一定的内存让代码在其中运行，这一块专门分配出来的内存叫做frame，每一个方法都有一个frame。当方法从main方法中开始执行的时候，main方法的frame被放到了栈上，然后如果在main方法中有其他方法的调用，就会有不断的frame被加到栈上 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -66,6 +65,51 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/03/08/ios-3/">iOS Programming 3(Managing Memory Wih ARC)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-03-08T18:54:00-05:00" pubdate data-updated="true">Mar 8<span>th</span>, 2014</time>
+        
+         | <a href="/blog/2014/03/08/ios-3/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>栈和堆</h3>
+
+<p>当一个方法被执行的时候，系统会从栈中分配出一定的内存让代码在其中运行，这一块专门分配出来的内存叫做frame，每一个方法都有一个frame。当方法从main方法中开始执行的时候，main方法的frame被放到了栈上，然后如果在main方法中有其他方法的调用，就会有不断的frame被加到栈上，下图就是在一个栈上不断调用和结束调用方法的对应的frame结构：</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/03/08/ios-3/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -534,49 +578,6 @@ Annotation是类，方法或字段的一种注解或元数据，当程序被JVM�
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/07/27/comparator/">Java中Comparable和Comparator实现对象比较</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-07-27T20:20:00-04:00" pubdate data-updated="true">Jul 27<span>th</span>, 2013</time>
-        
-         | <a href="/blog/2013/07/27/comparator/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>当需要排序的集合或数组不是单纯的数字型时，通常可以使用Comparator或Comparable，以简单的方式实现对象排序或自定义排序。下面通过两个例子分别用Comparable和Comparator实现对User对象中年龄排序。</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/07/27/comparator/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/4/">&larr; Older</a>
@@ -594,6 +595,10 @@ Annotation是类，方法或字段的一种注解或元数据，当程序被JVM�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/05/23/tg-day-3/">TG Day 3</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/05/21/tg-day-2/">TG Day 2</a>
       </li>
     
@@ -607,10 +612,6 @@ Annotation是类，方法或字段的一种注解或元数据，当程序被JVM�
     
       <li class="post">
         <a href="/blog/2014/05/18/linux1/">Linux 1</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/05/18/regex5/">正则表达式必知必会 5</a>
       </li>
     
   </ul>
