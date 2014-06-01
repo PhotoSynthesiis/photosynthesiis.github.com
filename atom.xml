@@ -4,7 +4,7 @@
   <title><![CDATA[public static void man]]></title>
   <link href="http://PhotoSynthesiis.github.io/atom.xml" rel="self"/>
   <link href="http://PhotoSynthesiis.github.io/"/>
-  <updated>2014-05-23T00:22:27-04:00</updated>
+  <updated>2014-05-31T23:17:31-04:00</updated>
   <id>http://PhotoSynthesiis.github.io/</id>
   <author>
     <name><![CDATA[Qiushi Li]]></name>
@@ -12,6 +12,140 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Git 3 (Branching)]]></title>
+    <link href="http://PhotoSynthesiis.github.io/blog/2014/05/31/git-3/"/>
+    <updated>2014-05-31T19:26:00-04:00</updated>
+    <id>http://PhotoSynthesiis.github.io/blog/2014/05/31/git-3</id>
+    <content type="html"><![CDATA[<h2>What is Git Branch</h2>
+
+<p><code>分支的好处</code>: 它允许在不干扰主分支的情况下,从主分支里分离出一条小的分支,在里面进行开发,然后再把修改合并到主分支里.</p>
+
+<p><code>什么是分支</code>: 在Git下提交时,Git会保存每一次提交的快照,并且会保存一个指向祖先的指针.第一次提交时没有祖先,普通提交有一个祖先,由两个或多个分支合并而成的提交则有多个祖先.</p>
+
+<!-- more -->
+
+
+<p> <img src="http://PhotoSynthesiis.github.io/images/git-3_1.png"></p>
+
+<p>Git中的分支其实只是一个指针,最初的时候它指向master.当你在master上不断提交时,这个指针会随之向后移动,所以它总是指向最近的一次提交.</p>
+
+<p> <img src="http://PhotoSynthesiis.github.io/images/git-3_2.png"></p>
+
+<p>当创建一个新的branch时,git会新建一个指针指向这个新建立的branch.比如说你新建了一个名为testing的branch:</p>
+
+<p> <img src="http://PhotoSynthesiis.github.io/images/git-3_3.png"></p>
+
+<p>当这个branch被创建后,并不会立即切换到这个分支上去,如果想要切换到新建的分支,可以执行:</p>
+
+<p><code>git checkout testing</code></p>
+
+<p>如果想在创建分支的时候同时切换到那条分支上去,可以执行:</p>
+
+<p><code>git checkout -b testing</code></p>
+
+<p>现在就在testing分支上了,接下来的所有操作都会在这个分支上进行,不会干扰到master分支.那么git又是如何知道用户现在到底在哪个分支上呢?原来git保存了另一个名叫<code>HEAD</code>的指针,它总是指向用户所在的当前分支,并且会随着用户执行<code>git checkout</code>指令后指向另一个分支:</p>
+
+<p> <img src="http://PhotoSynthesiis.github.io/images/git-3_4.png"></p>
+
+<h2>Basic Branching and Merging</h2>
+
+<p>试想这样一个场景:为了完成当前工作,你在master上新建了一个分支(iss53)并且切换到上面,然后开始在新的分支上工作,并且进行了一些提交,这时你的老板分配给你一项紧急的任务,让你停掉当前的工作,立马开始新任务.这个时候你需要首先需要切换到master分支上,然后新建另一个分支(hotfix)来处理紧急任务.在修改完成并通过所有测试后,紧急任务总算是完成了,你开心地提交了这个任务.这个时候git里的情况如下:</p>
+
+<p> <img src="http://PhotoSynthesiis.github.io/images/git-3_5.png"></p>
+
+<p>这时,应该合并master和紧急任务的分支了,你需要执行下面一系列代码来完成这个操作:</p>
+
+<ul>
+<li>切换到master分支: <code>git checkout master</code></li>
+<li>合并master和hotfix分支: <code>git merge hotfix</code></li>
+</ul>
+
+
+<p>由于master分支所在的commit是hotfix分支所在commit的直接上游,只需要向右一直移动指针就行了,这种合并方式叫做快进(<code>fast forward</code>).</p>
+
+<p> <img src="http://PhotoSynthesiis.github.io/images/git-3_6.png"></p>
+
+<p>因为hotfix分支使用来修理紧急任务的,这时任务也完成了,可以删除这个分支.</p>
+
+<p><code>git branch -d hotfix</code></p>
+
+<p>接下来需要回到最初工作的分支上去:</p>
+
+<p><code>git checkout iss53</code></p>
+
+<p>经过一些提交后:</p>
+
+<p> <img src="http://PhotoSynthesiis.github.io/images/git-3_7.png"></p>
+
+<h2>Basic Merging</h2>
+
+<p>Merge分两步:</p>
+
+<ul>
+<li>checkout到你想要merge进去的branch(e.g. iss53 to master)</li>
+<li>运行merge</li>
+</ul>
+
+
+<p>iss53 merge到master和hotfix merge到master是不同的.后者只需要fast forward就行了,但是前者需要进行一次称为3-way-merge的操作,具体是需要合并3个东西: 两个commit的共同父节点和两个节点本身.</p>
+
+<p> <img src="http://PhotoSynthesiis.github.io/images/git-3_8.png"></p>
+
+<p>找到需要合并的节点后再合并:</p>
+
+<p> <img src="http://PhotoSynthesiis.github.io/images/git-3_9.png"></p>
+
+<h3>Basic Merge Conflict</h3>
+
+<p>如果两个需要被merge的节点里面有冲突(e.g. 同时修改了同一个文件的相同部分),git会提示有冲突.</p>
+
+<p> <img src="http://PhotoSynthesiis.github.io/images/git-3_10.png"></p>
+
+<p>上图的HEAD部分是当前分支在这一部分的修改,iss53的那部分是在iss53那个分支上对这一部分的修改,如果想要解决这个冲突,可以保留其中的一个,或者全部删掉重写.在解决后需要重新add这个文件.</p>
+
+<h2>Branch Management</h2>
+
+<p><code>git branch</code>: 列出当前的所有分支,当前分支前面会有一个星号(*).</p>
+
+<p><code>git branch -v</code>: 列出所有分支的最近的一次提交.</p>
+
+<h2>Remote Branches</h2>
+
+<p>远程分支是对远程仓库状态的索引,它告诉你自从上一次和服务器交互之后的状态.当从服务器上clone项目的时候,git会创建两个指针,一个是指向服务器的指针(origin/master),并且停留在你最近一次与之交互后的节点上,另一个指针(master)指向同一个节点,不过它是在本地.两个指针最大的不同就是指向服务器上的指针只会在你与服务器进行交互的时候移动(e.g. 提交),它是自动移动的,不能人为控制,可以想象成一个书签,帮你保存上一次的状态.本地的指针是在本地提交的时候移动的.</p>
+
+<p><img src="http://PhotoSynthesiis.github.io/images/git-3_11.png"></p>
+
+<p>例如我在本地进行了一些提交,同时有人往服务器上提交了代码,这时服务器上的那个指针就会向前移动,如果我想从服务器上获取这些更新,可以运行<code>git fetch origin</code>,这个指令用来获取最新的代码,但是它不会自动merge,如果想要获取并且让系统自动merge,需要执行<code>git pull</code>.运行之后系统的现状:</p>
+
+<p><img src="http://PhotoSynthesiis.github.io/images/git-3_12.png"></p>
+
+<h2>Push</h2>
+
+<p><code>git push (remote) (branch)</code>: 这条指令用来向服务器上推送代码.(e.g. git push origin master) 向名为origin的服务器上的master分支推送代码.</p>
+
+<h2>Tracking Branches</h2>
+
+<p>当我们在push或者pull的时候,git知道应该push到哪里去或者从哪里去pull,即使我们不加任何的参数.这是因为git在我们clone代码的时候建立了一个tracking branch,它和远程仓库有直接联系.</p>
+
+<h2>Rebasing</h2>
+
+<p>rebase是git中另一种合并分支的方法,与merge不同的是,rebase不需要进行3-way-merge,取而代之的是只需要把需要合并的分支的patch打到另一个分支上去就可以了.</p>
+
+<p><img src="http://PhotoSynthesiis.github.io/images/git-3_13.png"></p>
+
+<ul>
+<li>git checkout experiment</li>
+<li>git rebase master</li>
+</ul>
+
+
+<p>他的原理是回到两个分支的共同的祖先,提取你所在分支每次提交时产生的差异(diff),把这些差异保存在临时文件里,然后切换到需要合并到的分支,以此应用每一个patch文件.</p>
+
+<p><img src="http://PhotoSynthesiis.github.io/images/git-3_14.png"></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[TG Day 3]]></title>
@@ -744,11 +878,11 @@
 
 <p>#</p>
 
-<p><code>文本</code>: Hello, my name is Ben Forta, my email address is <a href="&#109;&#97;&#105;&#x6c;&#116;&#x6f;&#58;&#x62;&#101;&#x6e;&#64;&#x66;&#111;&#x72;&#116;&#97;&#46;&#99;&#111;&#109;">&#x62;&#101;&#x6e;&#x40;&#x66;&#x6f;&#114;&#x74;&#x61;&#46;&#99;&#x6f;&#109;</a></p>
+<p><code>文本</code>: Hello, my name is Ben Forta, my email address is <a href="&#x6d;&#97;&#105;&#x6c;&#x74;&#111;&#x3a;&#x62;&#101;&#x6e;&#64;&#102;&#x6f;&#x72;&#x74;&#x61;&#x2e;&#99;&#x6f;&#109;">&#98;&#101;&#110;&#64;&#102;&#111;&#x72;&#x74;&#x61;&#46;&#99;&#111;&#109;</a></p>
 
 <p><code>正则表达式</code>: \w[\w.]*@[\w.]+.\w+</p>
 
-<p><code>结果</code>: <a href="&#109;&#x61;&#105;&#x6c;&#x74;&#x6f;&#58;&#98;&#x65;&#x6e;&#x40;&#102;&#x6f;&#x72;&#x74;&#x61;&#x2e;&#x63;&#x6f;&#x6d;">&#98;&#101;&#110;&#x40;&#102;&#111;&#x72;&#116;&#97;&#46;&#99;&#111;&#x6d;</a></p>
+<p><code>结果</code>: <a href="&#109;&#97;&#x69;&#108;&#x74;&#111;&#58;&#98;&#x65;&#110;&#64;&#102;&#x6f;&#x72;&#x74;&#x61;&#46;&#x63;&#111;&#109;">&#x62;&#101;&#110;&#x40;&#102;&#x6f;&#x72;&#116;&#x61;&#x2e;&#99;&#x6f;&#x6d;</a></p>
 
 <p>这里的正则表达式匹配了一个邮件地址.</p>
 
@@ -758,11 +892,11 @@
 
 <p>#</p>
 
-<p><code>文本</code>: Hello, my name is Ben Forta, my email address is <a href="&#109;&#x61;&#105;&#x6c;&#x74;&#x6f;&#x3a;&#98;&#101;&#x6e;&#x40;&#x66;&#111;&#x72;&#116;&#x61;&#46;&#x63;&#x6f;&#109;">&#98;&#x65;&#110;&#64;&#102;&#x6f;&#114;&#116;&#x61;&#46;&#99;&#111;&#x6d;</a></p>
+<p><code>文本</code>: Hello, my name is Ben Forta, my email address is <a href="&#109;&#x61;&#x69;&#108;&#116;&#x6f;&#x3a;&#98;&#x65;&#x6e;&#64;&#x66;&#111;&#x72;&#x74;&#97;&#x2e;&#99;&#x6f;&#109;">&#98;&#x65;&#110;&#64;&#102;&#111;&#x72;&#x74;&#97;&#x2e;&#x63;&#111;&#109;</a></p>
 
 <p><code>正则表达式</code>:  (\w[\w.]*@[\w.]+.\w+)</p>
 
-<p><code>替换</code>: &lt;A href=&ldquo;<a href="&#109;&#x61;&#x69;&#x6c;&#116;&#x6f;&#x3a;&#36;&#x31;">&#36;&#49;</a>&rdquo;>$1&lt;/A></p>
+<p><code>替换</code>: &lt;A href=&ldquo;<a href="&#109;&#x61;&#105;&#x6c;&#116;&#x6f;&#x3a;&#36;&#x31;">&#36;&#49;</a>&rdquo;>$1&lt;/A></p>
 
 <p><code>结果</code>: ben@forta.com成为了可点击的链接</p>
 
@@ -844,11 +978,11 @@
 
 <p>#</p>
 
-<p><code>文本</code>: Send personal email to <a href="&#109;&#x61;&#105;&#x6c;&#116;&#111;&#58;&#98;&#x65;&#110;&#x40;&#x66;&#111;&#x72;&#116;&#x61;&#46;&#99;&#x6f;&#109;&#46;">&#x62;&#101;&#110;&#x40;&#102;&#x6f;&#114;&#116;&#x61;&#46;&#99;&#111;&#109;&#x2e;</a> For questions about the book use <a href="&#x6d;&#x61;&#x69;&#x6c;&#116;&#x6f;&#x3a;&#x73;&#x75;&#112;&#x70;&#111;&#114;&#x74;&#x40;&#102;&#x6f;&#x72;&#116;&#x61;&#46;&#99;&#x6f;&#x6d;&#46;">&#115;&#x75;&#112;&#112;&#x6f;&#x72;&#x74;&#64;&#102;&#x6f;&#x72;&#116;&#97;&#46;&#x63;&#111;&#109;&#46;</a> Feel free to send unsolicited email to <a href="&#109;&#x61;&#x69;&#108;&#x74;&#111;&#58;&#115;&#x70;&#97;&#x6d;&#64;&#x66;&#x6f;&#x72;&#x74;&#97;&#46;&#x63;&#x6f;&#x6d;&#x2e;">&#115;&#112;&#x61;&#109;&#64;&#x66;&#111;&#114;&#x74;&#97;&#46;&#99;&#111;&#x6d;&#x2e;</a></p>
+<p><code>文本</code>: Send personal email to <a href="&#109;&#97;&#x69;&#x6c;&#116;&#111;&#x3a;&#98;&#101;&#x6e;&#64;&#102;&#x6f;&#114;&#116;&#97;&#46;&#x63;&#x6f;&#x6d;&#x2e;">&#x62;&#x65;&#110;&#x40;&#x66;&#111;&#114;&#x74;&#x61;&#x2e;&#x63;&#111;&#x6d;&#46;</a> For questions about the book use <a href="&#109;&#x61;&#105;&#x6c;&#x74;&#x6f;&#x3a;&#x73;&#117;&#112;&#112;&#111;&#114;&#x74;&#64;&#102;&#111;&#x72;&#x74;&#x61;&#x2e;&#x63;&#x6f;&#x6d;&#46;">&#115;&#117;&#x70;&#112;&#x6f;&#x72;&#x74;&#64;&#x66;&#111;&#x72;&#116;&#x61;&#x2e;&#x63;&#x6f;&#x6d;&#x2e;</a> Feel free to send unsolicited email to <a href="&#109;&#97;&#x69;&#108;&#116;&#x6f;&#x3a;&#x73;&#112;&#97;&#109;&#x40;&#102;&#x6f;&#x72;&#x74;&#x61;&#x2e;&#x63;&#111;&#x6d;&#46;">&#115;&#x70;&#x61;&#109;&#64;&#102;&#x6f;&#x72;&#x74;&#x61;&#x2e;&#x63;&#x6f;&#x6d;&#46;</a></p>
 
 <p><code>正则表达式</code>: \w+@\w+.\w+</p>
 
-<p><code>结果</code>: <a href="&#109;&#x61;&#105;&#x6c;&#x74;&#111;&#58;&#98;&#x65;&#x6e;&#64;&#x66;&#111;&#114;&#116;&#97;&#46;&#99;&#x6f;&#x6d;">&#x62;&#101;&#x6e;&#x40;&#x66;&#111;&#x72;&#116;&#97;&#46;&#x63;&#x6f;&#109;</a>  <a href="&#x6d;&#97;&#x69;&#x6c;&#116;&#x6f;&#58;&#x73;&#117;&#x70;&#112;&#111;&#114;&#116;&#64;&#102;&#x6f;&#x72;&#x74;&#97;&#x2e;&#x63;&#x6f;&#x6d;">&#115;&#x75;&#x70;&#x70;&#111;&#114;&#x74;&#x40;&#102;&#111;&#114;&#116;&#x61;&#46;&#99;&#x6f;&#109;</a>  <a href="&#109;&#x61;&#105;&#108;&#116;&#111;&#x3a;&#x73;&#112;&#x61;&#109;&#x40;&#x66;&#x6f;&#x72;&#116;&#x61;&#46;&#x63;&#x6f;&#x6d;">&#115;&#112;&#x61;&#x6d;&#64;&#x66;&#x6f;&#114;&#116;&#x61;&#46;&#99;&#x6f;&#109;</a></p>
+<p><code>结果</code>: <a href="&#x6d;&#x61;&#105;&#x6c;&#x74;&#x6f;&#58;&#98;&#101;&#x6e;&#64;&#x66;&#111;&#114;&#x74;&#x61;&#x2e;&#99;&#111;&#x6d;">&#98;&#101;&#110;&#x40;&#x66;&#111;&#114;&#116;&#x61;&#x2e;&#99;&#111;&#109;</a>  <a href="&#109;&#97;&#105;&#x6c;&#116;&#111;&#58;&#x73;&#117;&#x70;&#112;&#x6f;&#114;&#x74;&#64;&#102;&#x6f;&#x72;&#116;&#x61;&#x2e;&#x63;&#111;&#x6d;">&#x73;&#x75;&#x70;&#x70;&#x6f;&#x72;&#x74;&#64;&#x66;&#x6f;&#x72;&#x74;&#97;&#x2e;&#x63;&#111;&#x6d;</a>  <a href="&#x6d;&#x61;&#x69;&#108;&#x74;&#111;&#x3a;&#115;&#112;&#97;&#109;&#64;&#102;&#x6f;&#x72;&#x74;&#97;&#46;&#x63;&#111;&#109;">&#x73;&#x70;&#x61;&#109;&#x40;&#x66;&#111;&#114;&#116;&#x61;&#x2e;&#x63;&#111;&#x6d;</a></p>
 
 <!-- more -->
 
@@ -3228,315 +3362,6 @@ X X Q X X X X X<br/></p>
 </span><span class='line'><span class="o">}</span>
 </span></code></pre></td></tr></table></div></figure>
 
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[iOS Programming 4(Views and the View Hierarchy)]]></title>
-    <link href="http://PhotoSynthesiis.github.io/blog/2014/03/09/ios-4/"/>
-    <updated>2014-03-09T19:08:00-04:00</updated>
-    <id>http://PhotoSynthesiis.github.io/blog/2014/03/09/ios-4</id>
-    <content type="html"><![CDATA[<h3>View Basics</h3>
-
-<p>在iOS中，每一个应用都有一个UIWindow的对象，他是应用中所有view的容器(container)，其实UIWindow自己也只是一个view，只不过他的职责不是显示view，而是作为容器存放view。当应用启动的时候，这个对象就被创建，我们可以往这个容器里面添加其他的view。那么什么是view呢？他是在屏幕上被显示的元素，例如button。每一个view都是UIView或UIView的子类的一个实例，每一个view都有一个对应的layer，view在其对应的那样儿上显示自己，我们可以想象成每个view都自带了一块画板，在画板上作画然后贴到最大的canvas(UIWindow)上去。view还能handle屏幕上的一些事件，例如button能handle touch事件。view之间存在层级关系(hierarchy),一个view可以包含另一个view，我们可以把其中的关系想象成一棵树，根结点就是UIWindow。</p>
-
-<!--more-->
-
-
-<h3>Frames &amp; View Hierarchy</h3>
-
-<p>我们通过一个小例子来阐述view的frame。首先新建一个empty application，然后创建一个类，继承自UIView：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="k">@interface</span> <span class="nc">BNRHypnosisterView</span> : <span class="nc">UIView</span>
-</span><span class='line'><span class="k">@end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>当一个类继承自UIView时，会继承两个方法，initWithFrame:和drawRect，前者是UIView的默认init方法，后者默认情况下是被注释，因为只有在custome的时候才需要他。initWithFrame接受一个CGRect参数，他是定义在父类(UIView)中的一个property:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">)</span> <span class="n">CGRect</span> <span class="n">frame</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>一个UIView的frame定义了这个view相对于其superview的位置和大小，CRRect中包含了两个关键信息(origin和size)，一是frame左上角初始点的坐标(origin.x, origin.y)，其次定义了这个frame的大小(size.width, size.height)。值得注意的是，这里的origin和size都不是objective-c中的对象，他们均是C语言中的结构体，所以在定义CGRect的时候不能写成：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="n">CGRect</span> <span class="o">*</span><span class="n">frame</span> <span class="o">=</span> <span class="p">....</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>而应该这样定义：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="n">CGRect</span> <span class="n">frame</span> <span class="o">=</span> <span class="n">CGRectMake</span><span class="p">(</span><span class="n">origin</span><span class="p">.</span><span class="n">x</span><span class="p">,</span> <span class="n">origin</span><span class="p">.</span><span class="n">y</span><span class="p">,</span> <span class="n">size</span><span class="p">.</span><span class="n">width</span><span class="p">,</span> <span class="n">size</span><span class="p">.</span><span class="n">height</span><span class="p">);</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>现在我们来到应用的appDelegate类，找到application:didFinishLaunchingWithOptions:方法，在里面定义一个view(firstView)，同时定义一个frame(fristFrame)，然后再把这个frame加到view里去，最后需要做的就是把包含有一个frame的这个view加入到application的root view里面去，这样就能被显示了：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nf">application:</span><span class="p">(</span><span class="n">UIApplication</span> <span class="o">*</span><span class="p">)</span><span class="nv">application</span> <span class="nf">didFinishLaunchingWithOptions:</span><span class="p">(</span><span class="n">NSDictionary</span>   <span class="o">*</span><span class="p">)</span><span class="nv">launchOptions</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>    <span class="n">self</span><span class="p">.</span><span class="n">window</span> <span class="o">=</span> <span class="p">[[</span><span class="n">UIWindow</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithFrame:</span><span class="p">[[</span><span class="n">UIScreen</span> <span class="n">mainScreen</span><span class="p">]</span> <span class="n">bounds</span><span class="p">]];</span>
-</span><span class='line'>    <span class="c1">// Override point for customization after application launch.</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="n">CGRect</span> <span class="n">firstFrame</span> <span class="o">=</span> <span class="n">CGRectMake</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">140</span><span class="p">);</span>
-</span><span class='line'>    <span class="n">BNRHypnosisterView</span> <span class="o">*</span><span class="n">firstView</span> <span class="o">=</span> <span class="p">[[</span><span class="n">BNRHypnosisterView</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithFrame:</span><span class="n">firstFrame</span><span class="p">];</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">window</span> <span class="nl">addSubview:</span><span class="n">firstView</span><span class="p">];</span>
-</span><span class='line'>    <span class="n">firstView</span><span class="p">.</span><span class="n">backgroundColor</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIColor</span> <span class="n">redColor</span><span class="p">];</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="n">self</span><span class="p">.</span><span class="n">window</span><span class="p">.</span><span class="n">backgroundColor</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIColor</span> <span class="n">whiteColor</span><span class="p">];</span>
-</span><span class='line'>    <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">window</span> <span class="n">makeKeyAndVisible</span><span class="p">];</span>
-</span><span class='line'>    <span class="k">return</span> <span class="n">YES</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>运行后，出来的效果会是这样的：</p>
-
-<p><img src="http://PhotoSynthesiis.github.io/images/ios_frame.png" width="300" height="600"></p>
-
-<p>当我们把一个新的view加入到UIWindow之后，他们之间的关系就如下面这样：</p>
-
-<p><img src="http://PhotoSynthesiis.github.io/images/ios_hierarchy.png" width="500" height="800"></p>
-
-<p>此外，当加入一个subview的时候，subview指向superview的关系自动被创建，不过为了避免强引用环(strong reference cycle)，subview指向superview的引用被设为weak(图中虚线部分)。</p>
-
-<p>这时，我们尝试再往UIWindow里面加上一个view：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nf">application:</span><span class="p">(</span><span class="n">UIApplication</span> <span class="o">*</span><span class="p">)</span><span class="nv">application</span> <span class="nf">didFinishLaunchingWithOptions:</span><span class="p">(</span><span class="n">NSDictionary</span> <span class="o">*</span><span class="p">)</span><span class="nv">launchOptions</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>    <span class="n">self</span><span class="p">.</span><span class="n">window</span> <span class="o">=</span> <span class="p">[[</span><span class="n">UIWindow</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithFrame:</span><span class="p">[[</span><span class="n">UIScreen</span> <span class="n">mainScreen</span><span class="p">]</span> <span class="n">bounds</span><span class="p">]];</span>
-</span><span class='line'>    <span class="c1">// Override point for customization after application launch.</span>
-</span><span class='line'>
-</span><span class='line'><span class="c1">//    CGRect firstFrame = self.window.bounds;</span>
-</span><span class='line'>    <span class="n">CGRect</span> <span class="n">firstFrame</span> <span class="o">=</span> <span class="n">CGRectMake</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">140</span><span class="p">);</span>
-</span><span class='line'>    <span class="n">BNRHypnosisterView</span> <span class="o">*</span><span class="n">firstView</span> <span class="o">=</span> <span class="p">[[</span><span class="n">BNRHypnosisterView</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithFrame:</span><span class="n">firstFrame</span><span class="p">];</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">window</span> <span class="nl">addSubview:</span><span class="n">firstView</span><span class="p">];</span>
-</span><span class='line'>    <span class="n">firstView</span><span class="p">.</span><span class="n">backgroundColor</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIColor</span> <span class="n">redColor</span><span class="p">];</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="n">CGRect</span> <span class="n">secondFrame</span> <span class="o">=</span> <span class="n">CGRectMake</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">);</span>
-</span><span class='line'>    <span class="n">BNRHypnosisterView</span> <span class="o">*</span><span class="n">secondView</span> <span class="o">=</span> <span class="p">[[</span><span class="n">BNRHypnosisterView</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithFrame:</span><span class="n">secondFrame</span><span class="p">];</span>
-</span><span class='line'>    <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">window</span> <span class="nl">addSubview:</span><span class="n">secondView</span><span class="p">];</span>
-</span><span class='line'>    <span class="n">secondView</span><span class="p">.</span><span class="n">backgroundColor</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIColor</span> <span class="n">greenColor</span><span class="p">];</span>
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'>    <span class="n">self</span><span class="p">.</span><span class="n">window</span><span class="p">.</span><span class="n">backgroundColor</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIColor</span> <span class="n">whiteColor</span><span class="p">];</span>
-</span><span class='line'>    <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">window</span> <span class="n">makeKeyAndVisible</span><span class="p">];</span>
-</span><span class='line'>    <span class="k">return</span> <span class="n">YES</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>这时出来的效果应该是这样的：</p>
-
-<p><img src="http://PhotoSynthesiis.github.io/images/ios_frame_2.png" width="300" height="600"></p>
-
-<p>对应的层次关系应该是这样的：</p>
-
-<p><img src="http://PhotoSynthesiis.github.io/images/ios_hierarchy_2.png" width="500" height="800"></p>
-
-<p>我们甚至可以把secondView作为firstView的subView，只需要改一行代码就行：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="c1">// [self.window addSubview:secondView];</span>
-</span><span class='line'><span class="p">[</span><span class="n">fistView</span> <span class="nl">addSubview:</span><span class="n">secondView</span><span class="p">];</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p> 这时出来的效果应该是这样的：</p>
-
-<p> <img src="http://PhotoSynthesiis.github.io/images/ios_frame_3.png" width="300" height="600"></p>
-
-<p> 对应的层次关系如下：</p>
-
-<p> <img src="http://PhotoSynthesiis.github.io/images/ios_hierarchy_3.png" width="500" height="800"></p>
-
-<h3>Customer Drawing in drawRect</h3>
-
-<p>每一个view都有一个bounds，他指的是这个view的范围，他与frame的区别在于：bounds是相对于自身来说的范围，而frame是相对于superview的范围(之前在定义frame的时候包含的参数包括起始点和长宽,这个起始点就是相对于superview的距离)。</p>
-
-<p>现在我们回到AppDelegate,把原来声明frame的语句改成下面这样:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="c1">// CGRect frame = CGRectMake(100, 200, 100, 140);</span>
-</span><span class='line'><span class="n">CGRect</span> <span class="n">frame</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">window</span><span class="p">.</span><span class="n">bounds</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>他的意思是把root window的bounds作为subview的frame,换句话说就是实现subview全屏.所以现在的运行效果应该是这样的:</p>
-
-<p> <img src="http://PhotoSynthesiis.github.io/images/ios_frame_4.png" width="300" height="600"></p>
-
-<h4>draw concentric circle</h4>
-
-<p>现在我们来做一点有意思的事情:画同心圆. 我们之前说过，如果需要自定义一些drawing，需要在drawRect方法中进行,当xCode发现drawRect方法不是被注释的情况下,会对UIWindow中的每一个view应用drawRect方法中定义的drawing.所以现在我们来到drawRect方法中做一些改变,最后达到的效果就如下图所示:</p>
-
-<p><img src="http://PhotoSynthesiis.github.io/images/ios_concentric.png" width="300" height="600"></p>
-
-<p>首先我们从最外层圆入手,定义圆心和半径:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="n">CGRect</span> <span class="n">bounds</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">bounds</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">CGPoint</span> <span class="n">center</span><span class="p">;</span>
-</span><span class='line'><span class="n">center</span><span class="p">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">bounds</span><span class="p">.</span><span class="n">origin</span><span class="p">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">bounds</span><span class="p">.</span><span class="n">size</span><span class="p">.</span><span class="n">width</span> <span class="o">/</span> <span class="mi">2</span><span class="p">;</span>
-</span><span class='line'><span class="n">center</span><span class="p">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">bounds</span><span class="p">.</span><span class="n">origin</span><span class="p">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">bounds</span><span class="p">.</span><span class="n">size</span><span class="p">.</span><span class="n">height</span> <span class="o">/</span> <span class="mi">2</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="kt">float</span> <span class="n">maxRadius</span> <span class="o">=</span> <span class="n">hypot</span><span class="p">(</span><span class="n">bounds</span><span class="p">.</span><span class="n">size</span><span class="p">.</span><span class="n">width</span><span class="p">,</span> <span class="n">bounds</span><span class="p">.</span><span class="n">size</span><span class="p">.</span><span class="n">height</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>定义好了圆心和半径,就可以开始画圆了.在objective-c中有一个很常用的画图类,叫做UIBezierPath,这个类里面定义了很多方法可以用来作图,当然画圆也不在话下.通过查看这个类的API,我们发现有一个叫做addArcWithCenter:c radius:r startAngle:s endAngle:e clockwise:的方法可以用来画圆,参数分别的含义是圆心,半径,起始角度(0),终止角度(360)和顺时针/逆时针(这里无所谓).最后定义好一切之后就需要作图了,调用UIBezierPath类的stroke方法即可:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">drawRect:</span><span class="p">(</span><span class="n">CGRect</span><span class="p">)</span><span class="nv">rect</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>    <span class="c1">// Drawing code</span>
-</span><span class='line'>    <span class="n">CGRect</span> <span class="n">bounds</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">bounds</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="n">CGPoint</span> <span class="n">center</span><span class="p">;</span>
-</span><span class='line'>    <span class="n">center</span><span class="p">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">bounds</span><span class="p">.</span><span class="n">origin</span><span class="p">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">bounds</span><span class="p">.</span><span class="n">size</span><span class="p">.</span><span class="n">width</span> <span class="o">/</span> <span class="mi">2</span><span class="p">;</span>
-</span><span class='line'>    <span class="n">center</span><span class="p">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">bounds</span><span class="p">.</span><span class="n">origin</span><span class="p">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">bounds</span><span class="p">.</span><span class="n">size</span><span class="p">.</span><span class="n">height</span> <span class="o">/</span> <span class="mi">2</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kt">float</span> <span class="n">maxRadius</span> <span class="o">=</span> <span class="n">MIN</span><span class="p">(</span><span class="n">bounds</span><span class="p">.</span><span class="n">size</span><span class="p">.</span><span class="n">width</span><span class="p">,</span> <span class="n">bounds</span><span class="p">.</span><span class="n">size</span><span class="p">.</span><span class="n">height</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="n">UIBezierPath</span> <span class="o">*</span><span class="n">path</span> <span class="o">=</span> <span class="p">[[</span><span class="n">UIBezierPath</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="p">[</span><span class="n">path</span> <span class="nl">addArcWithCenter:</span><span class="n">center</span> <span class="nl">radius:</span><span class="n">maxRadius</span> <span class="nl">startAngle:</span><span class="mi">0</span> <span class="nl">endAngle:</span><span class="n">M_PI</span> <span class="o">*</span> <span class="mi">2</span> <span class="nl">clockwise:</span><span class="n">YES</span><span class="p">];</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="n">path</span><span class="p">.</span><span class="n">lineWidth</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="p">[[</span><span class="n">UIColor</span> <span class="n">lightGrayColor</span><span class="p">]</span> <span class="n">setStroke</span><span class="p">];</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="p">[</span><span class="n">path</span> <span class="n">stroke</span><span class="p">];</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>上面的代码中path.lineWidth设置线的宽度,[[UIColor lightGrayColor] setStroke]用来设置线的颜色,最后出来的效果应该如下:</p>
-
-<p><img src="http://PhotoSynthesiis.github.io/images/ios_concentric_2.png" width="300" height="600"></p>
-
-<p>既然画好了一个圆,那么可以开始画其他的了.我们可以定义一个for循环,每次循环减少一定的半径,圆心不变.只需要修改一行代码:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="c1">//  [path addArcWithCenter:center radius:maxRadius startAngle:0 endAngle:M_PI * 2 clockwise:YES];</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">for</span> <span class="p">(</span><span class="kt">float</span> <span class="n">currentRadius</span> <span class="o">=</span> <span class="n">maxRadius</span><span class="p">;</span> <span class="n">currentRadius</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">;</span> <span class="n">currentRadius</span> <span class="o">-=</span> <span class="mi">20</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'><span class="c1">//        [path moveToPoint:CGPointMake(center.x + currentRadius, center.y)];</span>
-</span><span class='line'>        <span class="p">[</span><span class="n">path</span> <span class="nl">addArcWithCenter:</span><span class="n">center</span> <span class="nl">radius:</span><span class="n">currentRadius</span> <span class="nl">startAngle:</span><span class="mi">0</span> <span class="nl">endAngle:</span><span class="n">M_PI</span> <span class="o">*</span> <span class="mi">2</span> <span class="nl">clockwise:</span><span class="n">YES</span><span class="p">];</span>
-</span><span class='line'>    <span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>运行的效果:</p>
-
-<p><img src="http://PhotoSynthesiis.github.io/images/ios_concentric_3.png" width="300" height="600"></p>
-
-<p>这时还有两个问题:1.为什么有一条直线 2.应该是满屏的圆.首先我们来解决第一个问题.画过画的同学都知道,当在画同心圆的时候,从一个圆跳到下一个圆上去应该从纸上拿起铅笔然后开始画下一个圆,如果不拿起来的话就成了一笔画,所以两个圆之间会有一条连线,问题就出在这里.为了让电脑&#8221;提起笔&#8221;,我们应该在每次画完一个圆之后调用一个相应的方法告诉他,所以for循环应该改成下面这样:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="k">for</span> <span class="p">(</span><span class="kt">float</span> <span class="n">currentRadius</span> <span class="o">=</span> <span class="n">maxRadius</span><span class="p">;</span> <span class="n">currentRadius</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">;</span> <span class="n">currentRadius</span> <span class="o">-=</span> <span class="mi">20</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>    <span class="p">[</span><span class="n">path</span> <span class="nl">moveToPoint:</span><span class="n">CGPointMake</span><span class="p">(</span><span class="n">center</span><span class="p">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">currentRadius</span><span class="p">,</span> <span class="n">center</span><span class="p">.</span><span class="n">y</span><span class="p">)];</span>
-</span><span class='line'>    <span class="p">[</span><span class="n">path</span> <span class="nl">addArcWithCenter:</span><span class="n">center</span> <span class="nl">radius:</span><span class="n">currentRadius</span> <span class="nl">startAngle:</span><span class="mi">0</span> <span class="nl">endAngle:</span><span class="n">M_PI</span> <span class="o">*</span> <span class="mi">2</span> <span class="nl">clockwise:</span><span class="n">YES</span><span class="p">];</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>修改完成后运行:</p>
-
-<p><img src="http://PhotoSynthesiis.github.io/images/ios_concentric_3.png" width="300" height="600"></p>
-
-<p>最后修改满屏的问题,想一想就知道,肯定与圆的半径有关,半径大一些的话,屏幕上就都是圆了,那么究竟要多大呢?只需要一个圆能包含屏幕的四个角就行了(circumcircle),而这也只需要修改一行代码:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="c1">// float maxRadius = MIN(bounds.size.width, bounds.size.height) / 2;</span>
-</span><span class='line'><span class="kt">float</span> <span class="n">maxRadius</span> <span class="o">=</span> <span class="n">hypot</span><span class="p">(</span><span class="n">bounds</span><span class="p">.</span><span class="n">size</span><span class="p">.</span><span class="n">width</span><span class="p">,</span> <span class="n">bounds</span><span class="p">.</span><span class="n">size</span><span class="p">.</span><span class="n">height</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>再次运行,就达到了最终的效果:</p>
-
-<p><img src="http://PhotoSynthesiis.github.io/images/ios_concentric.png" width="300" height="600"></p>
 ]]></content>
   </entry>
   

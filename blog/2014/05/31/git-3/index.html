@@ -1,0 +1,423 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Git 3 (Branching) - public static void man</title>
+  <meta name="author" content="Qiushi Li">
+
+  
+  <meta name="description" content="What is Git Branch 分支的好处: 它允许在不干扰主分支的情况下,从主分支里分离出一条小的分支,在里面进行开发,然后再把修改合并到主分支里. 什么是分支: 在Git下提交时,Git会保存每一次提交的快照,并且会保存一个指向祖先的指针.第一次提交时没有祖先,普通提交有一个祖先, &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://PhotoSynthesiis.github.io/blog/2014/05/31/git-3">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="public static void man" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Fjalla+One' rel='stylesheet' type='text/css'>
+  
+
+</head>
+
+<body   class="collapse-sidebar sidebar-footer" >
+  <header role="banner"><hgroup>
+  <h1><a href="/">public static void man</a></h1>
+  
+    <h2>_hope is a good thing</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:PhotoSynthesiis.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Git 3 (Branching)</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-05-31T19:26:00-04:00" pubdate data-updated="true">May 31<span>st</span>, 2014</time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h2>What is Git Branch</h2>
+
+<p><code>分支的好处</code>: 它允许在不干扰主分支的情况下,从主分支里分离出一条小的分支,在里面进行开发,然后再把修改合并到主分支里.</p>
+
+<p><code>什么是分支</code>: 在Git下提交时,Git会保存每一次提交的快照,并且会保存一个指向祖先的指针.第一次提交时没有祖先,普通提交有一个祖先,由两个或多个分支合并而成的提交则有多个祖先.</p>
+
+<!-- more -->
+
+
+<p> <img src="/images/git-3_1.png"></p>
+
+<p>Git中的分支其实只是一个指针,最初的时候它指向master.当你在master上不断提交时,这个指针会随之向后移动,所以它总是指向最近的一次提交.</p>
+
+<p> <img src="/images/git-3_2.png"></p>
+
+<p>当创建一个新的branch时,git会新建一个指针指向这个新建立的branch.比如说你新建了一个名为testing的branch:</p>
+
+<p> <img src="/images/git-3_3.png"></p>
+
+<p>当这个branch被创建后,并不会立即切换到这个分支上去,如果想要切换到新建的分支,可以执行:</p>
+
+<p><code>git checkout testing</code></p>
+
+<p>如果想在创建分支的时候同时切换到那条分支上去,可以执行:</p>
+
+<p><code>git checkout -b testing</code></p>
+
+<p>现在就在testing分支上了,接下来的所有操作都会在这个分支上进行,不会干扰到master分支.那么git又是如何知道用户现在到底在哪个分支上呢?原来git保存了另一个名叫<code>HEAD</code>的指针,它总是指向用户所在的当前分支,并且会随着用户执行<code>git checkout</code>指令后指向另一个分支:</p>
+
+<p> <img src="/images/git-3_4.png"></p>
+
+<h2>Basic Branching and Merging</h2>
+
+<p>试想这样一个场景:为了完成当前工作,你在master上新建了一个分支(iss53)并且切换到上面,然后开始在新的分支上工作,并且进行了一些提交,这时你的老板分配给你一项紧急的任务,让你停掉当前的工作,立马开始新任务.这个时候你需要首先需要切换到master分支上,然后新建另一个分支(hotfix)来处理紧急任务.在修改完成并通过所有测试后,紧急任务总算是完成了,你开心地提交了这个任务.这个时候git里的情况如下:</p>
+
+<p> <img src="/images/git-3_5.png"></p>
+
+<p>这时,应该合并master和紧急任务的分支了,你需要执行下面一系列代码来完成这个操作:</p>
+
+<ul>
+<li>切换到master分支: <code>git checkout master</code></li>
+<li>合并master和hotfix分支: <code>git merge hotfix</code></li>
+</ul>
+
+
+<p>由于master分支所在的commit是hotfix分支所在commit的直接上游,只需要向右一直移动指针就行了,这种合并方式叫做快进(<code>fast forward</code>).</p>
+
+<p> <img src="/images/git-3_6.png"></p>
+
+<p>因为hotfix分支使用来修理紧急任务的,这时任务也完成了,可以删除这个分支.</p>
+
+<p><code>git branch -d hotfix</code></p>
+
+<p>接下来需要回到最初工作的分支上去:</p>
+
+<p><code>git checkout iss53</code></p>
+
+<p>经过一些提交后:</p>
+
+<p> <img src="/images/git-3_7.png"></p>
+
+<h2>Basic Merging</h2>
+
+<p>Merge分两步:</p>
+
+<ul>
+<li>checkout到你想要merge进去的branch(e.g. iss53 to master)</li>
+<li>运行merge</li>
+</ul>
+
+
+<p>iss53 merge到master和hotfix merge到master是不同的.后者只需要fast forward就行了,但是前者需要进行一次称为3-way-merge的操作,具体是需要合并3个东西: 两个commit的共同父节点和两个节点本身.</p>
+
+<p> <img src="/images/git-3_8.png"></p>
+
+<p>找到需要合并的节点后再合并:</p>
+
+<p> <img src="/images/git-3_9.png"></p>
+
+<h3>Basic Merge Conflict</h3>
+
+<p>如果两个需要被merge的节点里面有冲突(e.g. 同时修改了同一个文件的相同部分),git会提示有冲突.</p>
+
+<p> <img src="/images/git-3_10.png"></p>
+
+<p>上图的HEAD部分是当前分支在这一部分的修改,iss53的那部分是在iss53那个分支上对这一部分的修改,如果想要解决这个冲突,可以保留其中的一个,或者全部删掉重写.在解决后需要重新add这个文件.</p>
+
+<h2>Branch Management</h2>
+
+<p><code>git branch</code>: 列出当前的所有分支,当前分支前面会有一个星号(*).</p>
+
+<p><code>git branch -v</code>: 列出所有分支的最近的一次提交.</p>
+
+<h2>Remote Branches</h2>
+
+<p>远程分支是对远程仓库状态的索引,它告诉你自从上一次和服务器交互之后的状态.当从服务器上clone项目的时候,git会创建两个指针,一个是指向服务器的指针(origin/master),并且停留在你最近一次与之交互后的节点上,另一个指针(master)指向同一个节点,不过它是在本地.两个指针最大的不同就是指向服务器上的指针只会在你与服务器进行交互的时候移动(e.g. 提交),它是自动移动的,不能人为控制,可以想象成一个书签,帮你保存上一次的状态.本地的指针是在本地提交的时候移动的.</p>
+
+<p><img src="/images/git-3_11.png"></p>
+
+<p>例如我在本地进行了一些提交,同时有人往服务器上提交了代码,这时服务器上的那个指针就会向前移动,如果我想从服务器上获取这些更新,可以运行<code>git fetch origin</code>,这个指令用来获取最新的代码,但是它不会自动merge,如果想要获取并且让系统自动merge,需要执行<code>git pull</code>.运行之后系统的现状:</p>
+
+<p><img src="/images/git-3_12.png"></p>
+
+<h2>Push</h2>
+
+<p><code>git push (remote) (branch)</code>: 这条指令用来向服务器上推送代码.(e.g. git push origin master) 向名为origin的服务器上的master分支推送代码.</p>
+
+<h2>Tracking Branches</h2>
+
+<p>当我们在push或者pull的时候,git知道应该push到哪里去或者从哪里去pull,即使我们不加任何的参数.这是因为git在我们clone代码的时候建立了一个tracking branch,它和远程仓库有直接联系.</p>
+
+<h2>Rebasing</h2>
+
+<p>rebase是git中另一种合并分支的方法,与merge不同的是,rebase不需要进行3-way-merge,取而代之的是只需要把需要合并的分支的patch打到另一个分支上去就可以了.</p>
+
+<p><img src="/images/git-3_13.png"></p>
+
+<ul>
+<li>git checkout experiment</li>
+<li>git rebase master</li>
+</ul>
+
+
+<p>他的原理是回到两个分支的共同的祖先,提取你所在分支每次提交时产生的差异(diff),把这些差异保存在临时文件里,然后切换到需要合并到的分支,以此应用每一个patch文件.</p>
+
+<p><img src="/images/git-3_14.png"></p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Qiushi Li</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-05-31T19:26:00-04:00" pubdate data-updated="true">May 31<span>st</span>, 2014</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://PhotoSynthesiis.github.io/blog/2014/05/31/git-3/" data-via="photosynthesiis@gmail.com" data-counturl="http://PhotoSynthesiis.github.io/blog/2014/05/31/git-3/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2014/05/23/tg-day-3/" title="Previous Post: TG Day 3">&laquo; TG Day 3</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/05/31/git-3/">Git 3 (Branching)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/05/23/tg-day-3/">TG Day 3</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/05/21/tg-day-2/">TG Day 2</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/05/20/tg-day-1/">TG Day 1</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/05/18/linux2/">Linux 2</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/photosynthesiis@gmail.com">@photosynthesiis@gmail.com</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'photosynthesiis@gmail.com',
+            count: 3,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/photosynthesiis@gmail.com?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - Qiushi Li -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'photosynthesiis';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://PhotoSynthesiis.github.io/blog/2014/05/31/git-3/';
+        var disqus_url = 'http://PhotoSynthesiis.github.io/blog/2014/05/31/git-3/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

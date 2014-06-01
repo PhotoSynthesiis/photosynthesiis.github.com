@@ -9,7 +9,7 @@
   <meta name="author" content="Qiushi Li">
 
   
-  <meta name="description" content="今天该讲第三种设计模式 &mdash; 装饰器模式。同样，从名字就可以看出这种模式必定有一个基础组件，用来被修饰，也会有至少一个装饰器来修饰基础组件。同时要求被装饰器修饰过的组件对外界来说还是一个组件，只不过在被修饰之后多出了一些以前没有的功能。装饰器模式可以看做下图： ">
+  <meta name="description" content="工厂模式算是设计模式中用到的最多的一类了，对于它最直观的描述就是：父类定义一个创建对象的接口，由子类决定需要创建什么对象，这样让类把实例化推迟到了子类。下面来举个例子来阐述吧。 有一个披萨店，可以做各种各样的披萨，但位于不同地方的分店里的披萨味道会有些不同。如果利用工厂模式，就是： ">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +65,51 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/07/13/factory-pattern/">深入浅出设计模式之工厂模式(Factory Method Pattern)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-13T14:01:00-04:00" pubdate data-updated="true">Jul 13<span>th</span>, 2013</time>
+        
+         | <a href="/blog/2013/07/13/factory-pattern/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>工厂模式算是设计模式中用到的最多的一类了，对于它最直观的描述就是：父类定义一个创建对象的接口，由子类决定需要创建什么对象，这样让类把实例化推迟到了子类。下面来举个例子来阐述吧。</p>
+
+<p>有一个披萨店，可以做各种各样的披萨，但位于不同地方的分店里的披萨味道会有些不同。如果利用工厂模式，就是：</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/07/13/factory-pattern/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -471,52 +516,9 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/07/08/spring-mvc/">Spring MVC学习笔记</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-07-08T23:37:00-04:00" pubdate data-updated="true">Jul 8<span>th</span>, 2013</time>
-        
-         | <a href="/blog/2013/07/08/spring-mvc/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>学习Spring很长时间了，但是一直也没有认真地总结一次，总是陷入学习了忘记的怪圈（其实也不是怪圈，就是学习了没有总结）。 今天我就写一点东西来总结我的Spring MVC学习之旅。 这个得从我的Sponsor给我布置的家庭作业讲起，在这里面我学会了很多Spring的知识。</p>
-
-<p>可以假设Spring是一个大的容器，里面放着各种各样的网页、文件等以供一个个的request访问。所以，我想从web.xml的配置说起。</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/07/08/spring-mvc/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
+    
+      <a class="prev" href="/blog/page/6/">&larr; Older</a>
     
     <a href="/blog/archives">Blog Archives</a>
     
@@ -529,6 +531,10 @@
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/05/31/git-3/">Git 3 (Branching)</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2014/05/23/tg-day-3/">TG Day 3</a>
@@ -544,10 +550,6 @@
     
       <li class="post">
         <a href="/blog/2014/05/18/linux2/">Linux 2</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/05/18/linux1/">Linux 1</a>
       </li>
     
   </ul>
